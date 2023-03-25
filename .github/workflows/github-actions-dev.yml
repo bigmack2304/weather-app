@@ -1,0 +1,37 @@
+name: GitHub Actions dev
+run-name: Dev updated
+on:
+  push:
+    branches: [dev]
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [16.x]
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install modules
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Create dev Artifacts 
+        uses: actions/upload-artifact@v1
+        with:
+          name: dev
+          path: build
+
+      - name: Deploy
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          branch: gh-page-preview
+          clean: true
+          folder: build
+          target-folder: build/dev
