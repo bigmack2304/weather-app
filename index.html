@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ru">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+        <style>
+            @-webkit-keyframes anm {
+                from {
+                    background-position-x: 100%;
+                }
+
+                to {
+                    background-position-x: 0%;
+                }
+            }
+
+            @keyframes anm {
+                from {
+                    background-position-x: 100%;
+                }
+
+                to {
+                    background-position-x: 0%;
+                }
+            }
+
+            body {
+                padding: 20px;
+                min-width: 250px;
+            }
+
+            .animated {
+                background: -webkit-gradient(linear, left top, right top, color-stop(50%, #15ff0069), color-stop(0%, #f600ff00));
+                background: -o-linear-gradient(left, #15ff0069 50%, #f600ff00 0%);
+                background: linear-gradient(90deg, #15ff0069 50%, #f600ff00 0%);
+                background-position-x: 100%;
+                -webkit-animation-fill-mode: forwards;
+                animation-fill-mode: forwards;
+                background-size: 200% 200%;
+                -webkit-animation-name: anm;
+                animation-name: anm;
+                -webkit-animation-timing-function: linear;
+                animation-timing-function: linear;
+                -webkit-animation-duration: 5s;
+                animation-duration: 5s;
+            }
+
+            .link_container {
+                display: -webkit-box;
+                display: -ms-flexbox;
+                display: flex;
+                -webkit-box-orient: vertical;
+                -webkit-box-direction: normal;
+                -ms-flex-direction: column;
+                flex-direction: column;
+                row-gap: 10px;
+            }
+
+            .link_container__link {
+                padding: 10px;
+                width: -webkit-fit-content;
+                width: -moz-fit-content;
+                width: fit-content;
+                min-width: 130px;
+                text-align: center;
+                text-decoration: none;
+                font-family: sans-serif;
+                font-size: 20px;
+                font-weight: 600;
+                color: black;
+                outline: solid #94a7ff 2px;
+                white-space: nowrap;
+            }
+
+            .link_container__link:hover {
+                background-color: #c7c7c7;
+                outline: solid #3359ff 2px;
+            }
+
+            .link_container__link:focus {
+                background-color: #c7c7c7;
+                outline: solid #3359ff 2px;
+            }
+
+        </style>
+    </head>
+
+    <body>
+        <div class="link_container">
+            <a class="link_container__link" href="build/final/index.html">Версия final</a>
+            <a class="link_container__link" href="build/dev/index.html">Версия dev</a>
+        </div>
+    </body>
+
+    <script type="text/javascript" defer data-auto_click="true">
+        document.addEventListener("DOMContentLoaded", onload, { once: true });
+
+        function onload(e) {
+            var linkfinalPage = document.querySelector(".link_container").children[0];
+            linkfinalPage.classList.add("animated");
+            setTimeout(function () {
+                linkfinalPage.click();
+            }, 5000);
+        }
+    </script>
+</html>
