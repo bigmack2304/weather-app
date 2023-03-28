@@ -25,4 +25,4 @@ yarn-error.log*
 
 # files
 src/**/*.css
-!src/ui/normalize.css
+!src/global_styles/normalize.css

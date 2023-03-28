@@ -1,2 +1,31 @@
+@mixin for_test_1() {
+    background-image: url("https://vsegda-pomnim.com/uploads/posts/2022-04/1648945488_1-vsegda-pomnim-com-p-lesa-belarusi-foto-1.jpg");
+    background-position-x: 38%;
+}
+
 .Home {
+    overflow: hidden;
+    height: 100vh;
+    scroll-snap-type: y mandatory;
+    overflow-y: auto;
+
+    &__weather_now {
+        min-height: 100vh;
+        background-color: rgb(145, 161, 0);
+        @include for_test_1();
+        scroll-snap-align: center;
+    }
+
+    &__weather_week {
+        min-height: 100vh;
+        background-color: rgb(17, 69, 180);
+        scroll-snap-align: center;
+        box-shadow: black 0px -3px 20px 0px;
+    }
+
+    .Footer {
+        scroll-snap-align: center;
+        min-height: 40vh;
+        box-shadow: black 0px -3px 20px 0px;
+    }
 }

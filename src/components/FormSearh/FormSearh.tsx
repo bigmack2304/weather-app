@@ -1,0 +1,52 @@
+import React, { memo, useState, useEffect } from "react";
+import { deep_object_is_equal } from "../../utils/is_equal";
+// import { useCurrentWeather } from "../../hooks/useCurrentWeather";
+
+// форма поиска, при субмите вызывает коллбек submitCallback из пропсов
+
+interface IFormSearhProps {
+    submitCallback?: (searhVal: string) => void;
+}
+
+type TProps = Readonly<IFormSearhProps>;
+
+function FormSearh({ submitCallback = () => {} }: TProps) {
+    let [searhValue, setSearhValue] = useState<string>("");
+    // let [currentWeather, fetchCurrentWeather] = useCurrentWeather();
+
+    const form_onSubmit = (e: React.FormEvent) => {
+        let target = e.target as HTMLFormElement;
+        let searhValue = target.querySelector<HTMLInputElement>("input[type='searh']")!.value;
+
+        e.preventDefault();
+
+        if (searhValue == "") {
+            return;
+        }
+
+        setSearhValue("");
+        submitCallback(searhValue);
+        // fetchCurrentWeather(searhValue);
+    };
+
+    // useEffect(() => {
+    //     console.log(currentWeather);
+    // }, [currentWeather]);
+
+    const Searh_onChange = (e: React.FormEvent) => {
+        let target = e.target as HTMLInputElement;
+        setSearhValue(target.value);
+    };
+
+    return (
+        <form className="FormSearch" onSubmit={form_onSubmit}>
+            <input type="searh" value={searhValue} onChange={Searh_onChange} />
+            <input type="submit" value="Поиск" />
+        </form>
+    );
+}
+
+const FormSearh_memo = memo(FormSearh, deep_object_is_equal);
+
+export { FormSearh, FormSearh_memo };
+export type { IFormSearhProps };
