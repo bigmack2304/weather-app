@@ -19,5 +19,5 @@ jobs:
         run: npm ci
 
       - name: Build dev
-        run: npm run build_dev
+        run: npm run build-git
 
