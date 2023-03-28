@@ -1,0 +1,40 @@
+/*
+    стили для root и какието новые классы
+*/
+
+*,
+*::before,
+*::after {
+    box-sizing: inherit;
+}
+
+#root {
+    box-sizing: border-box;
+    font-family: "Gill Sans", sans-serif;
+}
+
+.visually_hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    border: 0;
+    padding: 0;
+    white-space: nowrap;
+    clip-path: inset(100%);
+    clip: rect(0 0 0 0);
+    overflow: hidden;
+}
+
+.svg_sprait {
+    display: none;
+}
+
+.scroll_remove {
+    overflow: hidden;
+}
+
+.Icon {
+    width: 35px;
+    height: 35px;
+}

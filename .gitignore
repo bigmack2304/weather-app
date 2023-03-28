@@ -26,3 +26,4 @@ yarn-error.log*
 # files
 src/**/*.css
 !src/global_styles/normalize.css
+!src/global_styles/def_styles.css
