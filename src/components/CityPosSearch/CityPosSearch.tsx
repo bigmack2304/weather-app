@@ -4,8 +4,7 @@ import { deep_object_is_equal } from "../../utils/is_equal";
 import { useSearchCityPos } from "../../hooks/useSearchCityPos";
 import type * as fetchCityLatLon from "../../utils/fetch_LatLon";
 import { ButtonClose } from "../ButtonClose/ButtonClose";
-import { get_full_country_by_code } from "../../utils/util_functions";
-import { get_system_language } from "../../utils/util_functions";
+import { get_full_country_by_code, get_system_language } from "../../utils/util_functions";
 import { IconLoader } from "../../ui/IconLoader";
 import "./CityPosSearch.scss";
 
@@ -68,8 +67,10 @@ function CityPosSearch({ selectCityCallback = () => {} }: TProps) {
                                     key={`${city.lat}-${city.lon}`}
                                     onClick={selectCallback.bind(null, city)}
                                 >
-                                    <span className="CityPosSearch__cityName">{get_localed_city_name(city)}: </span>
-                                    <span>{get_full_country_by_code(city.country)}, </span>
+                                    <span className="CityPosSearch__cityName">{get_localed_city_name(city)}</span>
+                                    <span>
+                                        {get_full_country_by_code(city.country) ? `: ${get_full_country_by_code(city.country)}` : null}
+                                    </span>
                                     <span>{city.state ? `, ${city.state}` : null}</span>
                                 </li>
                             );

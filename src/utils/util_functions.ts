@@ -4,7 +4,7 @@ const intlDisplayNames = new Intl.DisplayNames([get_system_language()], { type: 
 
 // более удобный интерфейс для intlDisplayNames
 function get_full_country_by_code(countryCode: string) {
-    return intlDisplayNames.of(countryCode) ?? "";
+    return intlDisplayNames.of(countryCode);
 }
 
 // получить код используемого устройством языка ("ru", "en", ...)
