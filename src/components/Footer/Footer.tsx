@@ -12,7 +12,7 @@ type TProps = Readonly<IFooterProps>;
 function defaultFooterContent() {
     return (
         <LinkIcon title="Страница проекта на GitHub" href="https://github.com/bigmack2304/weather-app">
-            <IconGitHub />
+            <IconGitHub addClassName={["Icon"]} />
         </LinkIcon>
     );
 }

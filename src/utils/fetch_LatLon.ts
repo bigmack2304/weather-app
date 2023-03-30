@@ -60,6 +60,7 @@ interface IFetchLatLonArgs {
     cityName?: string;
     limit?: TLimit;
     callBack?: (response: TFullResponse) => void;
+    errorCallback?: () => void;
 }
 
 function generate_url(cityName: string, limit: TLimit = 1): URL {
@@ -70,7 +71,7 @@ function generate_url(cityName: string, limit: TLimit = 1): URL {
     return temp_url;
 }
 
-async function fetch_lat_lon({ cityName = "", limit = 1, callBack = () => {} }: Readonly<IFetchLatLonArgs> = {}) {
+async function fetch_lat_lon({ cityName = "", limit = 1, callBack = () => {}, errorCallback = () => {} }: Readonly<IFetchLatLonArgs> = {}) {
     let full_url = generate_url(cityName, limit);
     let response: TFullResponse;
 
@@ -80,6 +81,7 @@ async function fetch_lat_lon({ cityName = "", limit = 1, callBack = () => {} }: 
 
         if (!Array.isArray(raw_response) && "cod" in raw_response) {
             throw new Error(`cod: ${raw_response.cod}\nmessage: ${raw_response.message}`);
+            errorCallback();
         }
 
         response = raw_response;
@@ -88,10 +90,12 @@ async function fetch_lat_lon({ cityName = "", limit = 1, callBack = () => {} }: 
         console.error(`Ошибка запроса по адресу ${full_url}`);
         console.error(err);
         console.groupEnd();
+        errorCallback();
     }
 
     if (Array.isArray(response) && response.length === 0) {
         console.warn(`По запросу ${full_url} ничего не найдено.`);
+        errorCallback();
     }
 
     callBack(response);

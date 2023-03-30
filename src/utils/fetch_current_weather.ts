@@ -2,7 +2,7 @@
 // https://openweathermap.org/current
 
 import { WEATHER_API_KEY, WEATHER_API_ADRESS_CURRENT } from "./global_vars";
-import { get_system_language } from "./geters_system_info";
+import { get_system_language } from "./util_functions";
 import type * as FetchLatLonTypes from "./fetch_LatLon";
 
 interface IFetchCurrentWeatherArgs {

@@ -1,6 +1,5 @@
 import React, { memo, useState, useEffect } from "react";
 import { deep_object_is_equal } from "../../utils/is_equal";
-// import { useCurrentWeather } from "../../hooks/useCurrentWeather";
 
 // форма поиска, при субмите вызывает коллбек submitCallback из пропсов
 
@@ -12,7 +11,6 @@ type TProps = Readonly<IFormSearhProps>;
 
 function FormSearh({ submitCallback = () => {} }: TProps) {
     let [searhValue, setSearhValue] = useState<string>("");
-    // let [currentWeather, fetchCurrentWeather] = useCurrentWeather();
 
     const form_onSubmit = (e: React.FormEvent) => {
         let target = e.target as HTMLFormElement;
@@ -26,12 +24,7 @@ function FormSearh({ submitCallback = () => {} }: TProps) {
 
         setSearhValue("");
         submitCallback(searhValue);
-        // fetchCurrentWeather(searhValue);
     };
-
-    // useEffect(() => {
-    //     console.log(currentWeather);
-    // }, [currentWeather]);
 
     const Searh_onChange = (e: React.FormEvent) => {
         let target = e.target as HTMLInputElement;

@@ -1,10 +1,17 @@
 import React from "react";
 import "./IconGitHub.scss";
 
-function IconGitHub() {
+interface IIconGitHubProps {
+    addClassName?: string[];
+}
+
+type TProps = Readonly<IIconGitHubProps>;
+
+function IconGitHub({ addClassName = [""] }: TProps) {
+    let componentClassName = [...addClassName, "IconGitHub"].join(" ");
     return (
         <svg
-            className="Icon IconGitHub"
+            className={componentClassName}
             xmlns="http://www.w3.org/2000/svg"
             shapeRendering="geometricPrecision"
             textRendering="geometricPrecision"

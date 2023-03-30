@@ -1,0 +1,48 @@
+.CityPosSearch {
+    position: relative;
+
+    &__elements_wrapper {
+        position: absolute;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        row-gap: 5px;
+    }
+
+    &__elements {
+        margin: 0 0 0 1px;
+        list-style-type: none;
+        padding: 5px 0 5px 0;
+        background-color: white;
+        border-bottom-left-radius: 5px;
+        border-bottom-right-radius: 5px;
+        width: 184px;
+    }
+
+    &__element {
+        cursor: pointer;
+        padding: 2px 5px 2px 5px;
+        overflow-wrap: break-word;
+
+        &:nth-child(n + 2) {
+            border-top: 1px black solid;
+        }
+
+        &:hover {
+            background-color: rgb(187, 187, 187);
+        }
+    }
+
+    &__cityName {
+        font-weight: bold;
+    }
+
+    &__loader {
+        width: 18px;
+        height: 18px;
+        z-index: 1;
+        position: absolute;
+        top: 3px;
+        left: 163px;
+    }
+}
