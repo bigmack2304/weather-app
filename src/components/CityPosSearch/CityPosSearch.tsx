@@ -84,20 +84,6 @@ function CityPosSearch({ selectCityCallback = () => {} }: TProps) {
     );
 }
 
-{
-    /* <div
-style={{
-    height: "20px",
-    width: "20px",
-    backgroundColor: "red",
-    zIndex: "1",
-    position: "absolute",
-    top: "2px",
-    left: "160px",
-}}
-></div> */
-}
-
 const CityPosSearch_memo = memo(CityPosSearch, deep_object_is_equal);
 
 export { CityPosSearch, CityPosSearch_memo };
