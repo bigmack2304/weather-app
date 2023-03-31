@@ -11,7 +11,11 @@ function get_full_country_by_code(countryCode: string) {
 
 // получить код используемого устройством языка ("ru", "en", ...)
 function get_system_language(): string {
-    return window.navigator.language;
+    let language = window.navigator.language;
+    if (language.includes("-")) {
+        language = language.slice(0, language.indexOf("-"));
+    }
+    return language.toLowerCase();
 }
 
 // возвращает название города в соответствии с текущей локалью, из обьекта  типа fetchCityLatLon.TResponseObj
