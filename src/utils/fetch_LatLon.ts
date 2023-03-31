@@ -57,10 +57,10 @@ type TResponseObj = {
 type TFullResponse = Array<TResponseObj> | undefined;
 
 interface IFetchLatLonArgs {
-    cityName?: string;
-    limit?: TLimit;
-    callBack?: (response: TFullResponse) => void;
-    errorCallback?: () => void;
+    cityName?: string; // наименование искомого города
+    limit?: TLimit; // сколько выводить городов с одинаковым имянем
+    callBack?: (response: TFullResponse) => void; // колбек, вызывается при получении ответа с сервера, с аргументом ответа
+    errorCallback?: () => void; // коллбек, вызывается при возникновении исключения в фече либо если город не найден
 }
 
 function generate_url(cityName: string, limit: TLimit = 1): URL {
@@ -81,7 +81,6 @@ async function fetch_lat_lon({ cityName = "", limit = 1, callBack = () => {}, er
 
         if (!Array.isArray(raw_response) && "cod" in raw_response) {
             throw new Error(`cod: ${raw_response.cod}\nmessage: ${raw_response.message}`);
-            errorCallback();
         }
 
         response = raw_response;

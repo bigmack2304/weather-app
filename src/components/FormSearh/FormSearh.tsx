@@ -1,5 +1,6 @@
 import React, { memo, useState, useEffect } from "react";
 import { deep_object_is_equal } from "../../utils/is_equal";
+import "./FormSearh.scss";
 
 // форма поиска, при субмите вызывает коллбек submitCallback из пропсов
 
@@ -33,8 +34,8 @@ function FormSearh({ submitCallback = () => {} }: TProps) {
 
     return (
         <form className="FormSearch" onSubmit={form_onSubmit}>
-            <input type="searh" value={searhValue} onChange={Searh_onChange} />
-            <input type="submit" value="Поиск" />
+            <input className="FormSearch__search" type="searh" value={searhValue} onChange={Searh_onChange} />
+            <input className="FormSearch__buttonSubmit" type="submit" value="Поиск" />
         </form>
     );
 }

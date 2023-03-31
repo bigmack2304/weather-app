@@ -9,6 +9,7 @@ interface IFetchCurrentWeatherArgs {
     lat: number;
     lon: number;
     callBack?: (response: TResponse) => void;
+    errorCallback?: () => void;
 }
 
 type TresponseObj = {
@@ -66,7 +67,7 @@ function generate_url(lat: number, lon: number): URL {
     return temp_url;
 }
 
-async function fetch_current_weather({ lat, lon, callBack = () => {} }: Readonly<IFetchCurrentWeatherArgs>) {
+async function fetch_current_weather({ lat, lon, callBack = () => {}, errorCallback = () => {} }: Readonly<IFetchCurrentWeatherArgs>) {
     let full_url = generate_url(lat, lon);
 
     let response: TResponse;
@@ -85,6 +86,7 @@ async function fetch_current_weather({ lat, lon, callBack = () => {} }: Readonly
         console.error(`Ошибка запроса по адресу ${full_url}`);
         console.error(err);
         console.groupEnd();
+        errorCallback();
     }
 
     callBack(response);

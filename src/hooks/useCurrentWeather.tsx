@@ -1,31 +1,64 @@
-import React, { useState } from "react";
-import { fetch_lat_lon } from "../utils/fetch_LatLon";
+import React, { useState, useRef } from "react";
 import { fetch_current_weather } from "../utils/fetch_current_weather";
 import type * as TypesCurrentWeather from "../utils/fetch_current_weather";
-import type * as TypesPosCity from "../utils/fetch_LatLon";
 
-// запрос текущей погоды
-// TODO строка 15 pos[0] , 0 это первый найденный город, их может быть до пяти, если их более одного то
-// юзеро должен сам выбрать город из найденных
+type TuseCurrentWeatherArgs = {
+    cityName?: string;
+    lat?: number;
+    lon?: number;
+    errorCallback?: () => void;
+};
 
-function useCurrentWeather(): [TypesCurrentWeather.TResponse, (cityName: string) => void] {
+const MAX_RADIUS = 0.05;
+
+function useCurrentWeather({ lat, lon, cityName, errorCallback = () => {} }: TuseCurrentWeatherArgs): [TypesCurrentWeather.TResponse] {
     let [weather, setWeather] = useState<TypesCurrentWeather.TResponse>();
-
-    const positionCallback = (pos: TypesPosCity.TFullResponse) => {
-        if (!pos || (pos && !pos[0])) return;
-        let { lat, lon } = pos[0];
-        fetch_current_weather({ lat: lat, lon: lon, callBack: responseCallback });
-    };
+    let memoPos = useRef({ prewLat: lat, prewLon: lon });
 
     const responseCallback = (resp: TypesCurrentWeather.TResponse) => {
         setWeather(resp);
     };
 
-    const fetchCurrentWeather = (cityName: string) => {
-        fetch_lat_lon({ cityName: cityName, callBack: positionCallback, limit: 5 });
+    const fetchErrorCallback = () => {
+        errorCallback();
     };
 
-    return [weather, fetchCurrentWeather];
+    const update_memoPos = () => {
+        if (memoPos.current.prewLat !== lat) {
+            memoPos.current.prewLat = lat;
+        }
+        if (memoPos.current.prewLon !== lon) {
+            memoPos.current.prewLon = lat;
+        }
+    };
+
+    // debugger;
+
+    const deforeFetch = () => {
+        if (lat && lon) {
+            if (memoPos.current.prewLat === lat || memoPos.current.prewLon === lon) return;
+
+            update_memoPos();
+
+            if (!weather) {
+                fetch_current_weather({ lat, lon, callBack: responseCallback, errorCallback: fetchErrorCallback });
+            } else {
+                // если новые координаты +- теже что и координаты текущего города то ничего не делаем
+                // координаты от GEOAPI и из API запроса погоды могут немного отличватся
+                if (Math.abs(weather.coord.lat - lat) > MAX_RADIUS || Math.abs(weather.coord.lon - lon) > MAX_RADIUS) {
+                    // дополнительно проверяем что искомый город отличается от текущего
+                    if (weather.name !== cityName) {
+                        fetch_current_weather({ lat, lon, callBack: responseCallback, errorCallback: fetchErrorCallback });
+                    }
+                }
+            }
+        }
+    };
+
+    deforeFetch();
+
+    return [weather];
 }
 
 export { useCurrentWeather };
+export type { TuseCurrentWeatherArgs };

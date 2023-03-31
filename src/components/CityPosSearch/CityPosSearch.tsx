@@ -1,21 +1,32 @@
-import React, { memo, useEffect, useState } from "react";
+import React, { memo, useEffect, useState, useContext } from "react";
+import { WeatherContext } from "../../Contexts/WeatherContext";
 import { FormSearh } from "../FormSearh/FormSearh";
 import { deep_object_is_equal } from "../../utils/is_equal";
 import { useSearchCityPos } from "../../hooks/useSearchCityPos";
 import type * as fetchCityLatLon from "../../utils/fetch_LatLon";
 import { ButtonClose } from "../ButtonClose/ButtonClose";
-import { get_full_country_by_code, get_system_language } from "../../utils/util_functions";
+import { get_full_country_by_code, get_localed_city_name } from "../../utils/util_functions";
 import { IconLoader } from "../../ui/IconLoader";
 import "./CityPosSearch.scss";
 
-interface ICityPosSearchProps {
-    selectCityCallback?: (lat: number, lon: number) => void;
-}
+// компонент делает запрос на сервер для определления координат города
+// указанного в форме, после ответа, если найден один город то происходит вызов
+// колбека selectCityCallback с передачей в него широты и долготы
+// еслиже найденных городов более одного то под формой появляется список найденных
+// городов, юсер кликает на нужный ему город, после этого также происходит вызов
+// selectCityCallback с координатами выбранного города
+
+// TODO в cityPosResponse.map((city)... выводить отсортированный массив
+// сортировать нужно по важности, если у нас русская локаль, то с верху дожны быть
+// русские результаты
+
+interface ICityPosSearchProps {}
 
 type TProps = Readonly<ICityPosSearchProps>;
 
-function CityPosSearch({ selectCityCallback = () => {} }: TProps) {
+function CityPosSearch({}: TProps) {
     let [isLoading, setIsLoading] = useState<boolean>(false);
+    const selectCityCallback = useContext(WeatherContext).selectCityCallback;
 
     const onErrorFetchCityPos = () => {
         setIsLoading(false);
@@ -38,19 +49,8 @@ function CityPosSearch({ selectCityCallback = () => {} }: TProps) {
     };
 
     const selectCallback = (selectedCity: fetchCityLatLon.TResponseObj) => {
-        console.log(selectedCity);
-        selectCityCallback(selectedCity.lat, selectedCity.lon);
+        selectCityCallback(selectedCity.lat, selectedCity.lon, get_localed_city_name(selectedCity));
         removeResponse();
-    };
-
-    const get_localed_city_name = (city: fetchCityLatLon.TResponseObj) => {
-        if (city.local_names) {
-            let locale = get_system_language() as keyof typeof city.local_names;
-            if (city.local_names[locale]) {
-                return city.local_names[locale] as string;
-            }
-        }
-        return city.name;
     };
 
     return (
@@ -80,7 +80,7 @@ function CityPosSearch({ selectCityCallback = () => {} }: TProps) {
                 </div>
             ) : null}
 
-            {isLoading === true ? <IconLoader addClassName={["CityPosSearch__loader"]} /> : null}
+            {isLoading ? <IconLoader addClassName={["CityPosSearch__loader"]} /> : null}
         </div>
     );
 }

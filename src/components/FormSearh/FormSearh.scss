@@ -1,6 +1,15 @@
 .FormSearch {
     font-family: inherit;
-    input {
+    width: 100%;
+    display: flex;
+
+    &__search {
         font-family: inherit;
+        min-width: 50px;
+        width: 100%;
+        padding-right: 25px;
+    }
+
+    &__buttonSubmit {
     }
 }
