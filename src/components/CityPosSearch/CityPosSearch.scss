@@ -9,6 +9,7 @@
         flex-direction: column;
         align-items: center;
         row-gap: 5px;
+        width: 77.2%;
     }
 
     &__elements {
@@ -18,7 +19,6 @@
         background-color: white;
         border-bottom-left-radius: 5px;
         border-bottom-right-radius: 5px;
-        width: 184px;
     }
 
     &__element {

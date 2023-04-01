@@ -5,7 +5,7 @@ import { deep_object_is_equal } from "../../utils/is_equal";
 import { useSearchCityPos } from "../../hooks/useSearchCityPos";
 import type * as fetchCityLatLon from "../../utils/fetch_LatLon";
 import { ButtonClose } from "../ButtonClose/ButtonClose";
-import { get_full_country_by_code, get_localed_city_name } from "../../utils/util_functions";
+import { get_full_country_by_code, get_localed_city_name, get_system_language } from "../../utils/util_functions";
 import { IconLoader } from "../../ui/IconLoader";
 import "./CityPosSearch.scss";
 
@@ -15,10 +15,6 @@ import "./CityPosSearch.scss";
 // еслиже найденных городов более одного то под формой появляется список найденных
 // городов, юсер кликает на нужный ему город, после этого также происходит вызов
 // selectCityCallback с координатами выбранного города
-
-// TODO в cityPosResponse.map((city)... выводить отсортированный массив
-// сортировать нужно по важности, если у нас русская локаль, то с верху дожны быть
-// русские результаты
 
 interface ICityPosSearchProps {}
 
@@ -33,6 +29,14 @@ function CityPosSearch({}: TProps) {
     };
 
     let [cityPosResponse, fetchCityPos, removeResponse] = useSearchCityPos(onErrorFetchCityPos);
+    let sorted_cityPosResponse: fetchCityLatLon.TResponseObj[] = cityPosResponse ? [...cityPosResponse] : [];
+    sorted_cityPosResponse = sorted_cityPosResponse.sort((a, b) => {
+        let sys_locale = get_system_language();
+        if (a.country.toLowerCase() === sys_locale) {
+            return -1;
+        }
+        return 1;
+    });
 
     useEffect(() => {
         if (cityPosResponse && cityPosResponse.length !== 0) {
@@ -59,7 +63,7 @@ function CityPosSearch({}: TProps) {
             {cityPosResponse && cityPosResponse.length > 1 ? (
                 <div className="CityPosSearch__elements_wrapper">
                     <ul className="CityPosSearch__elements">
-                        {cityPosResponse.map((city) => {
+                        {sorted_cityPosResponse.map((city) => {
                             return (
                                 <li
                                     tabIndex={0}
