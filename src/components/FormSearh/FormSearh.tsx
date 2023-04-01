@@ -6,11 +6,13 @@ import "./FormSearh.scss";
 
 interface IFormSearhProps {
     submitCallback?: (searhVal: string) => void;
+    focusCallback?: () => void;
+    blurCallback?: () => void;
 }
 
 type TProps = Readonly<IFormSearhProps>;
 
-function FormSearh({ submitCallback = () => {} }: TProps) {
+function FormSearh({ submitCallback = () => {}, focusCallback = () => {}, blurCallback = () => {} }: TProps) {
     let [searhValue, setSearhValue] = useState<string>("");
 
     const form_onSubmit = (e: React.FormEvent) => {
@@ -32,9 +34,24 @@ function FormSearh({ submitCallback = () => {} }: TProps) {
         setSearhValue(target.value);
     };
 
+    const onFocus = (e: React.FocusEvent) => {
+        focusCallback();
+    };
+
+    const onBlur = (e: React.FocusEvent) => {
+        blurCallback();
+    };
+
     return (
         <form className="FormSearch" onSubmit={form_onSubmit}>
-            <input className="FormSearch__search" type="searh" value={searhValue} onChange={Searh_onChange} />
+            <input
+                className="FormSearch__search"
+                type="searh"
+                value={searhValue}
+                onChange={Searh_onChange}
+                onFocus={onFocus}
+                onBlur={onBlur}
+            />
             <input className="FormSearch__buttonSubmit" type="submit" value="Поиск" />
         </form>
     );

@@ -5,6 +5,15 @@ import { WEATHER_API_KEY, WEATHER_API_ADRESS_CURRENT } from "./global_vars";
 import { get_system_language } from "./util_functions";
 import type * as FetchLatLonTypes from "./fetch_LatLon";
 
+type TresponseObjWeatherObj = {
+    id: number;
+    main: string;
+    description: string;
+    icon: string;
+};
+
+type TresponseObjWeather = TresponseObjWeatherObj[];
+
 interface IFetchCurrentWeatherArgs {
     lat: number;
     lon: number;
@@ -17,14 +26,7 @@ type TresponseObj = {
         lon: number;
         lat: number;
     };
-    weather: [
-        {
-            id: number;
-            main: string;
-            description: string;
-            icon: string;
-        }
-    ];
+    weather: TresponseObjWeather;
     base: string;
     main: {
         temp: number;
@@ -93,4 +95,4 @@ async function fetch_current_weather({ lat, lon, callBack = () => {}, errorCallb
 }
 
 export { fetch_current_weather };
-export type { IFetchCurrentWeatherArgs, TResponse, TresponseObj };
+export type { IFetchCurrentWeatherArgs, TResponse, TresponseObj, TresponseObjWeather, TresponseObjWeatherObj };

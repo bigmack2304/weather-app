@@ -57,9 +57,13 @@ function CityPosSearch({}: TProps) {
         removeResponse();
     };
 
+    const onFormFocus = () => {};
+
+    const onFormBlur = () => {};
+
     return (
         <div className="CityPosSearch">
-            <FormSearh submitCallback={searchCity} />
+            <FormSearh submitCallback={searchCity} focusCallback={onFormFocus} blurCallback={onFormBlur} />
             {cityPosResponse && cityPosResponse.length > 1 ? (
                 <div className="CityPosSearch__elements_wrapper">
                     <ul className="CityPosSearch__elements">

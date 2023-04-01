@@ -1,6 +1,7 @@
 import React, { useState, useRef } from "react";
 import { fetch_current_weather } from "../utils/fetch_current_weather";
 import type * as TypesCurrentWeather from "../utils/fetch_current_weather";
+// import { useLoacalStorage } from "./useLocalStorage";
 
 type TuseCurrentWeatherArgs = {
     cityName?: string;
@@ -19,9 +20,16 @@ function useCurrentWeather({
 }: TuseCurrentWeatherArgs): [currentWeather: TypesCurrentWeather.TResponse] {
     let [weather, setWeather] = useState<TypesCurrentWeather.TResponse>();
     let memoPos = useRef({ prewLat: lat, prewLon: lon });
+    // let [localStorageData, setLocalStorageData] = useLoacalStorage(false);
 
     const responseCallback = (resp: TypesCurrentWeather.TResponse) => {
         setWeather(resp);
+
+        // при получении погоды о городе, заносим его в историю
+        // if (resp) {
+        //     let new_data = { name: resp.name, lat: resp.coord.lat, lon: resp.coord.lon };
+        //     setLocalStorageData({ ...localStorageData, history: [new_data, ...localStorageData.history] });
+        // }
     };
 
     const fetchErrorCallback = () => {

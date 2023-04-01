@@ -1,5 +1,7 @@
 import React, { useEffect } from "react";
 import { useHandleUpdate } from "./useHandleUpdate";
+import { set_storage_data, get_stprage_data } from "./../appLocalStorage/appLoacalStorage";
+import type { IAppLocalStorage } from "./../appLocalStorage/appLoacalStorage";
 
 // хук для чтения и записи данных в локал-сторадж, по томуже принцыпу что и useState
 // updateOnChange - разрешить-ли обновление компонента при изменении данных в локал-сторадже
@@ -7,15 +9,14 @@ import { useHandleUpdate } from "./useHandleUpdate";
 // В теории изменение стораджа в одном компоненте приведет и к обновлению других компонентов
 // которые используют этот хук с параметром true
 
-const STORAGE_KEY = "app_local_data";
-const STORAGE_DEF_VALUE = [];
-
-function useLoacalStorage(updateOnChange: boolean): [localStorageData: object, setLocalStorageData: (data: object) => void] {
-    const localData = JSON.parse(localStorage.getItem(STORAGE_KEY) ?? "{}") as object;
+function useLoacalStorage(
+    updateOnChange: boolean
+): [localStorageData: IAppLocalStorage, setLocalStorageData: (data: IAppLocalStorage) => void] {
+    const localData = get_stprage_data();
     const [handleupdate] = useHandleUpdate();
 
-    const setLocalData = (data: object) => {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    const setLocalData = (data: IAppLocalStorage) => {
+        set_storage_data(data);
         window.dispatchEvent(new CustomEvent("appLocalStorageUpdate"));
     };
 
