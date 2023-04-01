@@ -11,7 +11,12 @@ type TuseCurrentWeatherArgs = {
 
 const MAX_RADIUS = 0.05;
 
-function useCurrentWeather({ lat, lon, cityName, errorCallback = () => {} }: TuseCurrentWeatherArgs): [TypesCurrentWeather.TResponse] {
+function useCurrentWeather({
+    lat,
+    lon,
+    cityName,
+    errorCallback = () => {},
+}: TuseCurrentWeatherArgs): [currentWeather: TypesCurrentWeather.TResponse] {
     let [weather, setWeather] = useState<TypesCurrentWeather.TResponse>();
     let memoPos = useRef({ prewLat: lat, prewLon: lon });
 

@@ -7,7 +7,7 @@ import type * as fetchLatLonTypes from "../utils/fetch_LatLon";
 
 function useSearchCityPos(
     onFetchError: () => void = () => {}
-): [Readonly<fetchLatLonTypes.TFullResponse>, (cityName: string) => void, () => void] {
+): [fetchResult: Readonly<fetchLatLonTypes.TFullResponse>, fetchRequest: (cityName: string) => void, deleteFetchResult: () => void] {
     let [fetchResult, setFetchResult] = useState<fetchLatLonTypes.TFullResponse>();
 
     const fetchCallback = (response: fetchLatLonTypes.TFullResponse) => {
