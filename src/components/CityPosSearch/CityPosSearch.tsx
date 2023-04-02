@@ -84,7 +84,7 @@ function CityPosSearch({}: TProps) {
                             );
                         })}
                     </ul>
-                    <ButtonClose clickCallback={removeResponse} />
+                    <ButtonClose clickCallback={removeResponse} addClassName={["CityPosSearch__buttonClose"]} />
                 </div>
             ) : null}
 

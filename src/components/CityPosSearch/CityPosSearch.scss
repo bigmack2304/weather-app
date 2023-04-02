@@ -1,3 +1,5 @@
+$button_size: 25px;
+
 .CityPosSearch {
     position: relative;
     min-width: 269px;
@@ -30,8 +32,15 @@
             border-top: 1px black solid;
         }
 
-        &:hover {
-            background-color: rgb(187, 187, 187);
+        // если устроиство поддерживает hover (устройство с мышкой)
+        @media (hover: hover) {
+            &:hover {
+                background-color: rgb(187, 187, 187);
+            }
+        }
+
+        &:active {
+            background-color: rgb(170, 170, 170);
         }
     }
 
@@ -48,8 +57,12 @@
         left: 187px;
     }
 
+    &__buttonClose {
+        height: $button_size;
+        width: $button_size;
+    }
+
     .FormSearch__search {
         padding-right: 25px;
     }
-
 }

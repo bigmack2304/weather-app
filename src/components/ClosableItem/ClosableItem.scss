@@ -1,0 +1,23 @@
+$button_size: 15px;
+
+.ClosableItem {
+    display: flex;
+    background-color: white;
+    justify-content: space-between;
+    column-gap: 10px;
+    padding: 5px 10px;
+    align-items: center;
+
+    &__text {
+    }
+
+    &__button_wrapper {
+        line-height: 0;
+        padding: 3px;
+    }
+
+    &__buttonClose {
+        width: $button_size;
+        height: $button_size;
+    }
+}

@@ -4,13 +4,15 @@ import { IconClose } from "../../ui/IconClose";
 
 interface IButtonCloseProps {
     clickCallback?: (e: React.MouseEvent) => void;
+    addClassName?: string[];
 }
 
 type TProps = Readonly<IButtonCloseProps>;
 
-function ButtonClose({ clickCallback = () => {} }: TProps) {
+function ButtonClose({ clickCallback = () => {}, addClassName = [""] }: TProps) {
+    let componentClassName = [...addClassName, "ButtonClose"].join(" ");
     return (
-        <button className="ButtonClose" onClick={clickCallback}>
+        <button className={componentClassName} onClick={clickCallback}>
             <IconClose />
         </button>
     );

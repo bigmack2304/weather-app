@@ -76,7 +76,7 @@ function deep_array_is_equal(arr1: any[], arr2: any[]): boolean {
     return result;
 }
 
-// глубокое сравнение двух обьектов по значениям
+// глубокое сравнение двух обьектов по значениям, вернет true если одинаковы
 function deep_object_is_equal(obj1: Readonly<object_keys>, obj2: Readonly<object_keys>): boolean {
     let result: boolean = true;
     let len: number = 0;

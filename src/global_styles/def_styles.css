@@ -8,9 +8,13 @@
     box-sizing: inherit;
 }
 
-#root {
+body {
     box-sizing: border-box;
     font-family: "Gill Sans", sans-serif;
+    min-width: 280px;
+}
+
+#root {
 }
 
 .visually_hidden {
