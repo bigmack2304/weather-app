@@ -7,7 +7,7 @@ import { City5d3hWeather } from "../../components/City5d3hWeather/City5d3hWeathe
 import "./Home.scss";
 import { WeatherContext } from "../../Contexts/WeatherContext";
 import type { TWeatherContext } from "../../Contexts/WeatherContext";
-import { update_meta_title, add_unique_obj_to_array } from "../../utils/util_functions";
+import { update_meta_title, unshuft_unique_obj_to_array_force } from "../../utils/util_functions";
 import { useLoacalStorage } from "../../hooks/useLocalStorage";
 
 // Начальная страница
@@ -30,7 +30,7 @@ function HomePage() {
 
         if (cityName && cityName !== "") {
             let new_data = { name: weatherState.cityName!, lat: weatherState.lat!, lon: weatherState.lon! };
-            let new_history = add_unique_obj_to_array(localStorageData.history, new_data);
+            let new_history = unshuft_unique_obj_to_array_force(localStorageData.history, new_data);
             setLocalStorageData({ ...localStorageData, history: [...new_history] });
         }
     }, [weatherState.cityName]);

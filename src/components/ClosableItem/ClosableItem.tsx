@@ -20,23 +20,29 @@ interface IClosableItemProps {
     closeCallback?: (metaDataId: string) => void;
     children?: string | null | undefined;
     metaDataId?: string;
+    onClick?: (metaDataId: string) => void;
 }
 
 type TProps = Readonly<IClosableItemProps>;
 
-function ClosableItem({ addClassName = [""], closeCallback = () => {}, children, metaDataId = "" }: TProps) {
+function ClosableItem({ addClassName = [""], closeCallback = () => {}, children, metaDataId = "", onClick = () => {} }: TProps) {
     let componentClassName = [...addClassName, "ClosableItem"].join(" ");
     const [isVisibly, setIsVisibly] = useState<boolean>(true);
 
     const onClose = (e: React.MouseEvent) => {
+        e.stopPropagation(); // на всякий случай
         closeCallback(metaDataId);
         setIsVisibly(false);
+    };
+
+    const onComponentClick = (e: React.MouseEvent) => {
+        onClick(metaDataId);
     };
 
     return (
         <>
             {isVisibly ? (
-                <div className={componentClassName}>
+                <div className={componentClassName} onClick={onComponentClick}>
                     <div className="ClosableItem__text">{children}</div>
                     <div className="ClosableItem__button_wrapper">
                         <ButtonClose clickCallback={onClose} addClassName={["ClosableItem__buttonClose"]} />

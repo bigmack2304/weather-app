@@ -38,9 +38,9 @@ function update_meta_title(cityName: string | undefined) {
     docHead.querySelector("title")!.textContent = `Погода ${text}`;
 }
 
-// добавляет обьект (в начало) в массив обьектов, только если в этом массиве нету таковоже обьекта (по значениям),
+// добавляет обьект (в начало) в массива обьектов, только если в этом массиве нету таковоже обьекта (по значениям),
 // возвращает новый массив.
-function add_unique_obj_to_array<T extends object>(arr: Readonly<T[]>, obj: Readonly<T>): T[] {
+function unshuft_unique_obj_to_array<T extends object>(arr: Readonly<T[]>, obj: Readonly<T>): T[] {
     let is_new_object_unique = true;
 
     for (let elem of arr) {
@@ -56,4 +56,28 @@ function add_unique_obj_to_array<T extends object>(arr: Readonly<T[]>, obj: Read
     return arr as T[];
 }
 
-export { get_full_country_by_code, get_system_language, get_localed_city_name, update_meta_title, add_unique_obj_to_array };
+// добавляет обьект (в начало) в массива обьектов, еслли в массиве уже был такойже обьект (по значениям),
+// то он удаляется, возвращает новый массив.
+function unshuft_unique_obj_to_array_force<T extends object>(arr: Readonly<T[]>, obj: Readonly<T>): T[] {
+    let temp_arr: T[] = [...arr];
+
+    temp_arr = temp_arr.filter((value) => {
+        if (deep_object_is_equal(value, obj)) {
+            return false;
+        }
+        return true;
+    });
+
+    temp_arr.unshift(obj);
+
+    return temp_arr;
+}
+
+export {
+    get_full_country_by_code,
+    get_system_language,
+    get_localed_city_name,
+    update_meta_title,
+    unshuft_unique_obj_to_array,
+    unshuft_unique_obj_to_array_force,
+};
