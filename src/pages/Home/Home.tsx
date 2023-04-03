@@ -17,9 +17,9 @@ function HomePage() {
     let [weatherState, setWeatherState] = useState<TWeatherContext>({
         ...useContext(WeatherContext),
 
-        lat: localStorageData.history[0].lat ?? undefined,
-        lon: localStorageData.history[0].lon ?? undefined,
-        cityName: localStorageData.history[0].name ?? undefined,
+        lat: localStorageData.history[0]?.lat ?? undefined,
+        lon: localStorageData.history[0]?.lon ?? undefined,
+        cityName: localStorageData.history[0]?.name ?? undefined,
 
         selectCityCallback: (lat: number, lon: number, cityName: string) => {
             console.log(`response of fetch geo:\n lat: ${lat}, lon: ${lon}, name: ${cityName}`);

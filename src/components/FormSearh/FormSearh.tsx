@@ -26,6 +26,9 @@ function FormSearh({
         let searhValue = target.querySelector<HTMLInputElement>("input[type='searh']")!.value;
 
         e.preventDefault();
+        (target.children[0] as HTMLInputElement).blur(); // принудительно снимаем фокус (если мы нажали enter он не снимится),
+        // изза этого CityPosSearch баговал и после субмита не отображал подскаски,
+        // пока не обновиш фокус на инпуте
 
         if (searhValue == "") {
             return;
