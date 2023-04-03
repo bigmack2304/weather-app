@@ -8,11 +8,17 @@ interface IFormSearhProps {
     submitCallback?: (searhVal: string) => void;
     focusCallback?: () => void;
     blurCallback?: () => void;
+    inputChangeCallback?: (str: string) => void;
 }
 
 type TProps = Readonly<IFormSearhProps>;
 
-function FormSearh({ submitCallback = () => {}, focusCallback = () => {}, blurCallback = () => {} }: TProps) {
+function FormSearh({
+    submitCallback = () => {},
+    focusCallback = () => {},
+    blurCallback = () => {},
+    inputChangeCallback = () => {},
+}: TProps) {
     let [searhValue, setSearhValue] = useState<string>("");
 
     const form_onSubmit = (e: React.FormEvent) => {
@@ -32,6 +38,7 @@ function FormSearh({ submitCallback = () => {}, focusCallback = () => {}, blurCa
     const Searh_onChange = (e: React.FormEvent) => {
         let target = e.target as HTMLInputElement;
         setSearhValue(target.value);
+        inputChangeCallback(target.value);
     };
 
     const onFocus = (e: React.FocusEvent) => {

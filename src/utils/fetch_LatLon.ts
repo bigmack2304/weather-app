@@ -94,6 +94,7 @@ async function fetch_lat_lon({ cityName = "", limit = 1, callBack = () => {}, er
 
     if (Array.isArray(response) && response.length === 0) {
         console.warn(`По запросу ${full_url} ничего не найдено.`);
+        response = undefined;
         errorCallback();
     }
 

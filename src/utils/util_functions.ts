@@ -73,6 +73,21 @@ function unshuft_unique_obj_to_array_force<T extends object>(arr: Readonly<T[]>,
     return temp_arr;
 }
 
+// находит такойже обьект (по значениям) в массиве обьектов, и удаляет его из массива
+// возвращает новый массив
+function delete_obj_from_array<T extends object>(arr: Readonly<T[]>, obj: Readonly<T>): T[] {
+    let temp_arr: T[] = [...arr];
+
+    temp_arr = temp_arr.filter((value) => {
+        if (deep_object_is_equal(value, obj)) {
+            return false;
+        }
+        return true;
+    });
+
+    return temp_arr;
+}
+
 export {
     get_full_country_by_code,
     get_system_language,
@@ -80,4 +95,5 @@ export {
     update_meta_title,
     unshuft_unique_obj_to_array,
     unshuft_unique_obj_to_array_force,
+    delete_obj_from_array,
 };

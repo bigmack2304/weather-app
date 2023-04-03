@@ -5,28 +5,27 @@ $button_size: 25px;
     min-width: 269px;
     width: 269px;
 
-    &__elements_wrapper {
+    &__hints_wrapper {
         position: absolute;
+        width: 77.2%;
         display: flex;
         flex-direction: column;
         align-items: center;
         row-gap: 5px;
-        width: 77.2%;
     }
 
-    &__elements {
-        margin: 0 0 0 1px;
-        list-style-type: none;
-        padding: 5px 0 5px 0;
+    &__hints_elements {
+        overflow-wrap: break-word;
         background-color: white;
         border-bottom-left-radius: 5px;
         border-bottom-right-radius: 5px;
+        overflow: hidden;
+        width: 100%;
     }
 
-    &__element {
-        cursor: pointer;
-        padding: 2px 5px 2px 5px;
-        overflow-wrap: break-word;
+    &__hint_element {
+        cursor: default;
+        padding: 3px 4px 3px 4px;
 
         &:nth-child(n + 2) {
             border-top: 1px black solid;
@@ -57,9 +56,19 @@ $button_size: 25px;
         left: 187px;
     }
 
-    &__buttonClose {
+    &__geo_hints_buttonClose {
         height: $button_size;
         width: $button_size;
+    }
+
+    &__history_outer {
+        background-color: rgba(0, 0, 0, 0.404);
+        position: fixed;
+        height: 200vh;
+        width: 100%;
+        top: 0px;
+        left: 0px;
+        min-width: 280px;
     }
 
     .FormSearch__search {
