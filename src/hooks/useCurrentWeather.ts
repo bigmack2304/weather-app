@@ -3,6 +3,11 @@ import { fetch_current_weather } from "../utils/fetch_current_weather";
 import type * as TypesCurrentWeather from "../utils/fetch_current_weather";
 // import { useLoacalStorage } from "./useLocalStorage";
 
+type TrefMemoPos = {
+    prewLat: TuseCurrentWeatherArgs["lat"];
+    prewLon: TuseCurrentWeatherArgs["lon"];
+};
+
 type TuseCurrentWeatherArgs = {
     cityName?: string;
     lat?: number;
@@ -19,7 +24,7 @@ function useCurrentWeather({
     errorCallback = () => {},
 }: TuseCurrentWeatherArgs): [currentWeather: TypesCurrentWeather.TResponse] {
     let [weather, setWeather] = useState<TypesCurrentWeather.TResponse>();
-    let memoPos = useRef({ prewLat: lat, prewLon: lon });
+    let memoPos = useRef<TrefMemoPos>({ prewLat: -999.999, prewLon: -999.999 }); // первоначально инициаизируем несуществующими координатами
     // let [localStorageData, setLocalStorageData] = useLoacalStorage(false);
 
     const responseCallback = (resp: TypesCurrentWeather.TResponse) => {
@@ -45,7 +50,7 @@ function useCurrentWeather({
         }
     };
 
-    // debugger;
+    //debugger;
 
     const deforeFetch = () => {
         if (lat && lon) {

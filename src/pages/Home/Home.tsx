@@ -13,15 +13,19 @@ import { useLoacalStorage } from "../../hooks/useLocalStorage";
 // Начальная страница
 
 function HomePage() {
+    let [localStorageData, setLocalStorageData] = useLoacalStorage(false);
     let [weatherState, setWeatherState] = useState<TWeatherContext>({
         ...useContext(WeatherContext),
+
+        lat: localStorageData.history[0].lat ?? undefined,
+        lon: localStorageData.history[0].lon ?? undefined,
+        cityName: localStorageData.history[0].name ?? undefined,
+
         selectCityCallback: (lat: number, lon: number, cityName: string) => {
             console.log(`response of fetch geo:\n lat: ${lat}, lon: ${lon}, name: ${cityName}`);
             setWeatherState({ ...weatherState, lat, lon, cityName });
         },
     });
-
-    let [localStorageData, setLocalStorageData] = useLoacalStorage(false);
 
     useEffect(() => {
         const cityName = weatherState.cityName;

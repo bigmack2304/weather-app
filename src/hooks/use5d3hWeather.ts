@@ -3,6 +3,11 @@ import { fetch_5d3h_weather } from "../utils/fetch_5d3h_weather";
 import type * as Types5d3hWeather from "../utils/fetch_5d3h_weather";
 // import { useLoacalStorage } from "./useLocalStorage";
 
+type TrefMemoPos = {
+    prewLat: Tuse5d3hWeatherArgs["lat"];
+    prewLon: Tuse5d3hWeatherArgs["lon"];
+};
+
 type Tuse5d3hWeatherArgs = {
     cityName?: string;
     lat?: number;
@@ -14,7 +19,7 @@ const MAX_RADIUS = 0.05;
 
 function use5d3hWeather({ lat, lon, cityName, errorCallback = () => {} }: Tuse5d3hWeatherArgs): [respWeather: Types5d3hWeather.TResponse] {
     let [weather, setWeather] = useState<Types5d3hWeather.TResponse>();
-    let memoPos = useRef({ prewLat: lat, prewLon: lon });
+    let memoPos = useRef<TrefMemoPos>({ prewLat: -999.999, prewLon: -999.999 }); // первоначально инициаизируем несуществующими координатами
     // let [localStorageData, setLocalStorageData] = useLoacalStorage(false);
 
     const responseCallback = (resp: Types5d3hWeather.TResponse) => {
