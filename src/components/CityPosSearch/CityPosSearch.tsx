@@ -113,27 +113,30 @@ function CityPosSearch({}: TProps) {
             <FormSearh submitCallback={searchCity} focusCallback={onFormFocus} inputChangeCallback={onFormChange} />
 
             {cityPosResponse && cityPosResponse.length > 1 ? (
-                <div className="CityPosSearch__hints_wrapper">
-                    <div className="CityPosSearch__hints_elements">
-                        {sorted_cityPosResponse.map((city) => {
-                            return (
-                                <div
-                                    tabIndex={0}
-                                    className="CityPosSearch__hint_element"
-                                    key={`${city.lat}-${city.lon}`}
-                                    onClick={selectCallback.bind(null, city)}
-                                >
-                                    <span className="CityPosSearch__cityName">{get_localed_city_name(city)}</span>
-                                    <span>
-                                        {get_full_country_by_code(city.country) ? `: ${get_full_country_by_code(city.country)}` : null}
-                                    </span>
-                                    <span>{city.state ? `, ${city.state}` : null}</span>
-                                </div>
-                            );
-                        })}
+                <>
+                    <div className="CityPosSearch__history_outer" onClick={removeResponse}></div>
+                    <div className="CityPosSearch__hints_wrapper">
+                        <div className="CityPosSearch__hints_elements">
+                            {sorted_cityPosResponse.map((city) => {
+                                return (
+                                    <div
+                                        tabIndex={0}
+                                        className="CityPosSearch__hint_element"
+                                        key={`${city.lat}-${city.lon}`}
+                                        onClick={selectCallback.bind(null, city)}
+                                    >
+                                        <span className="CityPosSearch__cityName">{get_localed_city_name(city)}</span>
+                                        <span>
+                                            {get_full_country_by_code(city.country) ? `: ${get_full_country_by_code(city.country)}` : null}
+                                        </span>
+                                        <span>{city.state ? `, ${city.state}` : null}</span>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                        {/* <ButtonClose clickCallback={removeResponse} addClassName={["CityPosSearch__geo_hints_buttonClose"]} /> */}
                     </div>
-                    <ButtonClose clickCallback={removeResponse} addClassName={["CityPosSearch__geo_hints_buttonClose"]} />
-                </div>
+                </>
             ) : null}
 
             {isHistoryVisible && filtred_storage_history.length !== 0 && !cityPosResponse ? (
