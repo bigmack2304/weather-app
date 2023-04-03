@@ -30,15 +30,22 @@ type TresponseObj = {
     base: string;
     main: {
         temp: number;
-        pressure: number;
-        humidity: number;
+        feels_like: number;
         temp_min: number;
         temp_max: number;
+        pressure: number;
+        humidity: number;
+        sea_level: number;
+        grnd_level: number;
     };
     visibility: number;
     wind: {
         speed: number;
         deg: number;
+        gust: number;
+    };
+    rain: {
+        ["1h"]: number;
     };
     clouds: {
         all: number;
@@ -47,11 +54,11 @@ type TresponseObj = {
     sys: {
         type: number;
         id: number;
-        message: number;
         country: FetchLatLonTypes.TResponseObj["country"];
         sunrise: number;
         sunset: number;
     };
+    timezone: number;
     id: number;
     name: string;
     cod: number;
