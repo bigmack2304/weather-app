@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useState, useLayoutEffect } from "react";
 import "./CityCurrentWeather.scss";
-import "./../../fonts/BebasNeue/bebasneue.css";
 import { useCurrentWeather } from "../../hooks/useCurrentWeather";
 import { WeatherContext } from "../../Contexts/WeatherContext";
 import { IconDirection } from "../../ui/IconDirection";
