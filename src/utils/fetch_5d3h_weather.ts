@@ -36,7 +36,7 @@ type TresponseObjListObj = {
     clouds: {
         all: number;
     };
-    wind: {
+    wind?: {
         speed: number;
         deg: number;
         gust: number;
@@ -44,10 +44,10 @@ type TresponseObjListObj = {
     visibility: number;
     pop: number;
     rain?: {
-        ["3h"]?: number;
+        ["3h"]: number;
     };
     snow?: {
-        ["3h"]?: number;
+        ["3h"]: number;
     };
     sys: {
         pod: string;

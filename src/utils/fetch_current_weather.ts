@@ -39,7 +39,7 @@ type TresponseObj = {
         grnd_level: number;
     };
     visibility: number;
-    wind: {
+    wind?: {
         speed: number;
         deg: number;
         gust: number;

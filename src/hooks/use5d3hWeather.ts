@@ -1,7 +1,6 @@
 import React, { useState, useRef } from "react";
 import { fetch_5d3h_weather } from "../utils/fetch_5d3h_weather";
 import type * as Types5d3hWeather from "../utils/fetch_5d3h_weather";
-// import { useLoacalStorage } from "./useLocalStorage";
 
 type TrefMemoPos = {
     prewLat: Tuse5d3hWeatherArgs["lat"];
@@ -13,23 +12,26 @@ type Tuse5d3hWeatherArgs = {
     lat?: number;
     lon?: number;
     errorCallback?: () => void;
+    fetchStartCallback?: () => void;
+    fetchEndCallback?: () => void;
 };
 
 const MAX_RADIUS = 0.05;
 
-function use5d3hWeather({ lat, lon, cityName, errorCallback = () => {} }: Tuse5d3hWeatherArgs): [respWeather: Types5d3hWeather.TResponse] {
+function use5d3hWeather({
+    lat,
+    lon,
+    cityName,
+    errorCallback = () => {},
+    fetchEndCallback = () => {},
+    fetchStartCallback = () => {},
+}: Tuse5d3hWeatherArgs): [respWeather: Types5d3hWeather.TResponse, startFetch: () => void] {
     let [weather, setWeather] = useState<Types5d3hWeather.TResponse>();
     let memoPos = useRef<TrefMemoPos>({ prewLat: -999.999, prewLon: -999.999 }); // первоначально инициаизируем несуществующими координатами
-    // let [localStorageData, setLocalStorageData] = useLoacalStorage(false);
 
     const responseCallback = (resp: Types5d3hWeather.TResponse) => {
         setWeather(resp);
-
-        // при получении погоды о городе, заносим его в историю
-        // if (resp) {
-        //     let new_data = { name: resp.name, lat: resp.coord.lat, lon: resp.coord.lon, id:resp.id };
-        //     setLocalStorageData({ ...localStorageData, history: [new_data, ...localStorageData.history] });
-        // }
+        fetchEndCallback();
     };
 
     const fetchErrorCallback = () => {
@@ -52,6 +54,7 @@ function use5d3hWeather({ lat, lon, cityName, errorCallback = () => {} }: Tuse5d
             update_memoPos();
 
             if (!weather) {
+                fetchStartCallback();
                 fetch_5d3h_weather({ lat, lon, callBack: responseCallback, errorCallback: fetchErrorCallback });
             } else {
                 // если новые координаты +- теже что и координаты текущего города то ничего не делаем
@@ -60,6 +63,7 @@ function use5d3hWeather({ lat, lon, cityName, errorCallback = () => {} }: Tuse5d
                 if (Math.abs(weather.city.coord.lat - lat) > MAX_RADIUS || Math.abs(weather.city.coord.lon - lon) > MAX_RADIUS) {
                     // дополнительно проверяем что искомый город отличается от текущего
                     if (weather.city.name !== cityName) {
+                        fetchStartCallback();
                         fetch_5d3h_weather({ lat, lon, callBack: responseCallback, errorCallback: fetchErrorCallback });
                     }
                 }
@@ -67,9 +71,11 @@ function use5d3hWeather({ lat, lon, cityName, errorCallback = () => {} }: Tuse5d
         }
     };
 
-    deforeFetch();
+    const startFetch = () => {
+        deforeFetch();
+    };
 
-    return [weather];
+    return [weather, startFetch];
 }
 
 export { use5d3hWeather };
