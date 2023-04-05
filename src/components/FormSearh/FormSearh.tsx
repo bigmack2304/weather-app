@@ -9,6 +9,7 @@ interface IFormSearhProps {
     focusCallback?: () => void;
     blurCallback?: () => void;
     inputChangeCallback?: (str: string) => void;
+    placeholder?: string;
 }
 
 type TProps = Readonly<IFormSearhProps>;
@@ -18,6 +19,7 @@ function FormSearh({
     focusCallback = () => {},
     blurCallback = () => {},
     inputChangeCallback = () => {},
+    placeholder = "",
 }: TProps) {
     let [searhValue, setSearhValue] = useState<string>("");
 
@@ -61,6 +63,7 @@ function FormSearh({
                 onChange={Searh_onChange}
                 onFocus={onFocus}
                 onBlur={onBlur}
+                placeholder={placeholder}
             />
             <input className="FormSearch__buttonSubmit" type="submit" value="Поиск" />
         </form>

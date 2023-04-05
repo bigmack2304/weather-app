@@ -110,7 +110,12 @@ function CityPosSearch({}: TProps) {
 
     return (
         <div className="CityPosSearch">
-            <FormSearh submitCallback={searchCity} focusCallback={onFormFocus} inputChangeCallback={onFormChange} />
+            <FormSearh
+                submitCallback={searchCity}
+                focusCallback={onFormFocus}
+                inputChangeCallback={onFormChange}
+                placeholder="Поиск города"
+            />
 
             {cityPosResponse && cityPosResponse.length > 1 ? (
                 <>

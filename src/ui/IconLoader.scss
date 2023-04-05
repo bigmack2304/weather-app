@@ -3,6 +3,10 @@ $time: 2;
 $weight: 15%;
 $color: #191946;
 
+.IconLoader {
+    display: inline-block;
+}
+
 .IconLoader__holder {
     position: absolute;
     left: 0px;
@@ -36,8 +40,7 @@ $color: #191946;
     height: 100%;
     opacity: 0;
 }
-.IconLoader__preloader div:before {
-    content: "";
+.IconLoader__item {
     position: absolute;
     left: 50%;
     top: 0%;

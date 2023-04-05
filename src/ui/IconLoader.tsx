@@ -13,16 +13,36 @@ function IconLoader({ addClassName = [""] }: TProps) {
         <div className={componentClassName}>
             <div className="IconLoader__holder">
                 <div className="IconLoader__preloader">
-                    <div></div>
-                    <div></div>
-                    <div></div>
-                    <div></div>
-                    <div></div>
-                    <div></div>
-                    <div></div>
-                    <div></div>
-                    <div></div>
-                    <div></div>
+                    <div>
+                        <span className="IconLoader__item"></span>
+                    </div>
+                    <div>
+                        <span className="IconLoader__item"></span>
+                    </div>
+                    <div>
+                        <span className="IconLoader__item"></span>
+                    </div>
+                    <div>
+                        <span className="IconLoader__item"></span>
+                    </div>
+                    <div>
+                        <span className="IconLoader__item"></span>
+                    </div>
+                    <div>
+                        <span className="IconLoader__item"></span>
+                    </div>
+                    <div>
+                        <span className="IconLoader__item"></span>
+                    </div>
+                    <div>
+                        <span className="IconLoader__item"></span>
+                    </div>
+                    <div>
+                        <span className="IconLoader__item"></span>
+                    </div>
+                    <div>
+                        <span className="IconLoader__item"></span>
+                    </div>
                 </div>
             </div>
         </div>

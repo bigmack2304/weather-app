@@ -41,7 +41,7 @@ function HomePage() {
 
     return (
         <WeatherContext.Provider value={weatherState}>
-            <main className="Home">
+            <main className="Home Home--Fon_day_clear">
                 <section className="Home__weather_now">
                     <h3 className="visually_hidden">Погода на сегодня</h3>
                     <Header />
@@ -49,7 +49,7 @@ function HomePage() {
                 </section>
                 <section className="Home__weather_week">
                     <h3 className="visually_hidden">Погода на 5 дней</h3>
-                    <City5d3hWeather />
+                    {/* <City5d3hWeather /> */}
                 </section>
                 <Footer />
             </main>

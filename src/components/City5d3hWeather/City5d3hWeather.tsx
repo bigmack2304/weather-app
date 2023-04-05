@@ -11,13 +11,17 @@ function City5d3hWeather({}: TProps = {}) {
     const onErrorWeather = () => {};
     const { lat, lon, cityName } = useContext(WeatherContext);
 
-    let [Weather] = use5d3hWeather({ cityName, lat, lon, errorCallback: onErrorWeather });
+    let [Weather, getWeather] = use5d3hWeather({ cityName, lat, lon, errorCallback: onErrorWeather });
 
     useEffect(() => {
         if (Weather) {
             console.log(Weather);
         }
     }, [Weather]);
+
+    useEffect(() => {
+        getWeather();
+    });
 
     return <div className="City5d3hWeather"></div>;
 }

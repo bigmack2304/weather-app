@@ -1,3 +1,5 @@
+@import "./../../global_styles/global_vars.scss";
+
 .CityPosSearch {
     position: relative;
     min-width: 269px;
@@ -55,7 +57,8 @@
     }
 
     &__history_outer {
-        background-color: rgba(0, 0, 0, 0.404);
+        background-color: $BACKDROP_COLLOR;
+        backdrop-filter: $BACKDROP_BLUR;
         position: fixed;
         height: 200vh;
         width: 100%;

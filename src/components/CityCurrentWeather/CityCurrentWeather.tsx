@@ -1,54 +1,50 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState, useLayoutEffect } from "react";
 import "./CityCurrentWeather.scss";
+import "./../../fonts/BebasNeue/bebasneue.css";
 import { useCurrentWeather } from "../../hooks/useCurrentWeather";
 import { WeatherContext } from "../../Contexts/WeatherContext";
+import { IconDirection } from "../../ui/IconDirection";
+import { deg_invesion, deg_to_compass, get_text_date } from "../../utils/util_functions";
+import { IconLoader } from "../../ui/IconLoader";
+import "./../../fonts/acline/acline.css";
 
 interface ICityCurrentWeatherProps {}
 
 type TProps = Readonly<ICityCurrentWeatherProps>;
 
-function deg_to_compass(val: number) {
-    // 0 45 90 135 180 225 270 315
-    const STEP = 22.5;
-
-    if (val > 0 - STEP && val < 0 + STEP) {
-        return "северное";
-    }
-
-    if (val > 45 - STEP && val < 45 + STEP) {
-        return "северно-восточное";
-    }
-
-    if (val > 90 - STEP && val < 90 + STEP) {
-        return "восточное";
-    }
-
-    if (val > 135 - STEP && val < 135 + STEP) {
-        return "южно-восточное";
-    }
-
-    if (val > 180 - STEP && val < 180 + STEP) {
-        return "южное";
-    }
-
-    if (val > 225 - STEP && val < 225 + STEP) {
-        return "южно-западное";
-    }
-
-    if (val > 270 - STEP && val < 270 + STEP) {
-        return "западное";
-    }
-
-    if (val > 315 - STEP && val < 315 + STEP) {
-        return "северно-западное";
-    }
-}
+// сила ветра
+// 0 – штиль (безветрие);
+// 1 – 3 – слабый (скорость 2 – 5 м/с);
+// 4 – 5 – умеренный (5 – 10 м/с);
+// 6 – 8 – сильный (10 – 18 м/с);
+// 9 – 11 – шторм (18 – 30 м/с);
+// 12 – ураган (более 30 м/с);
 
 function CityCurrentWeather({}: TProps = {}) {
-    const onErrorCurrentWeather = () => {};
     const { lat, lon, cityName } = useContext(WeatherContext);
+    const [isLoadingVisible, setIsLoadingVisible] = useState<boolean>(false);
+    let obj_date = get_text_date(new Date());
 
-    let [currentWeather] = useCurrentWeather({ cityName, lat, lon, errorCallback: onErrorCurrentWeather });
+    const onErrorCurrentWeather = () => {
+        setIsLoadingVisible(false);
+    };
+
+    const onStartCurrentWeather = () => {
+        setIsLoadingVisible(true);
+    };
+
+    const onEndCurrentWeather = () => {
+        setIsLoadingVisible(false);
+    };
+
+    let [currentWeather, getWeather] = useCurrentWeather({
+        cityName,
+        lat,
+        lon,
+        errorCallback: onErrorCurrentWeather,
+        fetchStartCallback: onStartCurrentWeather,
+        fetchEndCallback: onEndCurrentWeather,
+    });
 
     useEffect(() => {
         if (currentWeather) {
@@ -56,10 +52,60 @@ function CityCurrentWeather({}: TProps = {}) {
         }
     }, [currentWeather]);
 
+    useEffect(() => {
+        getWeather();
+    });
+
+    // return (
+    //     <div className="CityCurrentWeather">
+    //         {currentWeather ? (
+    //             <>
+    //                 <h2 className="CityCurrentWeather__head">{`${currentWeather.name}: ${currentWeather.weather[0].description}`}</h2>
+    //                 <section className="CityCurrentWeather__wrapper">
+    //                     <h4 className="visually_hidden">Детали</h4>
+    //                     <span>Температура: {`${Math.round(currentWeather.main.temp)}`}°</span>
+    //                     <span>Ощущается как: {`${Math.round(currentWeather.main.feels_like)}`}°</span>
+    //                     <span>Влажность: {`${Math.round(currentWeather.main.humidity)}`}%</span>
+    //                     <span>Видимость: {`${currentWeather.visibility / 1000}`} Km</span>
+    //                     {currentWeather.wind ? (
+    //                         <>
+    //                             <span>Скорость ветра: {`${currentWeather.wind.speed}`} m/сек</span>
+    //                             <span>Порывы ветра: до {`${currentWeather.wind.gust}`} m/сек</span>
+
+    //                             <span style={{ verticalAlign: "middle" }}>
+    //                                 Направление ветра: {deg_to_compass(currentWeather.wind.deg)}{" "}
+    //                                 <IconDirection
+    //                                     direction={deg_invesion(currentWeather.wind.deg)}
+    //                                     addClassName={["CityCurrentWeather__wind_direction"]}
+    //                                     title={deg_to_compass(currentWeather.wind.deg)}
+    //                                 />
+    //                             </span>
+    //                         </>
+    //                     ) : null}
+    //                     {currentWeather.snow ? (
+    //                         <>
+    //                             <span>Снег: {`${currentWeather.snow["1h"]}mm`} за час.</span>
+    //                         </>
+    //                     ) : null}
+    //                     {currentWeather.rain ? (
+    //                         <>
+    //                             <span>Дождь: {`${currentWeather.rain["1h"]}mm`} за час.</span>
+    //                         </>
+    //                     ) : null}
+    //                 </section>
+    //             </>
+    //         ) : null}
+    //     </div>
+    // );
+
     return (
         <div className="CityCurrentWeather">
             {currentWeather ? (
                 <>
+                    <div className="CityCurrentWeather__head">
+                        <h2 className="CityCurrentWeather__name">{currentWeather.name}</h2>
+                        <p className="CityCurrentWeather__data_details">{`${obj_date.dayNum_monthName} ${obj_date.year_num} ${obj_date.hours}:${obj_date.minutes}`}</p>
+                    </div>
                     <h2 className="CityCurrentWeather__head">{`${currentWeather.name}: ${currentWeather.weather[0].description}`}</h2>
                     <section className="CityCurrentWeather__wrapper">
                         <h4 className="visually_hidden">Детали</h4>
@@ -67,12 +113,50 @@ function CityCurrentWeather({}: TProps = {}) {
                         <span>Ощущается как: {`${Math.round(currentWeather.main.feels_like)}`}°</span>
                         <span>Влажность: {`${Math.round(currentWeather.main.humidity)}`}%</span>
                         <span>Видимость: {`${currentWeather.visibility / 1000}`} Km</span>
-                        <span>Скорость ветра: {`${currentWeather.wind.speed}`} m/сек</span>
-                        <span>Порывы ветра: до {`${currentWeather.wind.gust}`} m/сек</span>
-                        <span>Направление ветра: {deg_to_compass(currentWeather.wind.deg)}</span>
+                        {currentWeather.wind ? (
+                            <>
+                                <span>Скорость ветра: {`${currentWeather.wind.speed}`} m/сек</span>
+                                <span>Порывы ветра: до {`${currentWeather.wind.gust}`} m/сек</span>
+
+                                <span style={{ verticalAlign: "middle" }}>
+                                    Направление ветра: {deg_to_compass(currentWeather.wind.deg)}{" "}
+                                    <IconDirection
+                                        direction={deg_invesion(currentWeather.wind.deg)}
+                                        addClassName={["CityCurrentWeather__wind_direction"]}
+                                        title={deg_to_compass(currentWeather.wind.deg)}
+                                    />
+                                </span>
+                            </>
+                        ) : null}
+                        {currentWeather.snow ? (
+                            <>
+                                <span>Снег: {`${currentWeather.snow["1h"]}mm`} за час.</span>
+                            </>
+                        ) : null}
+                        {currentWeather.rain ? (
+                            <>
+                                <span>Дождь: {`${currentWeather.rain["1h"]}mm`} за час.</span>
+                            </>
+                        ) : null}
                     </section>
                 </>
-            ) : null}
+            ) : !isLoadingVisible ? (
+                <>
+                    <div className="CityCurrentWeather__default">
+                        <p className="CityCurrentWeather__default_text">Начните поиск.</p>
+                    </div>
+                </>
+            ) : (
+                <></>
+            )}
+
+            {isLoadingVisible ? (
+                <div className="CityCurrentWeather__loader_wrapper">
+                    <IconLoader addClassName={["CityCurrentWeather__loader"]} />
+                </div>
+            ) : (
+                <></>
+            )}
         </div>
     );
 }
