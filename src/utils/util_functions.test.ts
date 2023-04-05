@@ -50,3 +50,14 @@ test("test function to_positive_value", () => {
     const case4 = util_functions.to_positive_value(5);
     expect(case4).toBe(5);
 });
+
+test("test function deg_to_compass", () => {
+    const case1 = util_functions.deg_to_compass(0);
+    expect(case1).toBe("северное");
+
+    const case2 = util_functions.deg_to_compass(45);
+    expect(case2).toBe("северно-восточное");
+
+    const case3 = util_functions.deg_to_compass(191);
+    expect(case3).toBe("южное");
+});
