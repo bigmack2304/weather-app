@@ -27,3 +27,4 @@ yarn-error.log*
 src/**/*.css
 !src/global_styles/normalize.css
 !src/global_styles/def_styles.css
+!src/fonts/**/*.css
