@@ -44,8 +44,13 @@ type TresponseObj = {
         deg: number;
         gust: number;
     };
-    rain: {
-        ["1h"]: number;
+    rain?: {
+        ["1h"]?: number;
+        ["3h"]?: number;
+    };
+    snow?: {
+        ["1h"]?: number;
+        ["3h"]?: number;
     };
     clouds: {
         all: number;
