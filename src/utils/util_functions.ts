@@ -88,6 +88,24 @@ function delete_obj_from_array<T extends object>(arr: Readonly<T[]>, obj: Readon
     return temp_arr;
 }
 
+// преобразует любое число в значение от 0 до 359,
+// 0->0, 359->359, 361->1,360->0, 400->40 ... (Закольцоввывает любое число на 360)
+function number_to_deg360(value: number) {
+    let positive_value = to_positive_value(value);
+    return positive_value % 360;
+}
+
+// инвертирует направление (deg-360) например deg_invesion(181) -> 1
+function deg_invesion(deg: number) {
+    let positive_deg = to_positive_value(deg);
+    return number_to_deg360(positive_deg + 180);
+}
+
+// если число отрицательное то преобразуем его в положительное
+function to_positive_value(value: number) {
+    return value >= 0 ? value : Math.abs(0 - value);
+}
+
 export {
     get_full_country_by_code,
     get_system_language,
@@ -96,4 +114,7 @@ export {
     unshuft_unique_obj_to_array,
     unshuft_unique_obj_to_array_force,
     delete_obj_from_array,
+    number_to_deg360,
+    deg_invesion,
+    to_positive_value,
 };
