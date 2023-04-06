@@ -3,7 +3,7 @@ import "./CityCurrentWeather.scss";
 import { useCurrentWeather } from "../../hooks/useCurrentWeather";
 import { WeatherContext } from "../../Contexts/WeatherContext";
 import { IconDirection } from "../../ui/IconDirection";
-import { deg_invesion, deg_to_compass, get_text_date } from "../../utils/util_functions";
+import { deg_invesion, deg_to_compass, get_text_date, calc_backgraund_type, calc_sun_hours_details } from "../../utils/util_functions";
 import { IconLoader } from "../../ui/IconLoader";
 import "./../../fonts/acline/acline.css";
 
@@ -20,7 +20,7 @@ type TProps = Readonly<ICityCurrentWeatherProps>;
 // 12 – ураган (более 30 м/с);
 
 function CityCurrentWeather({}: TProps = {}) {
-    const { lat, lon, cityName } = useContext(WeatherContext);
+    const { lat, lon, cityName, pageRef } = useContext(WeatherContext);
     const [isLoadingVisible, setIsLoadingVisible] = useState<boolean>(false);
     let obj_date = get_text_date(new Date());
 
@@ -48,6 +48,12 @@ function CityCurrentWeather({}: TProps = {}) {
     useEffect(() => {
         if (currentWeather) {
             console.log(currentWeather);
+
+            let sun_data = calc_sun_hours_details(currentWeather.sys.sunrise, currentWeather.sys.sunset, currentWeather.timezone);
+
+            if (pageRef) {
+                pageRef.current?.classList.add(`Home--bg_${calc_backgraund_type(sun_data, currentWeather)}`);
+            }
         }
     }, [currentWeather]);
 
@@ -108,8 +114,8 @@ function CityCurrentWeather({}: TProps = {}) {
                     <h2 className="CityCurrentWeather__head">{`${currentWeather.name}: ${currentWeather.weather[0].description}`}</h2>
                     <section className="CityCurrentWeather__wrapper">
                         <h4 className="visually_hidden">Детали</h4>
-                        <span>Температура: {`${Math.round(currentWeather.main.temp)}`}°</span>
-                        <span>Ощущается как: {`${Math.round(currentWeather.main.feels_like)}`}°</span>
+                        <span>Температура: {`${Math.round(currentWeather.main.temp)}`}°с</span>
+                        <span>Ощущается как: {`${Math.round(currentWeather.main.feels_like)}`}°с</span>
                         <span>Влажность: {`${Math.round(currentWeather.main.humidity)}`}%</span>
                         <span>Видимость: {`${currentWeather.visibility / 1000}`} Km</span>
                         {currentWeather.wind ? (

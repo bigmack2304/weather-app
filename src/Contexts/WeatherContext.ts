@@ -9,6 +9,7 @@ type TWeatherContext = {
     lat?: number;
     lon?: number;
     cityName?: string;
+    pageRef?: React.RefObject<HTMLElement>;
 };
 
 const baseWeatherContext: TWeatherContext = {
@@ -16,6 +17,7 @@ const baseWeatherContext: TWeatherContext = {
     lat: undefined,
     lon: undefined,
     cityName: undefined,
+    pageRef: undefined,
 };
 
 const WeatherContext = createContext(baseWeatherContext);

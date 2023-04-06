@@ -1,4 +1,4 @@
-import React, { memo, useState, useContext, useEffect } from "react";
+import React, { memo, useState, useContext, useEffect, useRef } from "react";
 import { deep_object_is_equal } from "../../utils/is_equal";
 import { Footer } from "../../components/Footer/Footer";
 import { Header } from "../../components/Header/Header";
@@ -14,12 +14,15 @@ import { useLoacalStorage } from "../../hooks/useLocalStorage";
 
 function HomePage() {
     let [localStorageData, setLocalStorageData] = useLoacalStorage(false);
+    let homeRef = useRef<HTMLElement>(null);
+
     let [weatherState, setWeatherState] = useState<TWeatherContext>({
         ...useContext(WeatherContext),
 
         lat: localStorageData.history[0]?.lat ?? undefined,
         lon: localStorageData.history[0]?.lon ?? undefined,
         cityName: localStorageData.history[0]?.name ?? undefined,
+        pageRef: homeRef,
 
         selectCityCallback: (lat: number, lon: number, cityName: string) => {
             console.log(`response of fetch geo:\n lat: ${lat}, lon: ${lon}, name: ${cityName}`);
@@ -41,7 +44,7 @@ function HomePage() {
 
     return (
         <WeatherContext.Provider value={weatherState}>
-            <main className="Home Home--Fon_day_clear">
+            <main className="Home" ref={homeRef}>
                 <section className="Home__weather_now">
                     <h3 className="visually_hidden">Погода на сегодня</h3>
                     <Header />

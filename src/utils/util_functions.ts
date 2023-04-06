@@ -1,4 +1,5 @@
 import type * as fetchCityLatLon from "./fetch_LatLon";
+import type * as currentWeather from "./fetch_current_weather";
 import { deep_object_is_equal } from "./is_equal";
 
 // конвертирует код страны в полное название страны, с учетом языка пользователя
@@ -205,14 +206,58 @@ function calc_sun_hours_details(sunrise_timestamp_sec: number, sunset_timestamp_
         sunrise: {
             hours: date_sunrise.getUTCHours(),
             minutes: date_sunrise.getUTCMinutes(),
+            timestamp: date_sunrise.getTime(),
         },
         sunset: {
             hours: date_sunset.getUTCHours(),
             minutes: date_sunset.getUTCMinutes(),
+            timestamp: date_sunset.getTime(),
         },
     };
 
     return sun_hours_details;
+}
+
+// расчитывает ип фона для приложения, в зависимости от времяни и условий погоды
+function calc_backgraund_type(sun_data: ReturnType<typeof calc_sun_hours_details>, currentWeather: currentWeather.TResponse) {
+    if (!currentWeather) return;
+
+    const HOUR_MS = 3_600_000; // милисекунд в одном часе
+    let now_date = new Date((currentWeather.dt + currentWeather.timezone) * 1000);
+    let now_timestamp = now_date.getTime();
+    let generated_name: string = ""; // это будет выходная строка с названием класса
+    let wather_status = currentWeather.weather[0].main.toLowerCase();
+
+    // ночь
+    if (now_timestamp > sun_data.sunset.timestamp || now_timestamp < sun_data.sunrise.timestamp) {
+        generated_name = generated_name + "night";
+    }
+
+    // вечер
+    if (now_timestamp > sun_data.sunset.timestamp - HOUR_MS && now_timestamp < sun_data.sunset.timestamp) {
+        generated_name = generated_name + "evening";
+        if (wather_status && (wather_status == "rain" || wather_status == "snow")) {
+            generated_name = generated_name + "_cloudy";
+        }
+    }
+
+    // день
+    if (now_timestamp < sun_data.sunset.timestamp - HOUR_MS && now_timestamp > sun_data.sunrise.timestamp + HOUR_MS) {
+        generated_name = generated_name + "day";
+        if (wather_status && (wather_status == "rain" || wather_status == "snow")) {
+            generated_name = generated_name + "_cloudy";
+        }
+    }
+
+    // утро
+    if (now_timestamp > sun_data.sunrise.timestamp && now_timestamp < sun_data.sunrise.timestamp + HOUR_MS) {
+        generated_name = generated_name + "morning";
+        if (wather_status && (wather_status == "rain" || wather_status == "snow")) {
+            generated_name = generated_name + "_cloudy";
+        }
+    }
+
+    return generated_name;
 }
 
 export {
@@ -231,4 +276,5 @@ export {
     get_text_date,
     is_hover_screen,
     calc_sun_hours_details,
+    calc_backgraund_type,
 };
