@@ -37,6 +37,13 @@ function is_multiTuch(): boolean {
     return false;
 }
 
+// проверяет поддерживает указатель экрана HOVER
+// например тачпад с сенсорным экраном его не поддерживает покеа не подключим мышку
+function is_hover_screen() {
+    const isHoverableDevice = window.matchMedia("(hover: hover) and (pointer: fine)");
+    return isHoverableDevice.matches;
+}
+
 /*
     Попытка определить мобильное устройство.
     true если это мобила
@@ -171,6 +178,7 @@ function deg_to_compass(val: number) {
     }
 }
 
+// преобразует Date или таймштамп в строку со времянем
 function get_text_date(date: Date | number = new Date()) {
     if (typeof date === "number") {
         date = new Date(date);
@@ -187,6 +195,26 @@ function get_text_date(date: Date | number = new Date()) {
     };
 }
 
+// ДЛЯ получения времяни восхода и захода солнца из weather api
+function calc_sun_hours_details(sunrise_timestamp_sec: number, sunset_timestamp_sec: number, shift_timezone: number = 0) {
+    // Date принимает таймштамп в милисекундах
+    let date_sunrise = new Date((sunrise_timestamp_sec + shift_timezone) * 1000);
+    let date_sunset = new Date((sunset_timestamp_sec + shift_timezone) * 1000);
+
+    let sun_hours_details = {
+        sunrise: {
+            hours: date_sunrise.getUTCHours(),
+            minutes: date_sunrise.getUTCMinutes(),
+        },
+        sunset: {
+            hours: date_sunset.getUTCHours(),
+            minutes: date_sunset.getUTCMinutes(),
+        },
+    };
+
+    return sun_hours_details;
+}
+
 export {
     get_full_country_by_code,
     get_system_language,
@@ -201,4 +229,6 @@ export {
     deg_to_compass,
     is_device_mobile,
     get_text_date,
+    is_hover_screen,
+    calc_sun_hours_details,
 };
