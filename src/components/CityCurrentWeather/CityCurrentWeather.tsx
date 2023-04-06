@@ -22,7 +22,7 @@ type TProps = Readonly<ICityCurrentWeatherProps>;
 function CityCurrentWeather({}: TProps = {}) {
     const { lat, lon, cityName, pageRef } = useContext(WeatherContext);
     const [isLoadingVisible, setIsLoadingVisible] = useState<boolean>(false);
-    let obj_date = get_text_date(new Date());
+    let obj_date: ReturnType<typeof get_text_date> | undefined;
 
     const onErrorCurrentWeather = () => {
         setIsLoadingVisible(false);
@@ -45,14 +45,26 @@ function CityCurrentWeather({}: TProps = {}) {
         fetchEndCallback: onEndCurrentWeather,
     });
 
+    if (currentWeather) {
+        let weather_date = new Date((currentWeather.dt + currentWeather.timezone) * 1000);
+        weather_date.setHours(weather_date.getUTCHours());
+        obj_date = get_text_date(weather_date);
+    }
+
     useEffect(() => {
         if (currentWeather) {
             console.log(currentWeather);
 
             let sun_data = calc_sun_hours_details(currentWeather.sys.sunrise, currentWeather.sys.sunset, currentWeather.timezone);
 
-            if (pageRef) {
-                pageRef.current?.classList.add(`Home--bg_${calc_backgraund_type(sun_data, currentWeather)}`);
+            if (pageRef && pageRef.current) {
+                for (let elem of Array.from(pageRef.current.classList)) {
+                    if (elem.startsWith("Home--bg_")) {
+                        pageRef.current.classList.remove(elem);
+                    }
+                }
+
+                pageRef.current.classList.add(`Home--bg_${calc_backgraund_type(sun_data, currentWeather)}`);
             }
         }
     }, [currentWeather]);
@@ -109,7 +121,10 @@ function CityCurrentWeather({}: TProps = {}) {
                 <>
                     <div className="CityCurrentWeather__head">
                         <h2 className="CityCurrentWeather__name">{currentWeather.name}</h2>
-                        <p className="CityCurrentWeather__data_details">{`${obj_date.dayNum_monthName} ${obj_date.year_num} ${obj_date.hours}:${obj_date.minutes}`}</p>
+
+                        {obj_date ? (
+                            <p className="CityCurrentWeather__data_details">{`${obj_date.dayNum_monthName} ${obj_date.year_num} ${obj_date.hours}:${obj_date.minutes}`}</p>
+                        ) : null}
                     </div>
                     <h2 className="CityCurrentWeather__head">{`${currentWeather.name}: ${currentWeather.weather[0].description}`}</h2>
                     <section className="CityCurrentWeather__wrapper">
@@ -151,17 +166,13 @@ function CityCurrentWeather({}: TProps = {}) {
                         <p className="CityCurrentWeather__default_text">Начните поиск.</p>
                     </div>
                 </>
-            ) : (
-                <></>
-            )}
+            ) : null}
 
             {isLoadingVisible ? (
                 <div className="CityCurrentWeather__loader_wrapper">
                     <IconLoader addClassName={["CityCurrentWeather__loader"]} />
                 </div>
-            ) : (
-                <></>
-            )}
+            ) : null}
         </div>
     );
 }
