@@ -33,7 +33,7 @@ type TresponseObjListObj = {
             icon: string;
         }
     ];
-    clouds: {
+    clouds?: {
         all: number;
     };
     wind?: {

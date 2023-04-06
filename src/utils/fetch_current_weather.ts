@@ -52,7 +52,7 @@ type TresponseObj = {
         ["1h"]?: number;
         ["3h"]?: number;
     };
-    clouds: {
+    clouds?: {
         all: number;
     };
     dt: number;
