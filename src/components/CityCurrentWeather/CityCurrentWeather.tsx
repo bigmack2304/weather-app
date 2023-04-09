@@ -1,10 +1,14 @@
-import React, { useContext, useEffect, useState, useLayoutEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import "./CityCurrentWeather.scss";
 import { useCurrentWeather } from "../../hooks/useCurrentWeather";
 import { WeatherContext } from "../../Contexts/WeatherContext";
 import { IconDirection } from "../../ui/IconDirection";
-import { deg_invesion, deg_to_compass, get_text_date, calc_backgraund_type, calc_sun_hours_details } from "../../utils/util_functions";
+import { calc_backgraund_type, calc_sun_hours_details } from "../../utils/util_functions";
 import { IconLoader } from "../../ui/IconLoader";
+import { WeatherNowTime } from "../WeatherNowTime/WeatherNowTime";
+import { WeatherBaseInfo } from "../WeatherBaseInfo/WeatherBaseInfo";
+import { WeatherAltInfoFall } from "../WeatherAltInfoFall/WeatherAltInfoFall";
+import { WeatherAltInfoWnd } from "../WeatherAltInfoWnd/WeatherAltInfoWnd";
 import "./../../fonts/acline/acline.css";
 
 interface ICityCurrentWeatherProps {}
@@ -22,7 +26,6 @@ type TProps = Readonly<ICityCurrentWeatherProps>;
 function CityCurrentWeather({}: TProps = {}) {
     const { lat, lon, cityName, pageRef } = useContext(WeatherContext);
     const [isLoadingVisible, setIsLoadingVisible] = useState<boolean>(false);
-    let obj_date: ReturnType<typeof get_text_date> | undefined;
 
     const onErrorCurrentWeather = () => {
         setIsLoadingVisible(false);
@@ -44,12 +47,6 @@ function CityCurrentWeather({}: TProps = {}) {
         fetchStartCallback: onStartCurrentWeather,
         fetchEndCallback: onEndCurrentWeather,
     });
-
-    if (currentWeather) {
-        let weather_date = new Date((currentWeather.dt + currentWeather.timezone) * 1000);
-        weather_date.setHours(weather_date.getUTCHours());
-        obj_date = get_text_date(weather_date);
-    }
 
     useEffect(() => {
         if (currentWeather) {
@@ -77,11 +74,11 @@ function CityCurrentWeather({}: TProps = {}) {
     //     <div className="CityCurrentWeather">
     //         {currentWeather ? (
     //             <>
-    //                 <h2 className="CityCurrentWeather__head">{`${currentWeather.name}: ${currentWeather.weather[0].description}`}</h2>
+    /////                 <h2 className="CityCurrentWeather__head">{`${currentWeather.name}: ${currentWeather.weather[0].description}`}</h2>
     //                 <section className="CityCurrentWeather__wrapper">
     //                     <h4 className="visually_hidden">Детали</h4>
-    //                     <span>Температура: {`${Math.round(currentWeather.main.temp)}`}°</span>
-    //                     <span>Ощущается как: {`${Math.round(currentWeather.main.feels_like)}`}°</span>
+    ////                     <span>Температура: {`${Math.round(currentWeather.main.temp)}`}°</span>
+    ////                     <span>Ощущается как: {`${Math.round(currentWeather.main.feels_like)}`}°</span>
     //                     <span>Влажность: {`${Math.round(currentWeather.main.humidity)}`}%</span>
     //                     <span>Видимость: {`${currentWeather.visibility / 1000}`} Km</span>
     //                     {currentWeather.wind ? (
@@ -121,44 +118,14 @@ function CityCurrentWeather({}: TProps = {}) {
                 <>
                     <div className="CityCurrentWeather__head">
                         <h2 className="CityCurrentWeather__name">{currentWeather.name}</h2>
+                        <WeatherNowTime weather={currentWeather} addClassName={["CityCurrentWeather__data_details"]} />
+                        <WeatherBaseInfo weather={currentWeather} />
 
-                        {obj_date ? (
-                            <p className="CityCurrentWeather__data_details">{`${obj_date.dayNum_monthName} ${obj_date.year_num} ${obj_date.hours}:${obj_date.minutes}`}</p>
-                        ) : null}
+                        <div className="CityCurrentWeather__alt_info">
+                            <WeatherAltInfoFall weather={currentWeather} />
+                            <WeatherAltInfoWnd weather={currentWeather} />
+                        </div>
                     </div>
-                    <h2 className="CityCurrentWeather__head">{`${currentWeather.name}: ${currentWeather.weather[0].description}`}</h2>
-                    <section className="CityCurrentWeather__wrapper">
-                        <h4 className="visually_hidden">Детали</h4>
-                        <span>Температура: {`${Math.round(currentWeather.main.temp)}`}°с</span>
-                        <span>Ощущается как: {`${Math.round(currentWeather.main.feels_like)}`}°с</span>
-                        <span>Влажность: {`${Math.round(currentWeather.main.humidity)}`}%</span>
-                        <span>Видимость: {`${currentWeather.visibility / 1000}`} Km</span>
-                        {currentWeather.wind ? (
-                            <>
-                                <span>Скорость ветра: {`${currentWeather.wind.speed}`} m/сек</span>
-                                <span>Порывы ветра: до {`${currentWeather.wind.gust}`} m/сек</span>
-
-                                <span style={{ verticalAlign: "middle" }}>
-                                    Направление ветра: {deg_to_compass(currentWeather.wind.deg)}{" "}
-                                    <IconDirection
-                                        direction={deg_invesion(currentWeather.wind.deg)}
-                                        addClassName={["CityCurrentWeather__wind_direction"]}
-                                        title={deg_to_compass(currentWeather.wind.deg)}
-                                    />
-                                </span>
-                            </>
-                        ) : null}
-                        {currentWeather.snow ? (
-                            <>
-                                <span>Снег: {`${currentWeather.snow["1h"]}mm`} за час.</span>
-                            </>
-                        ) : null}
-                        {currentWeather.rain ? (
-                            <>
-                                <span>Дождь: {`${currentWeather.rain["1h"]}mm`} за час.</span>
-                            </>
-                        ) : null}
-                    </section>
                 </>
             ) : !isLoadingVisible ? (
                 <>

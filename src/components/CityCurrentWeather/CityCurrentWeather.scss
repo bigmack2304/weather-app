@@ -1,40 +1,14 @@
-// .CityCurrentWeather {
-//     flex-grow: 1;
-//     overflow: hidden;
-//     padding: 10px;
-
-//     &__head {
-//         font-family: "Bebas Neue";
-//         letter-spacing: 2px;
-//         background-color: #ffffffa1;
-//         width: fit-content;
-//         padding: 10px;
-//         backdrop-filter: blur(2px);
-//         border-radius: 5px;
-//         border: 2px #000000 solid;
-//     }
-
-//     &__wrapper {
-//         display: flex;
-//         flex-direction: column;
-//         flex-wrap: wrap;
-//         padding: 10px 10px 10px 10px;
-//         gap: 5px;
-//         font-size: 18px;
-//         background-color: #ffffffa1;
-//         backdrop-filter: blur(2px);
-//         border-radius: 5px;
-//         border: 2px #000000 solid;
-//     }
-
-//     &__wind_direction {
-//         width: 30px;
-//         height: auto;
-//         vertical-align: middle;
-//     }
-// }
-
 @import "./../../global_styles/global_vars.scss";
+
+@mixin FontAcLineDefs() {
+    letter-spacing: 3px;
+    font-weight: bold;
+    text-shadow: 0 0 2px black;
+    color: white;
+    margin: 0;
+    text-align: center;
+    font-family: "AC Line";
+}
 
 .CityCurrentWeather {
     position: relative;
@@ -47,25 +21,13 @@
     }
 
     &__data_details {
-        margin: 0;
-        text-align: center;
-        font-family: "AC Line";
+        @include FontAcLineDefs();
         font-size: 20px;
-        color: $WHITE_TEXT;
-        letter-spacing: 3px;
-        font-weight: bold;
-        text-shadow: 0 0 2px black;
     }
 
     &__name {
-        font-family: "AC Line";
-        margin: 0;
+        @include FontAcLineDefs();
         font-size: 40px;
-        font-weight: bold;
-        text-align: center;
-        text-shadow: 0 0 2px black;
-        color: $WHITE_TEXT;
-        letter-spacing: 3px;
     }
 
     &__default {
@@ -105,5 +67,13 @@
         .IconLoader__item {
             background-color: #e4e4e4;
         }
+    }
+
+    &__alt_info {
+        margin-top: 10px;
+        display: flex;
+        gap: 5px;
+        flex-wrap: wrap;
+        flex-direction: row;
     }
 }

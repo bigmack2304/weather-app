@@ -1,0 +1,14 @@
+.IconWeatherSnowRain {
+    display: inline-block;
+    padding: 3px;
+
+    &__snow {
+        fill: #e7e7e7;
+    }
+    &__rain {
+        fill: #0bedf1;
+    }
+    &__white {
+        fill: #afafaf;
+    }
+}

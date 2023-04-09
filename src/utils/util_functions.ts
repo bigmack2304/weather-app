@@ -218,41 +218,80 @@ function calc_sun_hours_details(sunrise_timestamp_sec: number, sunset_timestamp_
     return sun_hours_details;
 }
 
+// возвращает наименование времяни суток в городе с учетом восхода и захода солнца
+function calc_weather_day_time(
+    sun_data: ReturnType<typeof calc_sun_hours_details>,
+    currentWeather: currentWeather.TresponseObj
+): "NIGHT" | "EVENING" | "DAY" | "MORNING" | "UNKNOWN" {
+    const HOUR_MS = 3_600_000 * 2; // часовая граница для утра и вечера (+- 2часа)
+    let now_date = new Date((currentWeather.dt + currentWeather.timezone) * 1000);
+    let now_timestamp = now_date.getTime();
+
+    // ночь
+    if (now_timestamp > sun_data.sunset.timestamp || now_timestamp < sun_data.sunrise.timestamp) {
+        return "NIGHT";
+    }
+
+    // вечер
+    if (now_timestamp >= sun_data.sunset.timestamp - HOUR_MS && now_timestamp <= sun_data.sunset.timestamp) {
+        return "EVENING";
+    }
+
+    // день
+    if (now_timestamp < sun_data.sunset.timestamp - HOUR_MS && now_timestamp > sun_data.sunrise.timestamp + HOUR_MS) {
+        return "DAY";
+    }
+
+    // утро
+    if (now_timestamp >= sun_data.sunrise.timestamp && now_timestamp <= sun_data.sunrise.timestamp + HOUR_MS) {
+        return "MORNING";
+    }
+
+    // поидее это никогда не должно отработать
+    return "UNKNOWN";
+}
+
 // расчитывает ип фона для приложения, в зависимости от времяни и условий погоды
 function calc_backgraund_type(sun_data: ReturnType<typeof calc_sun_hours_details>, currentWeather: currentWeather.TResponse) {
     if (!currentWeather) return;
 
-    const HOUR_MS = 3_600_000; // милисекунд в одном часе
-    let now_date = new Date((currentWeather.dt + currentWeather.timezone) * 1000);
-    let now_timestamp = now_date.getTime();
     let generated_name: string = ""; // это будет выходная строка с названием класса
-    let wather_status = currentWeather.weather[0].main.toLowerCase();
+    let wather_status = currentWeather.weather[0].main.toLowerCase() as Lowercase<currentWeather.TresponseObjWeatherObj["main"]>;
+    let is_bad_weather =
+        wather_status &&
+        (wather_status == "rain" ||
+            wather_status == "snow" ||
+            wather_status == "drizzle" ||
+            wather_status == "thunderstorm" ||
+            (currentWeather.weather[0].id >= 701 && currentWeather.weather[0].id <= 781) ||
+            currentWeather.weather[0].id >= 804);
+    let day_time = calc_weather_day_time(sun_data, currentWeather);
 
     // ночь
-    if (now_timestamp > sun_data.sunset.timestamp || now_timestamp < sun_data.sunrise.timestamp) {
+    if (day_time === "NIGHT") {
         generated_name = generated_name + "night";
     }
 
     // вечер
-    if (now_timestamp > sun_data.sunset.timestamp - HOUR_MS && now_timestamp < sun_data.sunset.timestamp) {
+    if (day_time === "EVENING") {
         generated_name = generated_name + "evening";
-        if (wather_status && (wather_status == "rain" || wather_status == "snow")) {
+        if (is_bad_weather) {
             generated_name = generated_name + "_cloudy";
         }
     }
 
     // день
-    if (now_timestamp < sun_data.sunset.timestamp - HOUR_MS && now_timestamp > sun_data.sunrise.timestamp + HOUR_MS) {
+    if (day_time === "DAY") {
         generated_name = generated_name + "day";
-        if (wather_status && (wather_status == "rain" || wather_status == "snow")) {
+        if (is_bad_weather) {
             generated_name = generated_name + "_cloudy";
         }
     }
 
     // утро
-    if (now_timestamp > sun_data.sunrise.timestamp && now_timestamp < sun_data.sunrise.timestamp + HOUR_MS) {
+    if (day_time === "MORNING") {
         generated_name = generated_name + "morning";
-        if (wather_status && (wather_status == "rain" || wather_status == "snow")) {
+        if (is_bad_weather) {
             generated_name = generated_name + "_cloudy";
         }
     }
@@ -277,4 +316,5 @@ export {
     is_hover_screen,
     calc_sun_hours_details,
     calc_backgraund_type,
+    calc_weather_day_time,
 };

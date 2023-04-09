@@ -1,6 +1,7 @@
-import React, { memo, useState, useEffect } from "react";
+import React, { memo, useState, useRef } from "react";
 import { deep_object_is_equal } from "../../utils/is_equal";
 import "./FormSearh.scss";
+import { ButtonSearch } from "../ButtonSearch/ButtonSearch";
 
 // форма поиска, при субмите вызывает коллбек submitCallback из пропсов
 
@@ -22,6 +23,7 @@ function FormSearh({
     placeholder = "",
 }: TProps) {
     let [searhValue, setSearhValue] = useState<string>("");
+    let formRef = useRef<HTMLFormElement>(null);
 
     const form_onSubmit = (e: React.FormEvent) => {
         let target = e.target as HTMLFormElement;
@@ -54,8 +56,14 @@ function FormSearh({
         blurCallback();
     };
 
+    const on_buttonSubmit = () => {
+        if (formRef && formRef.current) {
+            formRef.current.su();
+        }
+    };
+
     return (
-        <form className="FormSearch" onSubmit={form_onSubmit}>
+        <form className="FormSearch" onSubmit={form_onSubmit} ref={formRef}>
             <input
                 className="FormSearch__search"
                 type="searh"
@@ -65,7 +73,8 @@ function FormSearh({
                 onBlur={onBlur}
                 placeholder={placeholder}
             />
-            <input className="FormSearch__buttonSubmit" type="submit" value="Поиск" />
+            {/* <input className="FormSearch__buttonSubmit" type="submit" value="Поиск" /> */}
+            <ButtonSearch addClassName={["FormSearch__buttonSubmit"]} type="submit"></ButtonSearch>
         </form>
     );
 }

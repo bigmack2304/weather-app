@@ -1,13 +1,84 @@
 // запрос текущей погоды (по внешнему API)
 // https://openweathermap.org/current
+// https://openweathermap.org/weather-conditions#How-to-get-icon-URL
 
 import { WEATHER_API_KEY, WEATHER_API_ADRESS_CURRENT } from "./global_vars";
 import { get_system_language } from "./util_functions";
 import type * as FetchLatLonTypes from "./fetch_LatLon";
 
 type TresponseObjWeatherObj = {
-    id: number;
-    main: string;
+    id:
+        | 200
+        | 201
+        | 202
+        | 210
+        | 211
+        | 212
+        | 221
+        | 230
+        | 231
+        | 232
+        | 300
+        | 301
+        | 302
+        | 310
+        | 311
+        | 312
+        | 313
+        | 314
+        | 321
+        | 500
+        | 501
+        | 502
+        | 503
+        | 504
+        | 511
+        | 520
+        | 521
+        | 522
+        | 531
+        | 600
+        | 601
+        | 602
+        | 611
+        | 612
+        | 613
+        | 615
+        | 620
+        | 621
+        | 622
+        | 701
+        | 711
+        | 721
+        | 731
+        | 741
+        | 751
+        | 761
+        | 762
+        | 771
+        | 781
+        | 800
+        | 801
+        | 802
+        | 803
+        | 804;
+    main:
+        | "Thunderstorm"
+        | "Drizzle"
+        | "Rain"
+        | "Snow"
+        | "Mist"
+        | "Smoke"
+        | "Haze"
+        | "Dust"
+        | "Fog"
+        | "Sand"
+        | "Dust"
+        | "Ash"
+        | "Squall"
+        | "Tornado"
+        | "Clear"
+        | "Clouds";
     description: string;
     icon: string;
 };

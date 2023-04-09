@@ -69,5 +69,17 @@
 
     .FormSearch__search {
         padding-right: 25px;
+
+        padding-right: 25px;
+        height: 24px;
+        background-color: #ffffff69;
+        border: none;
+        border-bottom: 1px black solid;
+        border-top-left-radius: 5px;
+        border-bottom-left-radius: 5px;
+
+        &:focus {
+            background-color: white;
+        }
     }
 }
