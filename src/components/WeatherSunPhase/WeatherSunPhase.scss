@@ -1,0 +1,90 @@
+.WeatherSunPhase {
+    display: flex;
+    width: 100%;
+    flex-direction: row;
+    justify-content: space-between;
+    background-color: #292c52;
+    border-radius: 8px;
+    padding: 4px;
+
+    // &__sun_rise_wrapper {
+    //     color: white;
+    //     font-weight: bold;
+    //     display: flex;
+    //     flex-direction: column;
+    //     flex-wrap: wrap;
+    //     align-items: center;
+    //     width: 40px;
+
+    //     &__icon {
+    //         width: 30px;
+    //         height: 30px;
+
+    //         .IconSunrise__arrow {
+    //             stroke: white;
+    //         }
+    //     }
+
+    //     .WeatherSunPhase__time {
+    //     }
+    // }
+
+    &__sun_rise_wrapper,
+    &__sun_set_wrapper {
+        display: flex;
+        flex-direction: column;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: center;
+        width: 46px;
+        flex-shrink: 0;
+
+        &__icon {
+            width: 30px;
+            height: 30px;
+
+            .IconWeatherClearNight {
+            }
+
+            .IconSunrise__arrow {
+                stroke: white;
+            }
+        }
+
+        .WeatherSunPhase__time {
+            color: white;
+            font-weight: bold;
+        }
+    }
+
+    &__vieport {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        position: relative;
+    }
+
+    &__sun_wrapper {
+        width: 35px;
+        height: 35px;
+        background-color: #292c52;
+        flex-shrink: 0;
+        z-index: 0;
+    }
+
+    &__g1 {
+        position: absolute;
+        border: 1px white;
+        border-style: dashed;
+        width: 100%;
+        z-index: 0;
+    }
+
+    &__g2 {
+        height: 2px;
+        background-color: #626262;
+        z-index: 0;
+    }
+}

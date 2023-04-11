@@ -299,6 +299,19 @@ function calc_backgraund_type(sun_data: ReturnType<typeof calc_sun_hours_details
     return generated_name;
 }
 
+// Приобразуем значение из одного диапозона в тоже значение но в другом диапозоне
+function addon_map(val: number, val_min: number, val_max: number, need_min: number, need_max: number) {
+    let shkal_orig, shkal_new, new_val;
+    shkal_orig = val_max - val_min;
+    shkal_orig = shkal_orig / 100;
+    shkal_orig = (val - val_min) / shkal_orig;
+    shkal_new = need_max > need_min ? need_max - need_min : need_min - need_max;
+    shkal_new = shkal_new / 100;
+    new_val = shkal_new * shkal_orig;
+    new_val = new_val + need_min;
+    return new_val;
+}
+
 export {
     get_full_country_by_code,
     get_system_language,
@@ -317,4 +330,5 @@ export {
     calc_sun_hours_details,
     calc_backgraund_type,
     calc_weather_day_time,
+    addon_map,
 };
