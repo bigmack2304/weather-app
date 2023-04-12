@@ -17,7 +17,7 @@ interface IWeatherSunPhaseProps {
 type TProps = Readonly<IWeatherSunPhaseProps>;
 
 function WeatherSunPhase({ addClassName = [""], sun_hours, cityTime, cityTimezone }: TProps) {
-    const componentClassName = [...addClassName, "WeatherSunPhase"].join(" ");
+    const componentClassName = [...addClassName, "WeatherSunPhase", "LightEffect"].join(" ");
     const fixed_timestamp = (cityTime + cityTimezone) * 1000;
     const refVieport = useRef<HTMLDivElement>(null);
     const refSunWrapper = useRef<HTMLDivElement>(null);
@@ -63,7 +63,6 @@ function WeatherSunPhase({ addClassName = [""], sun_hours, cityTime, cityTimezon
     useEffect(() => {
         const onResize = first_caller_delay_callback(
             (e: Event) => {
-                console.log("resize");
                 handleupdate();
             },
             () => {},

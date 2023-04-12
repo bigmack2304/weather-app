@@ -15,6 +15,9 @@
     flex-grow: 1;
     overflow: hidden;
     padding: 10px;
+    display: flex;
+    flex-direction: column;
+    row-gap: 20px;
 
     &__head {
         margin-top: 30px;
@@ -69,19 +72,40 @@
         }
     }
 
-    &__alt_info {
-        margin-top: 40px;
+    &__alt_info_wrapper {
+        // margin-top: 20px;
         display: flex;
-        gap: 18px;
+        gap: 1px;
         flex-wrap: wrap;
         flex-direction: row;
         align-items: stretch;
         justify-content: center;
     }
 
+    .CityCurrentWeather__alt_info {
+        max-width: 260px;
+        min-width: 122px;
+        border-radius: 0;
+        flex-grow: 1;
+        flex-basis: 33%;
+    }
+
     &__alt_wind {
         .IconDirection {
             width: 50px;
+        }
+    }
+
+    &__main {
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        align-items: center;
+        row-gap: 20px;
+
+        .WeatherBaseInfo {
+            width: 100%;
         }
     }
 }
