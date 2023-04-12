@@ -126,7 +126,7 @@ function CityCurrentWeather({}: TProps = {}) {
                                 <WeatherAltInfoTemplate slot_header={"Давление"} slot_main={get_pressure()} slot_dop={"мм.рт.ст."} />
                             ) : null}
 
-                            {currentWeather.clouds ? (
+                            {currentWeather.clouds && currentWeather.clouds.all ? (
                                 <WeatherAltInfoTemplate slot_header={"Облачность"} slot_main={currentWeather.clouds.all} slot_dop={"%"} />
                             ) : null}
                         </div>

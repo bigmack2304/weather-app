@@ -124,7 +124,7 @@ type TresponseObj = {
         ["3h"]?: number;
     };
     clouds?: {
-        all: number;
+        all?: number;
     };
     dt: number;
     sys: {
