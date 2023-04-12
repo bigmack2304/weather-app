@@ -69,6 +69,14 @@
         @include bg_settings();
     }
 
+    .WeatherBaseInfo {
+        margin: 10px auto 0 auto;
+    }
+
+    .WeatherSunPhase {
+        margin: 10px auto 0 auto;
+    }
+
     .Footer {
         box-shadow: black 0px -3px 20px 0px;
     }

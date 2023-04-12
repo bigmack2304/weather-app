@@ -1,3 +1,9 @@
+@mixin GElement() {
+    z-index: 0;
+    margin: 0;
+    border: 0;
+}
+
 .WeatherSunPhase {
     display: flex;
     width: 100%;
@@ -6,28 +12,6 @@
     background-color: #292c52;
     border-radius: 8px;
     padding: 4px;
-
-    // &__sun_rise_wrapper {
-    //     color: white;
-    //     font-weight: bold;
-    //     display: flex;
-    //     flex-direction: column;
-    //     flex-wrap: wrap;
-    //     align-items: center;
-    //     width: 40px;
-
-    //     &__icon {
-    //         width: 30px;
-    //         height: 30px;
-
-    //         .IconSunrise__arrow {
-    //             stroke: white;
-    //         }
-    //     }
-
-    //     .WeatherSunPhase__time {
-    //     }
-    // }
 
     &__sun_rise_wrapper,
     &__sun_set_wrapper {
@@ -75,16 +59,15 @@
     }
 
     &__g1 {
+        @include GElement();
         position: absolute;
-        border: 1px white;
+        border-top: 2px white;
         border-style: dashed;
         width: 100%;
-        z-index: 0;
     }
 
     &__g2 {
-        height: 2px;
-        background-color: #626262;
-        z-index: 0;
+        @include GElement();
+        border-top: 2px #626262 solid;
     }
 }
