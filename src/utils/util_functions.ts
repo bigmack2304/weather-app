@@ -193,6 +193,8 @@ function get_text_date(date: Date | number = new Date()) {
         dayNum_monthName: new Intl.DateTimeFormat([get_system_language()], { month: "long", day: "numeric" }).format(date),
         minutes: new Intl.DateTimeFormat([get_system_language()], { minute: "numeric" }).format(date),
         hours: new Intl.DateTimeFormat([get_system_language()], { hour: "numeric" }).format(date),
+        hoursUTC: new Intl.DateTimeFormat([get_system_language()], { hour: "numeric", timeZone: "UTC" }).format(date),
+        minutesUTC: new Intl.DateTimeFormat([get_system_language()], { minute: "numeric", timeZone: "UTC" }).format(date),
     };
 }
 
