@@ -3,8 +3,9 @@ import "./WeatherSunPhase.scss";
 import { IconSunrise } from "../../ui/IconSunrise";
 import { IconWeatherClearDay } from "../../ui/IconWeatherClearDay";
 import { IconWeatherClearNight } from "../../ui/IconWeatherClearNight";
-import type { TResponse } from "../../utils/fetch_current_weather";
 import { calc_sun_hours_details, addon_map, get_text_date } from "../../utils/util_functions";
+import { first_caller_delay_callback } from "../../utils/decorators";
+import { useHandleUpdate } from "../../hooks/useHandleUpdate";
 
 interface IWeatherSunPhaseProps {
     addClassName?: string[];
@@ -20,7 +21,8 @@ function WeatherSunPhase({ addClassName = [""], sun_hours, cityTime, cityTimezon
     const fixed_timestamp = (cityTime + cityTimezone) * 1000;
     const refVieport = useRef<HTMLDivElement>(null);
     const refSunWrapper = useRef<HTMLDivElement>(null);
-    const refG2 = useRef<HTMLDivElement>(null);
+    const refG2 = useRef<HTMLHRElement>(null);
+    const [handleupdate] = useHandleUpdate();
 
     // расчитывает необходимый размер блока перед иконкой солнышка, так чтобы эта иконка была
     // в указанном процентном соотношении относительно ширины вьюпорта компонента
@@ -49,14 +51,31 @@ function WeatherSunPhase({ addClassName = [""], sun_hours, cityTime, cityTimezon
     };
 
     const is_night = fixed_timestamp < sun_hours.sunrise.timestamp || fixed_timestamp > sun_hours.sunset.timestamp ? true : false;
+    const fixed_time_data = get_text_date(fixed_timestamp);
 
-    //
-    const fixed_time_data = get_text_date(new Date(new Date(fixed_timestamp).setHours(new Date(fixed_timestamp).getUTCHours())));
-
+    // обновление расчетеов после каждого рендера
     useEffect(() => {
         if (is_night) return;
         set_sun_offset(calc_sun_pos());
     });
+
+    //Абдейт при ресайзе
+    useEffect(() => {
+        const onResize = first_caller_delay_callback(
+            (e: Event) => {
+                console.log("resize");
+                handleupdate();
+            },
+            () => {},
+            100
+        );
+
+        window.addEventListener("resize", onResize);
+
+        return () => {
+            window.removeEventListener("resize", onResize);
+        };
+    }, []);
 
     return (
         <div className={componentClassName}>
@@ -72,7 +91,7 @@ function WeatherSunPhase({ addClassName = [""], sun_hours, cityTime, cityTimezon
                     <>
                         <IconWeatherClearNight addClassName={["WeatherSunPhase__sun_rise_wrapper__icon"]} />
                         <span className="WeatherSunPhase__time">
-                            {fixed_time_data.hours}:{fixed_time_data.minutes}
+                            {fixed_time_data.hoursUTC}:{fixed_time_data.minutesUTC}
                         </span>
                     </>
                 )}
@@ -80,15 +99,15 @@ function WeatherSunPhase({ addClassName = [""], sun_hours, cityTime, cityTimezon
             <div className="WeatherSunPhase__vieport" ref={refVieport}>
                 {!is_night ? (
                     <>
-                        <div className="WeatherSunPhase__g1"></div>
-                        <div className="WeatherSunPhase__g2" ref={refG2}></div>
+                        <hr className="WeatherSunPhase__g1" />
+                        <hr className="WeatherSunPhase__g2" ref={refG2} />
                         <div className="WeatherSunPhase__sun_wrapper" ref={refSunWrapper}>
                             <IconWeatherClearDay />
                         </div>
                     </>
                 ) : (
                     <>
-                        <div className="WeatherSunPhase__g1"></div>
+                        <hr className="WeatherSunPhase__g1" />
                     </>
                 )}
             </div>
