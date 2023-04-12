@@ -75,11 +75,14 @@
     &__alt_info_wrapper {
         // margin-top: 20px;
         display: flex;
-        gap: 1px;
+        gap: 2px;
         flex-wrap: wrap;
         flex-direction: row;
         align-items: stretch;
         justify-content: center;
+
+        border-radius: $WEATCHER_INFO_BORDER_RADIUS;
+        overflow: hidden;
     }
 
     .CityCurrentWeather__alt_info {
