@@ -9,19 +9,23 @@ import { WeatherContext } from "../../Contexts/WeatherContext";
 import type { TWeatherContext } from "../../Contexts/WeatherContext";
 import { update_meta_title, unshuft_unique_obj_to_array_force } from "../../utils/util_functions";
 import { useLoacalStorage } from "../../hooks/useLocalStorage";
+import { useHashAddressBar } from "../../hooks/useHashAddressBar";
 
 // Начальная страница
 
 function HomePage() {
     let [localStorageData, setLocalStorageData] = useLoacalStorage(false);
     let homeRef = useRef<HTMLElement>(null);
+    let [is_hashOnFirstLoad, set_hash, clear_hash, get_hash] = useHashAddressBar();
 
     let [weatherState, setWeatherState] = useState<TWeatherContext>({
         ...useContext(WeatherContext),
 
-        lat: localStorageData.history[0]?.lat ?? undefined,
-        lon: localStorageData.history[0]?.lon ?? undefined,
-        cityName: localStorageData.history[0]?.name ?? undefined,
+        // если есть хеш в адресе, берем город оттуда, иначе из локал стораджа если есть
+        lat: is_hashOnFirstLoad ? Number(get_hash().lat) : localStorageData.history[0]?.lat ?? undefined,
+        lon: is_hashOnFirstLoad ? Number(get_hash().lon) : localStorageData.history[0]?.lon ?? undefined,
+        cityName: is_hashOnFirstLoad ? get_hash().city : localStorageData.history[0]?.name ?? undefined,
+
         pageRef: homeRef,
 
         selectCityCallback: (lat: number, lon: number, cityName: string) => {
@@ -30,15 +34,24 @@ function HomePage() {
         },
     });
 
+    // действия при изменении названия искомого города
     useEffect(() => {
         const cityName = weatherState.cityName;
 
+        // обновим метаданные тайтла
         update_meta_title(cityName);
 
         if (cityName && cityName !== "") {
+            // записываем город в локалсторадж
             let new_data = { name: weatherState.cityName!, lat: weatherState.lat!, lon: weatherState.lon! };
             let new_history = unshuft_unique_obj_to_array_force(localStorageData.history, new_data);
             setLocalStorageData({ ...localStorageData, history: [...new_history] });
+
+            // обновляем хэш
+            clear_hash();
+            set_hash("city", cityName);
+            set_hash("lat", weatherState.lat!.toString());
+            set_hash("lon", weatherState.lon!.toString());
         }
     }, [weatherState.cityName]);
 
