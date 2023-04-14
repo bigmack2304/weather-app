@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 
 import "./global_styles/normalize.css";
-import "./global_styles/def_styles.css";
+import "./global_styles/def_styles.scss";
 
 import { App } from "./pages/App/App";
 

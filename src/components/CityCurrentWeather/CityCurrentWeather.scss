@@ -25,12 +25,12 @@
 
     &__data_details {
         @include FontAcLineDefs();
-        font-size: 20px;
+        font-size: 1.12rem;
     }
 
     &__name {
         @include FontAcLineDefs();
-        font-size: 40px;
+        font-size: 2.2rem;
     }
 
     &__default {
@@ -44,7 +44,7 @@
 
         &_text {
             text-align: center;
-            font-size: 25px;
+            font-size: 1.38rem;
             color: $WHITE_TEXT;
             text-shadow: 0 0 9px black;
         }
@@ -72,8 +72,35 @@
         }
     }
 
+    &__main {
+        flex-grow: 1;
+
+        // display: flex;
+        // flex-direction: column;
+        // justify-content: space-around;
+        // align-items: center;
+        // row-gap: 20px;
+
+        display: grid;
+        justify-items: center;
+        align-items: center;
+        gap: 20px;
+        grid-template-areas:
+            "grid_base_info grid_base_info"
+            "grid_alt_info grid_alt_info"
+            "grid_sun_phase grid_sun_phase";
+
+        grid-template-columns: 1fr 1fr;
+
+        .WeatherBaseInfo {
+            width: 100%;
+            grid-area: grid_base_info;
+        }
+    }
+
     &__alt_info_wrapper {
         // margin-top: 20px;
+        grid-area: grid_alt_info;
         display: flex;
         gap: 2px;
         flex-wrap: wrap;
@@ -83,10 +110,11 @@
 
         border-radius: $WEATCHER_INFO_BORDER_RADIUS;
         overflow: hidden;
+        width: 100%;
     }
 
     .CityCurrentWeather__alt_info {
-        max-width: 260px;
+        max-width: 100%;
         min-width: 122px;
         border-radius: 0;
         flex-grow: 1;
@@ -95,20 +123,11 @@
 
     &__alt_wind {
         .IconDirection {
-            width: 50px;
+            width: 2.7rem;
         }
     }
 
-    &__main {
-        flex-grow: 1;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-around;
-        align-items: center;
-        row-gap: 20px;
-
-        .WeatherBaseInfo {
-            width: 100%;
-        }
+    &__sun_phase {
+        grid-area: grid_sun_phase;
     }
 }

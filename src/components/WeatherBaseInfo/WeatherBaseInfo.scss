@@ -26,8 +26,8 @@
     & .WeatherIcon {
         grid-area: grid-icon;
         justify-self: center;
-        width: 100px;
-        height: 100px;
+        width: 5.5rem;
+        height: auto;
     }
 
     &__temp_wrapper {
@@ -42,7 +42,7 @@
     }
 
     &__temp {
-        font-size: 38px;
+        font-size: 2.1rem;
     }
 
     &__temp_feels_like {

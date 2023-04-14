@@ -1,46 +1,49 @@
+@charset "UTF-8";
 /*
     стили для root и какието новые классы
 */
-
+/*
+     резиновый размер шрифта
+*/
 *,
 *::before,
 *::after {
-    box-sizing: inherit;
-}
+  box-sizing: inherit; }
+
+html {
+  font-size: calc( 14px + 8 * (( 100vw - 320px ) / 960)); }
+  @media screen and (max-width: 320px) {
+    html {
+      font-size: 14px; } }
+  @media screen and (min-width: 1280px) {
+    html {
+      font-size: 22px; } }
 
 body {
-    box-sizing: border-box;
-    font-family: "Gill Sans", sans-serif;
-    min-width: 280px;
-}
-
-#root {
-}
+  box-sizing: border-box;
+  font-family: "Gill Sans", sans-serif;
+  min-width: 280px; }
 
 .visually_hidden {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    margin: -1px;
-    border: 0;
-    padding: 0;
-    white-space: nowrap;
-    clip-path: inset(100%);
-    clip: rect(0 0 0 0);
-    overflow: hidden;
-}
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  border: 0;
+  padding: 0;
+  white-space: nowrap;
+  clip-path: inset(100%);
+  clip: rect(0 0 0 0);
+  overflow: hidden; }
 
 .scroll_remove {
-    overflow: hidden;
-}
+  overflow: hidden; }
 
 .Icon {
-    width: 35px;
-    height: 35px;
-}
+  width: 35px;
+  height: 35px; }
 
 .LightEffect {
-    border: 1px #474a6e solid;
-    border-bottom: 0;
-    box-shadow: 0px 2px 10px black;
-}
+  border: 1px #474a6e solid;
+  border-bottom: 0;
+  box-shadow: 0px 2px 10px black; }

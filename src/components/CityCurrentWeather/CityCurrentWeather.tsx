@@ -157,6 +157,7 @@ function CityCurrentWeather({}: TProps = {}) {
                         </div>
 
                         <WeatherSunPhase
+                            addClassName={["CityCurrentWeather__sun_phase"]}
                             sun_hours={calc_sun_hours_details(
                                 currentWeather.sys.sunrise,
                                 currentWeather.sys.sunset,

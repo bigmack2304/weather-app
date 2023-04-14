@@ -22,8 +22,9 @@
         flex-wrap: wrap;
         align-items: center;
         justify-content: center;
-        width: 46px;
+        min-width: 46px;
         flex-shrink: 0;
+        font-size: 1rem;
 
         &__icon {
             width: 30px;
@@ -71,5 +72,6 @@
     &__g2 {
         @include GElement();
         border-top: 2px #626262 solid;
+        transition: all linear 0.3s;
     }
 }
