@@ -11,6 +11,7 @@ interface IFormSearhProps {
     blurCallback?: () => void;
     inputChangeCallback?: (str: string) => void;
     placeholder?: string;
+    addClassName?: string[];
 }
 
 type TProps = Readonly<IFormSearhProps>;
@@ -21,7 +22,9 @@ function FormSearh({
     blurCallback = () => {},
     inputChangeCallback = () => {},
     placeholder = "",
+    addClassName = [""],
 }: TProps) {
+    let componentClassName = [...addClassName, "FormSearch"].join(" ").trim();
     let [searhValue, setSearhValue] = useState<string>("");
     let formRef = useRef<HTMLFormElement>(null);
 
@@ -63,7 +66,7 @@ function FormSearh({
     };
 
     return (
-        <form className="FormSearch" onSubmit={form_onSubmit} ref={formRef}>
+        <form className={componentClassName} onSubmit={form_onSubmit} ref={formRef}>
             <input
                 className="FormSearch__search"
                 type="searh"

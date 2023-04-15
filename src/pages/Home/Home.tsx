@@ -10,6 +10,7 @@ import type { TWeatherContext } from "../../Contexts/WeatherContext";
 import { update_meta_title, unshuft_unique_obj_to_array_force } from "../../utils/util_functions";
 import { useLoacalStorage } from "../../hooks/useLocalStorage";
 import { useHashAddressBar } from "../../hooks/useHashAddressBar";
+import { PortalVieport } from "../../components/PortalVieport/PortalVieport";
 
 // Начальная страница
 
@@ -69,6 +70,7 @@ function HomePage() {
                 </section>
                 <Footer />
             </main>
+            <PortalVieport />
         </WeatherContext.Provider>
     );
 }

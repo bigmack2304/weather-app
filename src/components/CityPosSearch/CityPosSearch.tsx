@@ -11,6 +11,7 @@ import { IconLoader } from "../../ui/IconLoader";
 import { useLoacalStorage } from "../../hooks/useLocalStorage";
 import { ClosableItem } from "../ClosableItem/ClosableItem";
 import "./CityPosSearch.scss";
+import { Portal } from "../../HOC/Portal/Portal";
 
 // компонент делает запрос на сервер для определления координат города
 // указанного в форме, после ответа, если найден один город то происходит вызов
@@ -115,10 +116,11 @@ function CityPosSearch({}: TProps) {
                 focusCallback={onFormFocus}
                 inputChangeCallback={onFormChange}
                 placeholder="Поиск города"
+                addClassName={["CityPosSearch__form"]}
             />
 
             {cityPosResponse && cityPosResponse.length > 1 ? (
-                <>
+                <Portal>
                     <div className="CityPosSearch__history_outer" onClick={removeResponse}></div>
                     <div className="CityPosSearch__hints_wrapper">
                         <div className="CityPosSearch__hints_elements">
@@ -141,11 +143,11 @@ function CityPosSearch({}: TProps) {
                         </div>
                         {/* <ButtonClose clickCallback={removeResponse} addClassName={["CityPosSearch__geo_hints_buttonClose"]} /> */}
                     </div>
-                </>
+                </Portal>
             ) : null}
 
             {isHistoryVisible && filtred_storage_history.length !== 0 && !cityPosResponse ? (
-                <>
+                <Portal>
                     <div className="CityPosSearch__history_outer" onClick={closeHistory}></div>
                     <div className="CityPosSearch__hints_wrapper">
                         <div className="CityPosSearch__hints_elements">
@@ -164,7 +166,7 @@ function CityPosSearch({}: TProps) {
                             })}
                         </div>
                     </div>
-                </>
+                </Portal>
             ) : null}
 
             {isLoadingVisible ? <IconLoader addClassName={["CityPosSearch__loader"]} /> : null}
