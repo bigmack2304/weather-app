@@ -147,35 +147,35 @@ function deg_to_compass(val: number) {
     const STEP = 22.5;
 
     if (val > 360 - STEP || val < 0 + STEP) {
-        return "северное";
+        return "северный";
     }
 
     if (val > 45 - STEP && val < 45 + STEP) {
-        return "северно-восточное";
+        return "северно-восточный";
     }
 
     if (val > 90 - STEP && val < 90 + STEP) {
-        return "восточное";
+        return "восточный";
     }
 
     if (val > 135 - STEP && val < 135 + STEP) {
-        return "южно-восточное";
+        return "южно-восточный";
     }
 
     if (val > 180 - STEP && val < 180 + STEP) {
-        return "южное";
+        return "южный";
     }
 
     if (val > 225 - STEP && val < 225 + STEP) {
-        return "южно-западное";
+        return "южно-западный";
     }
 
     if (val > 270 - STEP && val < 270 + STEP) {
-        return "западное";
+        return "западный";
     }
 
     if (val > 315 - STEP && val < 315 + STEP) {
-        return "северно-западное";
+        return "северно-западный";
     }
 }
 

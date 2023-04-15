@@ -88,7 +88,7 @@ function CityCurrentWeather({}: TProps = {}) {
             {currentWeather ? (
                 <>
                     <div className="CityCurrentWeather__head">
-                        <h2 className="CityCurrentWeather__name">{currentWeather.name}</h2>
+                        <h2 className="CityCurrentWeather__name">{cityName}</h2>
                         <WeatherNowTime weather={currentWeather} addClassName={["CityCurrentWeather__data_details"]} />
                     </div>
 

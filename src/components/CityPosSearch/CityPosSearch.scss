@@ -5,11 +5,6 @@
     min-width: 269px;
     width: 269px;
 
-    &__form {
-        z-index: 1;
-        position: relative;
-    }
-
     &__hints_wrapper {
         position: absolute;
 
@@ -33,6 +28,7 @@
     &__hint_element {
         cursor: default;
         padding: 3px 4px 3px 4px;
+        font-size: 16px;
 
         &:nth-child(n + 2) {
             border-top: 1px black solid;
@@ -74,19 +70,24 @@
         min-width: 280px;
     }
 
-    .FormSearch__search {
-        padding-right: 25px;
+    // тут пришлось повысить спецыфичность чтобы некоторые стили применились
+    &__form {
+        z-index: 1;
+        position: relative;
 
-        padding-right: 25px;
-        height: 24px;
-        background-color: #ffffff69;
-        border: none;
-        border-bottom: 1px black solid;
-        border-top-left-radius: 5px;
-        border-bottom-left-radius: 5px;
+        .FormSearch__search {
+            padding-right: 25px;
+            height: 24px;
+            background-color: #ffffff69;
+            border: none;
+            border-bottom: 1px black solid;
+            border-top-left-radius: 5px;
+            border-bottom-left-radius: 5px;
+            font-size: 16px;
 
-        &:focus {
-            background-color: white;
+            &:focus {
+                background-color: white;
+            }
         }
     }
 }
