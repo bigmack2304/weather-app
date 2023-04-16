@@ -151,7 +151,7 @@ function CityCurrentWeather({}: TProps = {}) {
                             <WeatherAltInfoTemplate
                                 addClassName={["CityCurrentWeather__alt_info"]}
                                 slot_header={"Видимость"}
-                                slot_main={`${currentWeather.visibility / 1000}`}
+                                slot_main={`${(currentWeather.visibility / 1000).toPrecision(2)}`}
                                 slot_dop={"Км"}
                             />
                         </div>

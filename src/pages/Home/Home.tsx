@@ -66,7 +66,7 @@ function HomePage() {
                 </section>
                 <section className="Home__weather_week">
                     <h3 className="visually_hidden">Погода на 5 дней</h3>
-                    {/* <City5d3hWeather /> */}
+                    <City5d3hWeather />
                 </section>
                 <Footer />
             </main>

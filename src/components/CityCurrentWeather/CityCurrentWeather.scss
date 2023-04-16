@@ -69,8 +69,8 @@
         position: relative;
         width: 150px;
         height: 150px;
-        top: 100px;
-        left: calc(50vw - 75px);
+        top: calc(50% - 75px);
+        left: calc(50% - 75px);
 
         .IconLoader__item {
             background-color: #e4e4e4;

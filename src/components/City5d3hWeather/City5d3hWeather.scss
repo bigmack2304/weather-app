@@ -1,2 +1,38 @@
+@import "./../../global_styles/global_vars.scss";
+
 .City5d3hWeather {
+    position: relative;
+    flex-grow: 1;
+
+    &__loader_wrapper {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: $BACKDROP_COLLOR;
+        backdrop-filter: $BACKDROP_BLUR;
+    }
+
+    &__loader {
+        position: relative;
+        width: 150px;
+        height: 150px;
+        top: calc(50% - 75px);
+        left: calc(50% - 75px);
+
+        .IconLoader__item {
+            background-color: #e4e4e4;
+        }
+    }
+
+    &__default {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        backdrop-filter: $BACKDROP_BLUR;
+        background-color: $BACKDROP_COLLOR;
+    }
 }
