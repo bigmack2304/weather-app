@@ -1,3 +1,5 @@
+@import "./../../global_styles/global_vars.scss";
+
 @keyframes gradient {
     0% {
         background-position: 0% 0%;
@@ -26,11 +28,19 @@
         align-items: stretch;
         justify-content: flex-start;
         overflow: hidden;
+
+        @include is-screen(desctop) {
+            min-height: fit-content;
+        }
     }
 
     &__weather_week {
         min-height: 100vh;
         box-shadow: black 0px -3px 20px 0px;
+
+        @include is-screen(desctop) {
+            box-shadow: rgba(0, 0, 0, 0) 0px 0px 0px 0px;
+        }
     }
 
     // фоны
