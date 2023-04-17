@@ -193,6 +193,14 @@ function get_text_date(date: Date | number = new Date()) {
         dayNum_monthName: new Intl.DateTimeFormat([get_system_language()], { month: "long", day: "numeric" }).format(date),
         minutes: new Intl.DateTimeFormat([get_system_language()], { minute: "numeric" }).format(date),
         hours: new Intl.DateTimeFormat([get_system_language()], { hour: "numeric" }).format(date),
+
+        day_numUTC: new Intl.DateTimeFormat([get_system_language()], { day: "numeric", timeZone: "UTC" }).format(date),
+        day_nameUTC: new Intl.DateTimeFormat([get_system_language()], { weekday: "long", timeZone: "UTC" }).format(date),
+        year_numUTC: new Intl.DateTimeFormat([get_system_language()], { year: "numeric", timeZone: "UTC" }).format(date),
+        month_nameUTC: new Intl.DateTimeFormat([get_system_language()], { month: "long", timeZone: "UTC" }).format(date),
+        dayNum_monthNameUTC: new Intl.DateTimeFormat([get_system_language()], { month: "long", day: "numeric", timeZone: "UTC" }).format(
+            date
+        ),
         hoursUTC: new Intl.DateTimeFormat([get_system_language()], { hour: "numeric", timeZone: "UTC" }).format(date),
         minutesUTC: new Intl.DateTimeFormat([get_system_language()], { minute: "numeric", timeZone: "UTC" }).format(date),
     };
@@ -223,10 +231,10 @@ function calc_sun_hours_details(sunrise_timestamp_sec: number, sunset_timestamp_
 // возвращает наименование времяни суток в городе с учетом восхода и захода солнца
 function calc_weather_day_time(
     sun_data: ReturnType<typeof calc_sun_hours_details>,
-    currentWeather: currentWeather.TresponseObj
+    time_data: { dt: number; timezone: number }
 ): "NIGHT" | "EVENING" | "DAY" | "MORNING" | "UNKNOWN" {
     const HOUR_MS = 3_600_000 * 2; // часовая граница для утра и вечера (+- 2часа)
-    let now_date = new Date((currentWeather.dt + currentWeather.timezone) * 1000);
+    let now_date = new Date((time_data.dt + time_data.timezone) * 1000);
     let now_timestamp = now_date.getTime();
 
     // ночь
@@ -314,6 +322,15 @@ function addon_map(val: number, val_min: number, val_max: number, need_min: numb
     return new_val;
 }
 
+// поучаем давление из hpa в милиметры ртутного стоба
+function convert_hpa_to_mmRtSt(val: { pressure: number | undefined; grnd_level: number | undefined }) {
+    if (val.pressure) {
+        return Math.round(val.pressure * 0.75);
+    }
+
+    return Math.round(val.grnd_level! * 0.75);
+}
+
 export {
     get_full_country_by_code,
     get_system_language,
@@ -333,4 +350,5 @@ export {
     calc_backgraund_type,
     calc_weather_day_time,
     addon_map,
+    convert_hpa_to_mmRtSt,
 };
