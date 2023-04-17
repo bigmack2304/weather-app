@@ -1,6 +1,6 @@
 import React from "react";
 import "./WeatherIcon.scss";
-import type { TResponse } from "../../utils/fetch_current_weather";
+import type { TResponse, TresponseObjWeatherObj } from "../../utils/fetch_current_weather";
 import { IconWeatherClearDay } from "../../ui/IconWeatherClearDay";
 import { IconWeatherClearNight } from "../../ui/IconWeatherClearNight";
 import { IconWeatherCloudyDay } from "../../ui/IconWeatherCloudyDay";
@@ -18,17 +18,21 @@ import { calc_weather_day_time, calc_sun_hours_details } from "../../utils/util_
 
 interface IWeatherIconProps {
     addClassName?: string[];
-    weather: TResponse;
+    weather_data: {
+        sunrise: number;
+        sunset: number;
+        timezone: number;
+        dt: number;
+        weather_id: TresponseObjWeatherObj["id"];
+    };
 }
 
 type TProps = Readonly<IWeatherIconProps>;
 
-function renderIcon(weather: TResponse) {
-    if (!weather) return;
-
-    const day_time_datails = calc_sun_hours_details(weather.sys.sunrise, weather.sys.sunset, weather.timezone);
-    const day_time = calc_weather_day_time(day_time_datails, weather);
-    const weather_detail_id = weather.weather[0].id; // тут мы более детально можем определить погоднрые условия (подробние в типизации API)
+function renderIcon(weather_data: IWeatherIconProps["weather_data"]) {
+    const day_time_datails = calc_sun_hours_details(weather_data.sunrise, weather_data.sunset, weather_data.timezone);
+    const day_time = calc_weather_day_time(day_time_datails, { dt: weather_data.dt, timezone: weather_data.timezone });
+    const weather_detail_id = weather_data.weather_id; // тут мы более детально можем определить погоднрые условия (подробние в типизации API)
 
     // чистое небо (днем или ночью)
     if (weather_detail_id === 800 || weather_detail_id === 801 || (weather_detail_id >= 701 && weather_detail_id <= 762)) {
@@ -100,9 +104,9 @@ function renderIcon(weather: TResponse) {
     return <IconWeatherCloudy addClassName={["WeatherIcon__icon"]} />;
 }
 
-function WeatherIcon({ addClassName = [""], weather }: TProps) {
+function WeatherIcon({ addClassName = [""], weather_data }: TProps) {
     const componentClassName = [...addClassName, "WeatherIcon"].join(" ");
-    return <div className={componentClassName}>{renderIcon(weather)}</div>;
+    return <div className={componentClassName}>{renderIcon(weather_data)}</div>;
 }
 
 export { WeatherIcon };

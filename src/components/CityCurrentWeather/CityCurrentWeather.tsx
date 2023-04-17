@@ -3,7 +3,7 @@ import "./CityCurrentWeather.scss";
 import { useCurrentWeather } from "../../hooks/useCurrentWeather";
 import { WeatherContext } from "../../Contexts/WeatherContext";
 import { IconDirection } from "../../ui/IconDirection";
-import { calc_backgraund_type, calc_sun_hours_details } from "../../utils/util_functions";
+import { calc_backgraund_type, calc_sun_hours_details, convert_hpa_to_mmRtSt } from "../../utils/util_functions";
 import { IconLoader } from "../../ui/IconLoader";
 import { WeatherNowTime } from "../WeatherNowTime/WeatherNowTime";
 import { WeatherBaseInfo } from "../WeatherBaseInfo/WeatherBaseInfo";
@@ -50,16 +50,6 @@ function CityCurrentWeather({}: TProps = {}) {
     });
 
     const is_pressure = currentWeather && (currentWeather.main.pressure || currentWeather.main.grnd_level) ? true : false;
-    // поучаем давление в милиметрах ртутного стоба
-    const get_pressure = () => {
-        if (!is_pressure) return;
-
-        if (currentWeather!.main.pressure) {
-            return Math.round(currentWeather!.main.pressure * 0.75);
-        }
-
-        return Math.round(currentWeather!.main.grnd_level! * 0.75);
-    };
 
     useEffect(() => {
         if (currentWeather) {
@@ -89,11 +79,27 @@ function CityCurrentWeather({}: TProps = {}) {
                 <>
                     <div className="CityCurrentWeather__head">
                         <h2 className="CityCurrentWeather__name">{cityName}</h2>
-                        <WeatherNowTime weather={currentWeather} addClassName={["CityCurrentWeather__data_details"]} />
+                        <WeatherNowTime
+                            times={{ dt: currentWeather.dt, timezone: currentWeather.timezone }}
+                            get_hours={false}
+                            get_minutes={false}
+                            addClassName={["CityCurrentWeather__data_details"]}
+                        />
                     </div>
 
                     <div className="CityCurrentWeather__main">
-                        <WeatherBaseInfo weather={currentWeather} />
+                        <WeatherBaseInfo
+                            weather_data={{
+                                sunrise: currentWeather.sys.sunrise,
+                                sunset: currentWeather.sys.sunset,
+                                timezone: currentWeather.timezone,
+                                dt: currentWeather.dt,
+                                weather_id: currentWeather.weather[0].id,
+                                description: currentWeather.weather[0].description,
+                                temp: currentWeather.main.temp,
+                                feels_like: currentWeather.main.feels_like,
+                            }}
+                        />
 
                         <div className="CityCurrentWeather__alt_info_wrapper">
                             {currentWeather.snow ? (
@@ -134,7 +140,10 @@ function CityCurrentWeather({}: TProps = {}) {
                                 <WeatherAltInfoTemplate
                                     addClassName={["CityCurrentWeather__alt_info"]}
                                     slot_header={"Давление"}
-                                    slot_main={get_pressure()}
+                                    slot_main={convert_hpa_to_mmRtSt({
+                                        pressure: currentWeather.main.pressure,
+                                        grnd_level: currentWeather.main.grnd_level,
+                                    })}
                                     slot_dop={"мм.рт.ст."}
                                 />
                             ) : null}
