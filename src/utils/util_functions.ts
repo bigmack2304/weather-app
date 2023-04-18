@@ -331,6 +331,22 @@ function convert_hpa_to_mmRtSt(val: { pressure: number | undefined; grnd_level: 
     return Math.round(val.grnd_level! * 0.75);
 }
 
+// вычесяет смещение элемента относительно всего документа
+function GetElementOffsetsInDocument(elem: HTMLElement): { top: number; left: number } {
+    let offsets = { top: 0, left: 0 };
+
+    do {
+        if (!isNaN(elem.offsetLeft)) {
+            offsets.left += elem.offsetLeft;
+        }
+        if (!isNaN(elem.offsetTop)) {
+            offsets.top += elem.offsetTop;
+        }
+    } while ((elem = elem.offsetParent as HTMLElement));
+
+    return offsets;
+}
+
 export {
     get_full_country_by_code,
     get_system_language,
@@ -351,4 +367,5 @@ export {
     calc_weather_day_time,
     addon_map,
     convert_hpa_to_mmRtSt,
+    GetElementOffsetsInDocument,
 };
