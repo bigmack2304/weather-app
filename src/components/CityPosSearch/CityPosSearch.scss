@@ -23,6 +23,8 @@
         border-bottom-right-radius: 5px;
         overflow: hidden;
         width: 100%;
+        max-height: 137px;
+        overflow-y: auto;
     }
 
     &__hint_element {
@@ -63,7 +65,7 @@
         background-color: $BACKDROP_COLLOR;
         backdrop-filter: $BACKDROP_BLUR;
         position: fixed;
-        height: 200vh;
+        height: 100%;
         width: 100%;
         top: 0px;
         left: 0px;
