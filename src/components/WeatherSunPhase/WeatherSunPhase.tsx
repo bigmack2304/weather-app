@@ -6,6 +6,7 @@ import { IconWeatherClearNight } from "../../ui/IconWeatherClearNight";
 import { calc_sun_hours_details, addon_map, get_text_date } from "../../utils/util_functions";
 import { first_caller_delay_callback } from "../../utils/decorators";
 import { useHandleUpdate } from "../../hooks/useHandleUpdate";
+import { HoverHint } from "../../HOC/HoverHint/HoverHint";
 
 interface IWeatherSunPhaseProps {
     addClassName?: string[];
@@ -81,10 +82,14 @@ function WeatherSunPhase({ addClassName = [""], sun_hours, cityTime, cityTimezon
             <div className="WeatherSunPhase__sun_rise_wrapper">
                 {!is_night ? (
                     <>
-                        <IconSunrise sunrise={true} addClassName={["WeatherSunPhase__sun_rise_wrapper__icon"]} />
-                        <span className="WeatherSunPhase__time">
-                            {sun_hours.sunrise.hours}:{sun_hours.sunrise.minutes}
-                        </span>
+                        <HoverHint hoverText="Восход">
+                            <>
+                                <IconSunrise sunrise={true} addClassName={["WeatherSunPhase__sun_rise_wrapper__icon"]} />
+                                <span className="WeatherSunPhase__time">
+                                    {sun_hours.sunrise.hours}:{sun_hours.sunrise.minutes}
+                                </span>
+                            </>
+                        </HoverHint>
                     </>
                 ) : (
                     <>
@@ -113,14 +118,18 @@ function WeatherSunPhase({ addClassName = [""], sun_hours, cityTime, cityTimezon
             <div className="WeatherSunPhase__sun_set_wrapper">
                 {!is_night ? (
                     <>
-                        <IconSunrise sunrise={false} addClassName={["WeatherSunPhase__sun_set_wrapper__icon"]} />
+                        <HoverHint hoverText="Заход">
+                            <IconSunrise sunrise={false} addClassName={["WeatherSunPhase__sun_set_wrapper__icon"]} />
+                        </HoverHint>
                         <span className="WeatherSunPhase__time">
                             {sun_hours.sunset.hours}:{sun_hours.sunset.minutes}
                         </span>
                     </>
                 ) : (
                     <>
-                        <IconSunrise sunrise={true} addClassName={["WeatherSunPhase__sun_rise_wrapper__icon"]} />
+                        <HoverHint hoverText="Восход">
+                            <IconSunrise sunrise={true} addClassName={["WeatherSunPhase__sun_rise_wrapper__icon"]} />
+                        </HoverHint>
                         <span className="WeatherSunPhase__time">
                             {sun_hours.sunrise.hours}:{sun_hours.sunrise.minutes}
                         </span>

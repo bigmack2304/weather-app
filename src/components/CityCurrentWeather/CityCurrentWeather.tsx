@@ -3,12 +3,13 @@ import "./CityCurrentWeather.scss";
 import { useCurrentWeather } from "../../hooks/useCurrentWeather";
 import { WeatherContext } from "../../Contexts/WeatherContext";
 import { IconDirection } from "../../ui/IconDirection";
-import { calc_backgraund_type, calc_sun_hours_details, convert_hpa_to_mmRtSt } from "../../utils/util_functions";
+import { calc_backgraund_type, calc_sun_hours_details, convert_hpa_to_mmRtSt, deg_to_compass } from "../../utils/util_functions";
 import { IconLoader } from "../../ui/IconLoader";
 import { WeatherNowTime } from "../WeatherNowTime/WeatherNowTime";
 import { WeatherBaseInfo } from "../WeatherBaseInfo/WeatherBaseInfo";
 import { WeatherAltInfoTemplate } from "../WeatherAltInfoTemplate/WeatherAltInfoTemplate";
 import "./../../fonts/acline/acline.css";
+import { HoverHint } from "../../HOC/HoverHint/HoverHint";
 
 import { WeatherSunPhase } from "../WeatherSunPhase/WeatherSunPhase";
 
@@ -152,7 +153,11 @@ function CityCurrentWeather({}: TProps = {}) {
                                 <WeatherAltInfoTemplate
                                     addClassName={["CityCurrentWeather__alt_wind", "CityCurrentWeather__alt_info"]}
                                     slot_header={"Ветер"}
-                                    slot_main={<IconDirection direction={currentWeather.wind.deg} />}
+                                    slot_main={
+                                        <HoverHint hoverText={deg_to_compass(currentWeather.wind.deg)}>
+                                            <IconDirection direction={currentWeather.wind.deg} />
+                                        </HoverHint>
+                                    }
                                     slot_dop={`${currentWeather.wind.speed} м/сек`}
                                 />
                             ) : null}
