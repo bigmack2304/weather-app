@@ -1,7 +1,7 @@
-import React, { useEffect, useState, useRef, useCallback } from "react";
+import React, { useEffect, useState, useRef, useCallback, useLayoutEffect } from "react";
 import "./HoverHint.scss";
 import { Portal } from "../Portal/Portal";
-import { GetElementOffsetsInDocument } from "../../utils/util_functions";
+import { GetElementOffsetsInDocument, addon_map } from "../../utils/util_functions";
 import { first_caller_delay_callback } from "../../utils/decorators";
 
 // HOC добавляет внутреннему элементу всплывающее окно с текстом, при наведении курсора или при клике
@@ -13,7 +13,8 @@ interface IHoverHintProps {
     hoverText?: React.ReactNode; // текст всплывающего окна
     gap_vertical?: number; // нужный отступ по вертикали
     gap_horizontal?: number; // нужный отступ по горизонтали
-    delay?: number; // задержка перед появленрием
+    start_delay?: number; // задержка перед появленрием
+    end_delay?: number; // задержка перед закрытием
 }
 
 type TProps = Readonly<IHoverHintProps>;
@@ -33,7 +34,7 @@ type THoverData = {
     to_render_hint_top: boolean; // можноли отрендерить его сверху целоевого элемента
 };
 
-function HoverHint({ children, hoverText = "", gap_vertical = 5, gap_horizontal = 0, delay = 1000 }: TProps) {
+function HoverHint({ children, hoverText = "", gap_vertical = 5, gap_horizontal = 0, start_delay = 1000, end_delay = 6000 }: TProps) {
     const [isHover, setIsHover] = useState<boolean>(false); // показываетсяли подсказка
     const isHoverOut = useRef<boolean>(false); // курсор покинул элемент
     const hintRef = useRef<HTMLDivElement>(null); // ссылка на элемент с подсказкой
@@ -56,11 +57,12 @@ function HoverHint({ children, hoverText = "", gap_vertical = 5, gap_horizontal 
     const onEnter = useCallback(
         (e: MouseEvent) => {
             if (isHover) return;
-
+            // debugger;
             // обновим данные в hoverData
             isHoverOut.current = false;
             let taget_data = (e.currentTarget as HTMLElement).getBoundingClientRect();
             let offsets = GetElementOffsetsInDocument(e.currentTarget as HTMLElement);
+
             hoverData.current = {
                 ...hoverData.current,
                 target_w: Math.floor(taget_data.width),
@@ -78,7 +80,7 @@ function HoverHint({ children, hoverText = "", gap_vertical = 5, gap_horizontal 
                     setIsHover(true);
                 },
                 () => {},
-                delay
+                start_delay
             );
 
             // решаем как показать подсказку, с задержкой или нет
@@ -112,44 +114,97 @@ function HoverHint({ children, hoverText = "", gap_vertical = 5, gap_horizontal 
     useEffect(() => {
         if (isHover) {
             // обновляем данные в hoverData
-            let hint_data = hintRef.current!.getBoundingClientRect();
-            let to_render_hint_top = hoverData.current.target_vp_top - gap_vertical >= hoverData.current.hint_h;
+            const update_hint_data = () => {
+                let hint_data = hintRef.current!.getBoundingClientRect();
+                let to_render_hint_top = hoverData.current.target_vp_top - gap_vertical >= Math.floor(hint_data.height);
 
-            hoverData.current = {
-                ...hoverData.current,
-                hint_h: Math.floor(hint_data.height),
-                hint_w: Math.floor(hint_data.width),
-                to_render_hint_top: to_render_hint_top,
+                hoverData.current = {
+                    ...hoverData.current,
+                    hint_h: Math.floor(hint_data.height),
+                    hint_w: Math.floor(hint_data.width),
+                    to_render_hint_top: to_render_hint_top,
+                };
             };
 
+            update_hint_data();
+
             // расчитываем положение подсказки на экране
-            const calcHintPosition = () => {
+            const calcHintPositionTop = () => {
                 if (hoverData.current.to_render_hint_top) {
-                    return hoverData.current.target_document_top - hoverData.current.hint_h - gap_vertical;
+                    return hoverData.current.target_vp_top + window.scrollY - hoverData.current.hint_h - gap_vertical;
                 }
 
-                return hoverData.current.target_document_top + hoverData.current.target_h + gap_vertical;
+                return hoverData.current.target_vp_top + window.scrollY + hoverData.current.target_h + gap_vertical;
+            };
+
+            const calcHintPositionLeft = () => {
+                let pos_left =
+                    hoverData.current.target_vp_left +
+                    window.scrollX +
+                    hoverData.current.target_w / 2 -
+                    hoverData.current.hint_w / 2 +
+                    gap_horizontal;
+
+                if (pos_left < 0) {
+                    pos_left = 0;
+                }
+
+                if (pos_left + hoverData.current.hint_w > document.body.clientWidth) {
+                    pos_left = pos_left - Math.abs(pos_left + hoverData.current.hint_w - document.body.clientWidth);
+                }
+
+                return pos_left;
             };
 
             const setHintPosition = () => {
-                hintRef.current!.style.left = `${
-                    hoverData.current.target_document_left + hoverData.current.target_w / 2 - hoverData.current.hint_w / 2 + gap_horizontal
-                }px`;
-                hintRef.current!.style.top = `${calcHintPosition()}px`;
+                hintRef.current!.style.left = `${calcHintPositionLeft()}px`;
+                hintRef.current!.style.top = `${calcHintPositionTop()}px`;
             };
 
             setHintPosition();
 
-            // при скролле будем выключать подсказку
-            const onScroll = () => {
+            // добавим стрелочку в начале или конце блока подсказки
+            // расчитываем ее позицию
+
+            const render_arrow = () => {
+                let arrow: HTMLDivElement;
+                let pos_left: number = 0;
+
+                if (hoverData.current.to_render_hint_top) {
+                    arrow = hintRef.current!.querySelector(".HoverHint__after") as HTMLDivElement;
+                    arrow.classList.add("HoverHint__after--active");
+                } else {
+                    arrow = hintRef.current!.querySelector(".HoverHint__before") as HTMLDivElement;
+                    arrow.classList.add("HoverHint__before--active");
+                }
+
+                pos_left = hoverData.current.target_vp_left + hoverData.current.target_w / 2 - parseInt(hintRef.current!.style.left);
+                arrow.style.left = `${pos_left}px`;
+            };
+
+            render_arrow();
+
+            // при скролле и ресайзе будем выключать подсказку
+            const onScroll_or_onResize = () => {
                 if (isHover) {
                     onOut();
                 }
             };
-            document.addEventListener("scroll", onScroll);
+
+            document.addEventListener("scroll", onScroll_or_onResize);
+            window.addEventListener("resize", onScroll_or_onResize);
+
+            // заводим таймер для автовыключения подсказки
+            let timerId = setTimeout(() => {
+                if (isHover) {
+                    onOut();
+                }
+            }, end_delay);
 
             return () => {
-                document.removeEventListener("scroll", onScroll);
+                document.removeEventListener("scroll", onScroll_or_onResize);
+                window.removeEventListener("resize", onScroll_or_onResize);
+                clearTimeout(timerId);
             };
         }
     }, [isHover]);
@@ -172,6 +227,8 @@ function HoverHint({ children, hoverText = "", gap_vertical = 5, gap_horizontal 
             {isHover ? (
                 <Portal>
                     <div className="HoverHint__hint" ref={hintRef}>
+                        <div className="HoverHint__before"></div>
+                        <div className="HoverHint__after"></div>
                         {hoverText}
                     </div>
                 </Portal>
