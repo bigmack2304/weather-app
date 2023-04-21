@@ -4,6 +4,7 @@
 import { WEATHER_API_KEY, WEATHER_API_ADRESS_5D3H } from "./global_vars";
 import { get_system_language } from "./util_functions";
 import type * as FetchLatLonTypes from "./fetch_LatLon";
+import type { TresponseObjWeather } from "./fetch_current_weather";
 
 interface IFetch5d3hWeatherArgs {
     lat: number;
@@ -25,14 +26,7 @@ type TresponseObjListObj = {
         humidity: number;
         temp_kf: number;
     };
-    weather: [
-        {
-            id: number;
-            main: string;
-            description: string;
-            icon: string;
-        }
-    ];
+    weather: TresponseObjWeather;
     clouds?: {
         all: number;
     };

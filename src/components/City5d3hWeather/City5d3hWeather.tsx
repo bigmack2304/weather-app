@@ -6,6 +6,7 @@ import { IconLoader } from "../../ui/IconLoader";
 import type { TresponseObjListObj, TresponseObj } from "../../utils/fetch_5d3h_weather";
 import { WeatherAltInfoTemplate } from "../WeatherAltInfoTemplate/WeatherAltInfoTemplate";
 import { get_text_date } from "../../utils/util_functions";
+import { WeatherIcon } from "./../WeatherIcon/WeatherIcon";
 
 interface ICity5d3hWeatherProps {}
 
@@ -134,7 +135,7 @@ function City5d3hWeather({}: TProps = {}) {
                         {isResponseSorted ? (
                             <>
                                 {sorted_days_weather.current.map((day) => {
-                                    let date_txt = get_text_date(new Date(day[0].dt_txt));
+                                    let date_txt = get_text_date(new Date(day[0].dt_txt.slice(0, day[0].dt_txt.indexOf(" "))));
 
                                     const onClick = (e: React.MouseEvent, data_id: string) => {
                                         setDataIdRender(data_id);
@@ -178,8 +179,19 @@ function City5d3hWeather({}: TProps = {}) {
                                               style={{ marginTop: "10px" }}
                                           >
                                               <div>{forecast.dt_txt.slice(forecast.dt_txt.indexOf(" "), forecast.dt_txt.length)}</div>
+                                              <WeatherIcon
+                                                  weather_data={{
+                                                      sunrise: Weather!.city.sunrise,
+                                                      sunset: Weather!.city.sunset,
+                                                      timezone: Weather!.city.timezone,
+                                                      //dt: forecast.dt,
+                                                      dt: new Date(forecast.dt_txt).getTime() / 1000,
+                                                      weather_id: forecast.weather[0].id,
+                                                  }}
+                                              />
                                               <div>{forecast.weather[0].description}</div>
                                               <div>{`Температура ${forecast.main.temp}°c`}</div>
+                                              <hr />
                                           </div>
                                       );
                                   });
