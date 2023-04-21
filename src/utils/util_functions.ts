@@ -188,6 +188,9 @@ function get_text_date(date: Date | number = new Date()) {
     return {
         day_num: new Intl.DateTimeFormat([get_system_language()], { day: "numeric" }).format(date),
         day_name: new Intl.DateTimeFormat([get_system_language()], { weekday: "long" }).format(date),
+
+        day_name_short: new Intl.DateTimeFormat([get_system_language()], { weekday: "short" }).format(date),
+
         year_num: new Intl.DateTimeFormat([get_system_language()], { year: "numeric" }).format(date),
         month_name: new Intl.DateTimeFormat([get_system_language()], { month: "long" }).format(date),
         dayNum_monthName: new Intl.DateTimeFormat([get_system_language()], { month: "long", day: "numeric" }).format(date),

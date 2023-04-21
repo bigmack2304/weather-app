@@ -219,7 +219,7 @@ function HoverHint({ children, hoverText = "", gap_vertical = 5, gap_horizontal 
             (hoverHintRef.current!.children[0] as HTMLElement).removeEventListener("mouseenter", onEnter);
             (hoverHintRef.current!.children[0] as HTMLElement).removeEventListener("click", onEnter);
         };
-    }, []);
+    }, [isHover]);
 
     return (
         <div className="HoverHint" onMouseLeave={onOut} onMouseMove={onMove} ref={hoverHintRef}>

@@ -1,6 +1,5 @@
 import React from "react";
 import "./WeatherAltInfoTemplate.scss";
-import { IconDirection } from "../../ui/IconDirection";
 
 // будем показывать количество осадков если они есть.
 
@@ -10,15 +9,29 @@ interface IWeatherAltInfoTemplateProps {
     slot_header?: React.ReactNode;
     slot_main?: React.ReactNode;
     slot_dop?: React.ReactNode;
+    onClick?: (event: React.MouseEvent, data_id: string) => void;
+    data_id?: string;
 }
 
 type TProps = Readonly<IWeatherAltInfoTemplateProps>;
 
-function WeatherAltInfoTemplate({ addClassName = [""], newClassName, slot_header, slot_main, slot_dop }: TProps) {
+function WeatherAltInfoTemplate({
+    addClassName = [""],
+    newClassName,
+    slot_header,
+    slot_main,
+    slot_dop,
+    onClick = () => {},
+    data_id = "",
+}: TProps) {
     const componentClassName = newClassName ?? [...addClassName, "WeatherAltInfoTemplate"].join(" ");
 
+    const componentOnClick = (e: React.MouseEvent) => {
+        onClick(e, data_id);
+    };
+
     return (
-        <div className={componentClassName}>
+        <div className={componentClassName} onClick={componentOnClick}>
             {slot_header ? <p className="WeatherAltInfoTemplate__head">{slot_header}</p> : null}
 
             {slot_main || slot_dop ? (

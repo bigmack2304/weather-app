@@ -1,8 +1,49 @@
 @import "./../../global_styles/global_vars.scss";
 
 .City5d3hWeather {
+    width: 100%;
     position: relative;
     flex-grow: 1;
+
+    &__data_wrapper {
+    }
+
+    &__days_list {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        column-gap: 1px;
+        justify-content: center;
+
+        .WeatherAltInfoTemplate {
+            border-radius: 0;
+            flex-grow: 1;
+            padding: 2px;
+
+            &__head {
+                white-space: normal;
+            }
+
+            &__content_wrapper {
+                display: block;
+            }
+
+            &__content_main {
+                font-size: 1rem;
+                text-transform: none;
+                display: block;
+                text-overflow: ellipsis;
+                overflow: hidden;
+                text-align: center;
+            }
+        }
+    }
+
+    &__day {
+        &--active {
+            background-color: $WEATCHER_INFO_ACTIVE_BACKROUND;
+        }
+    }
 
     &__loader_wrapper {
         position: absolute;
