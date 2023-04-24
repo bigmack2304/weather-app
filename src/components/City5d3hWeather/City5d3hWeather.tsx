@@ -68,12 +68,10 @@ function City5d3hWeather({}: TProps = {}) {
         };
 
         for (let forecast of weather.list) {
-            // let day_id = forecast.dt_txt!.slice(
-            //     0,
-            //     forecast.dt_txt!.indexOf(" ") > 0 ? forecast.dt_txt!.indexOf(" ") : forecast.dt_txt!.length
-            // );
-            let day_id = dt_from_string(forecast.dt);
-            day_id = day_id.slice(0, day_id.indexOf(" "));
+            let day_id = (function () {
+                let text_date = get_text_date(forecast.dt * 1000);
+                return `${text_date.day_numUTC}.${text_date.month_numUTC}.${text_date.year_numUTC}`;
+            })();
 
             if (is_unique(day_id)) {
                 days_map.push(day_id);
@@ -83,12 +81,10 @@ function City5d3hWeather({}: TProps = {}) {
         days_map.forEach((day, index) => {
             result.push([]);
             for (let forecast of weather.list) {
-                // let day_id = forecast.dt_txt.slice(
-                //     0,
-                //     forecast.dt_txt.indexOf(" ") > 0 ? forecast.dt_txt.indexOf(" ") : forecast.dt_txt.length
-                // );
-                let day_id = dt_from_string(forecast.dt);
-                day_id = day_id.slice(0, day_id.indexOf(" "));
+                let day_id = (function () {
+                    let text_date = get_text_date(forecast.dt * 1000);
+                    return `${text_date.day_numUTC}.${text_date.month_numUTC}.${text_date.year_numUTC}`;
+                })();
 
                 if (day == day_id) {
                     result[index].push(forecast);
@@ -108,16 +104,7 @@ function City5d3hWeather({}: TProps = {}) {
 
             for (let day_data of sorted_weather[i]) {
                 let day_str = dt_from_string(day_data.dt);
-                if (
-                    // day_data.dt_txt.includes("3:00") ||
-                    // day_data.dt_txt.includes("9:00") ||
-                    // day_data.dt_txt.includes("15:00") ||
-                    // day_data.dt_txt.includes("21:00")
-                    day_str.includes("3:0") ||
-                    day_str.includes("9:0") ||
-                    day_str.includes("15:0") ||
-                    day_str.includes("21:0")
-                ) {
+                if (day_str.includes("3:0") || day_str.includes("9:0") || day_str.includes("15:0") || day_str.includes("21:0")) {
                     result[i].push(day_data);
                 }
             }
@@ -155,7 +142,6 @@ function City5d3hWeather({}: TProps = {}) {
                 <div className="City5d3hWeather__data_wrapper">
                     <div className="City5d3hWeather__days_list">
                         {sorted_days_weather.map((day) => {
-                            // let date_txt = get_text_date(new Date(day[0].dt_txt.slice(0, day[0].dt_txt.indexOf(" "))));
                             let date_txt = get_text_date(new Date(day[0].dt * 1000));
 
                             const onClick = (e: React.MouseEvent, data_id: string) => {
@@ -163,7 +149,7 @@ function City5d3hWeather({}: TProps = {}) {
                             };
 
                             return (
-                                <React.Fragment key={dt_from_string(day[0].dt)}>
+                                <React.Fragment key={day[0].dt}>
                                     <WeatherAltInfoTemplate
                                         slot_header={date_txt.day_name_short}
                                         slot_main={date_txt.dayNum_monthNameUTC}
@@ -225,12 +211,11 @@ function City5d3hWeather({}: TProps = {}) {
                                               className="City5d3hWeather__day_time_weather"
                                               style={{ marginTop: "10px" }}
                                           >
-                                              {/* <div>{forecast.dt_txt.slice(forecast.dt_txt.indexOf(" "), forecast.dt_txt.length)}</div> */}
                                               <div>
-                                                  {dt_from_string(forecast.dt).slice(
-                                                      dt_from_string(forecast.dt).indexOf(" "),
-                                                      dt_from_string(forecast.dt).length
-                                                  )}
+                                                  {(function () {
+                                                      let text_date = get_text_date(forecast.dt * 1000);
+                                                      return `${text_date.hoursUTC}:${text_date.minutesUTC}`;
+                                                  })()}
                                               </div>
                                               <WeatherIcon
                                                   weather_data={{

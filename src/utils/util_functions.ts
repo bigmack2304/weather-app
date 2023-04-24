@@ -180,6 +180,24 @@ function deg_to_compass(val: number) {
 }
 
 // преобразует Date или таймштамп в строку со времянем
+const intl_day_num = new Intl.DateTimeFormat([get_system_language()], { day: "numeric" });
+const intl_day_name = new Intl.DateTimeFormat([get_system_language()], { weekday: "long" });
+const intl_day_name_short = new Intl.DateTimeFormat([get_system_language()], { weekday: "short" });
+const intl_year_num = new Intl.DateTimeFormat([get_system_language()], { year: "numeric" });
+const intl_month_name = new Intl.DateTimeFormat([get_system_language()], { month: "long" });
+const intl_month_num = new Intl.DateTimeFormat([get_system_language()], { month: "numeric" });
+const intl_month_numUTC = new Intl.DateTimeFormat([get_system_language()], { month: "numeric", timeZone: "UTC" });
+const intl_dayNum_monthName = new Intl.DateTimeFormat([get_system_language()], { month: "long", day: "numeric" });
+const intl_minutes = new Intl.DateTimeFormat([get_system_language()], { minute: "2-digit" });
+const intl_hours = new Intl.DateTimeFormat([get_system_language()], { hour: "2-digit" });
+const intl_day_numUTC = new Intl.DateTimeFormat([get_system_language()], { day: "numeric", timeZone: "UTC" });
+const intl_day_nameUTC = new Intl.DateTimeFormat([get_system_language()], { weekday: "long", timeZone: "UTC" });
+const intl_year_numUTC = new Intl.DateTimeFormat([get_system_language()], { year: "numeric", timeZone: "UTC" });
+const intl_month_nameUTC = new Intl.DateTimeFormat([get_system_language()], { month: "long", timeZone: "UTC" });
+const intl_dayNum_monthNameUTC = new Intl.DateTimeFormat([get_system_language()], { month: "long", day: "numeric", timeZone: "UTC" });
+const intl_hoursUTC = new Intl.DateTimeFormat([get_system_language()], { hour: "2-digit", timeZone: "UTC" });
+const intl_minutesUTC = new Intl.DateTimeFormat([get_system_language()], { minute: "2-digit", timeZone: "UTC" });
+
 function get_text_date(date: Date | number = new Date()) {
     if (typeof date === "number") {
         date = new Date(date);
@@ -194,28 +212,23 @@ function get_text_date(date: Date | number = new Date()) {
     };
 
     return {
-        day_num: new Intl.DateTimeFormat([get_system_language()], { day: "numeric" }).format(date),
-        day_name: new Intl.DateTimeFormat([get_system_language()], { weekday: "long" }).format(date),
-
-        day_name_short: new Intl.DateTimeFormat([get_system_language()], { weekday: "short" }).format(date),
-
-        year_num: new Intl.DateTimeFormat([get_system_language()], { year: "numeric" }).format(date),
-        month_name: new Intl.DateTimeFormat([get_system_language()], { month: "long" }).format(date),
-        month_num: new Intl.DateTimeFormat([get_system_language()], { month: "numeric" }).format(date),
-        month_numUTC: new Intl.DateTimeFormat([get_system_language()], { month: "numeric", timeZone: "UTC" }).format(date),
-        dayNum_monthName: new Intl.DateTimeFormat([get_system_language()], { month: "long", day: "numeric" }).format(date),
-        minutes: to_twoDigit(new Intl.DateTimeFormat([get_system_language()], { minute: "2-digit" }).format(date)),
-        hours: to_twoDigit(new Intl.DateTimeFormat([get_system_language()], { hour: "2-digit" }).format(date)),
-
-        day_numUTC: new Intl.DateTimeFormat([get_system_language()], { day: "numeric", timeZone: "UTC" }).format(date),
-        day_nameUTC: new Intl.DateTimeFormat([get_system_language()], { weekday: "long", timeZone: "UTC" }).format(date),
-        year_numUTC: new Intl.DateTimeFormat([get_system_language()], { year: "numeric", timeZone: "UTC" }).format(date),
-        month_nameUTC: new Intl.DateTimeFormat([get_system_language()], { month: "long", timeZone: "UTC" }).format(date),
-        dayNum_monthNameUTC: new Intl.DateTimeFormat([get_system_language()], { month: "long", day: "numeric", timeZone: "UTC" }).format(
-            date
-        ),
-        hoursUTC: to_twoDigit(new Intl.DateTimeFormat([get_system_language()], { hour: "2-digit", timeZone: "UTC" }).format(date)),
-        minutesUTC: to_twoDigit(new Intl.DateTimeFormat([get_system_language()], { minute: "2-digit", timeZone: "UTC" }).format(date)),
+        day_num: intl_day_num.format(date),
+        day_name: intl_day_name.format(date),
+        day_name_short: intl_day_name_short.format(date),
+        year_num: intl_year_num.format(date),
+        month_name: intl_month_name.format(date),
+        month_num: intl_month_num.format(date),
+        month_numUTC: intl_month_numUTC.format(date),
+        dayNum_monthName: intl_dayNum_monthName.format(date),
+        minutes: to_twoDigit(intl_minutes.format(date)),
+        hours: to_twoDigit(intl_hours.format(date)),
+        day_numUTC: intl_day_numUTC.format(date),
+        day_nameUTC: intl_day_nameUTC.format(date),
+        year_numUTC: intl_year_numUTC.format(date),
+        month_nameUTC: intl_month_nameUTC.format(date),
+        dayNum_monthNameUTC: intl_dayNum_monthNameUTC.format(date),
+        hoursUTC: to_twoDigit(intl_hoursUTC.format(date)),
+        minutesUTC: to_twoDigit(intl_minutesUTC.format(date)),
     };
 }
 
