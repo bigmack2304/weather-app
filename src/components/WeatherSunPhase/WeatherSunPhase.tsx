@@ -82,7 +82,7 @@ function WeatherSunPhase({ addClassName = [""], sun_hours, cityTime, cityTimezon
             <div className="WeatherSunPhase__sun_rise_wrapper">
                 {!is_night ? (
                     <>
-                        <HoverHint hoverText="Восход">
+                        <HoverHint hoverText="Восход" key={1}>
                             <>
                                 <IconSunrise sunrise={true} addClassName={["WeatherSunPhase__sun_rise_wrapper__icon"]} />
                                 <span className="WeatherSunPhase__time">
@@ -93,8 +93,8 @@ function WeatherSunPhase({ addClassName = [""], sun_hours, cityTime, cityTimezon
                     </>
                 ) : (
                     <>
-                        <IconWeatherClearNight addClassName={["WeatherSunPhase__sun_rise_wrapper__icon"]} />
-                        <span className="WeatherSunPhase__time">
+                        <IconWeatherClearNight addClassName={["WeatherSunPhase__sun_rise_wrapper__icon"]} key={2} />
+                        <span className="WeatherSunPhase__time" key={3}>
                             {fixed_time_data.hoursUTC}:{fixed_time_data.minutesUTC}
                         </span>
                     </>
@@ -103,34 +103,34 @@ function WeatherSunPhase({ addClassName = [""], sun_hours, cityTime, cityTimezon
             <div className="WeatherSunPhase__vieport" ref={refVieport}>
                 {!is_night ? (
                     <>
-                        <hr className="WeatherSunPhase__g1" />
-                        <hr className="WeatherSunPhase__g2" ref={refG2} />
-                        <div className="WeatherSunPhase__sun_wrapper" ref={refSunWrapper}>
+                        <hr className="WeatherSunPhase__g2" ref={refG2} key={1} />
+                        <div className="WeatherSunPhase__sun_wrapper" ref={refSunWrapper} key={2}>
                             <IconWeatherClearDay />
                         </div>
+                        <hr className="WeatherSunPhase__g1" key={3} />
                     </>
                 ) : (
                     <>
-                        <hr className="WeatherSunPhase__g1" />
+                        <hr className="WeatherSunPhase__g1" key={3} />
                     </>
                 )}
             </div>
             <div className="WeatherSunPhase__sun_set_wrapper">
                 {!is_night ? (
                     <>
-                        <HoverHint hoverText="Заход">
+                        <HoverHint hoverText="Заход" key={1}>
                             <IconSunrise sunrise={false} addClassName={["WeatherSunPhase__sun_set_wrapper__icon"]} />
                         </HoverHint>
-                        <span className="WeatherSunPhase__time">
+                        <span className="WeatherSunPhase__time" key={2}>
                             {sun_hours.sunset.hours}:{sun_hours.sunset.minutes}
                         </span>
                     </>
                 ) : (
                     <>
-                        <HoverHint hoverText="Восход">
+                        <HoverHint hoverText="Восход" key={3}>
                             <IconSunrise sunrise={true} addClassName={["WeatherSunPhase__sun_rise_wrapper__icon"]} />
                         </HoverHint>
-                        <span className="WeatherSunPhase__time">
+                        <span className="WeatherSunPhase__time" key={2}>
                             {sun_hours.sunrise.hours}:{sun_hours.sunrise.minutes}
                         </span>
                     </>

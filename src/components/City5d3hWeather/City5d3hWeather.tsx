@@ -207,7 +207,7 @@ function City5d3hWeather({}: TProps = {}) {
 
                                       return (
                                           <div
-                                              key={forecast.dt_txt}
+                                              key={forecast.dt}
                                               className="City5d3hWeather__day_time_weather"
                                               style={{ marginTop: "10px" }}
                                           >

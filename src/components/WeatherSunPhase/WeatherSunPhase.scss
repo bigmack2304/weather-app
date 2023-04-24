@@ -11,7 +11,7 @@
     width: 100%;
     flex-direction: row;
     justify-content: space-between;
-    background-color: #292c52;
+    background-color: $WEATCHER_INFO_BACKROUND;
     border-radius: $WEATCHER_INFO_BORDER_RADIUS;
     padding: 4px;
 
@@ -56,14 +56,14 @@
     &__sun_wrapper {
         width: 35px;
         height: 35px;
-        background-color: #292c52;
+        background-color: #292c5200;
         flex-shrink: 0;
         z-index: 0;
     }
 
     &__g1 {
         @include GElement();
-        position: absolute;
+        // position: absolute;
         border-top: 2px white;
         border-style: dashed;
         width: 100%;
