@@ -14,9 +14,8 @@ type TProps = Readonly<ICity5d3hWeatherProps>;
 
 function City5d3hWeather({}: TProps = {}) {
     const { lat, lon, cityName } = useContext(WeatherContext);
-    const sorted_days_weather = useRef<TresponseObjListObj[][]>([]); // двумерный массив, первый слой - дни, второй - погода на 3 - 9 - 15 - 21 часов
+    const [sorted_days_weather, set_sorted_days_weather] = useState<TresponseObjListObj[][]>([]); // двумерный массив, первый слой - дни, второй - погода на 3 - 9 - 15 - 21 часов
     const [isLoadingVisible, setIsLoadingVisible] = useState<boolean>(false);
-    const [isResponseSorted, setIsResponseSorted] = useState<boolean>(false);
     const [dataIdRender, setDataIdRender] = useState<string>("");
 
     const onErrorFetchWeather = () => {
@@ -39,6 +38,11 @@ function City5d3hWeather({}: TProps = {}) {
         fetchStartCallback: onStartFetchWeather,
         fetchEndCallback: onEndFetchWeather,
     });
+
+    const dt_from_string = (dt: number): string => {
+        let text_date = get_text_date(dt * 1000);
+        return `${text_date.day_numUTC}.${text_date.month_numUTC}.${text_date.year_numUTC} ${text_date.hoursUTC}:${text_date.minutesUTC}`;
+    };
 
     // сортирует ответ на массив дней с прогнозами
     const sort_weather_response = (weather: TresponseObj) => {
@@ -64,7 +68,12 @@ function City5d3hWeather({}: TProps = {}) {
         };
 
         for (let forecast of weather.list) {
-            let day_id = forecast.dt_txt.slice(0, forecast.dt_txt.indexOf(" ") > 0 ? forecast.dt_txt.indexOf(" ") : forecast.dt_txt.length);
+            // let day_id = forecast.dt_txt!.slice(
+            //     0,
+            //     forecast.dt_txt!.indexOf(" ") > 0 ? forecast.dt_txt!.indexOf(" ") : forecast.dt_txt!.length
+            // );
+            let day_id = dt_from_string(forecast.dt);
+            day_id = day_id.slice(0, day_id.indexOf(" "));
 
             if (is_unique(day_id)) {
                 days_map.push(day_id);
@@ -74,10 +83,13 @@ function City5d3hWeather({}: TProps = {}) {
         days_map.forEach((day, index) => {
             result.push([]);
             for (let forecast of weather.list) {
-                let day_id = forecast.dt_txt.slice(
-                    0,
-                    forecast.dt_txt.indexOf(" ") > 0 ? forecast.dt_txt.indexOf(" ") : forecast.dt_txt.length
-                );
+                // let day_id = forecast.dt_txt.slice(
+                //     0,
+                //     forecast.dt_txt.indexOf(" ") > 0 ? forecast.dt_txt.indexOf(" ") : forecast.dt_txt.length
+                // );
+                let day_id = dt_from_string(forecast.dt);
+                day_id = day_id.slice(0, day_id.indexOf(" "));
+
                 if (day == day_id) {
                     result[index].push(forecast);
                 }
@@ -95,11 +107,16 @@ function City5d3hWeather({}: TProps = {}) {
             result.push([]);
 
             for (let day_data of sorted_weather[i]) {
+                let day_str = dt_from_string(day_data.dt);
                 if (
-                    day_data.dt_txt.includes("3:00") ||
-                    day_data.dt_txt.includes("9:00") ||
-                    day_data.dt_txt.includes("15:00") ||
-                    day_data.dt_txt.includes("21:00")
+                    // day_data.dt_txt.includes("3:00") ||
+                    // day_data.dt_txt.includes("9:00") ||
+                    // day_data.dt_txt.includes("15:00") ||
+                    // day_data.dt_txt.includes("21:00")
+                    day_str.includes("3:0") ||
+                    day_str.includes("9:0") ||
+                    day_str.includes("15:0") ||
+                    day_str.includes("21:0")
                 ) {
                     result[i].push(day_data);
                 }
@@ -109,52 +126,54 @@ function City5d3hWeather({}: TProps = {}) {
         return result;
     };
 
+    // после сортировки ответа о прогнозе
+    useEffect(() => {
+        // если не один день не выбран, выбираем первый по умолчанию
+        if (sorted_days_weather.length > 0 && dataIdRender == "") {
+            // setDataIdRender(sorted_days_weather[0][0].dt_txt);
+            setDataIdRender(dt_from_string(sorted_days_weather[0][0].dt));
+            console.log(sorted_days_weather);
+        }
+    }, [sorted_days_weather]);
+
+    // после любого обновления прогноза
     useEffect(() => {
         if (Weather) {
-            sorted_days_weather.current = delete_undue_hours(sort_weather_response(Weather));
+            set_sorted_days_weather(delete_undue_hours(sort_weather_response(Weather)));
             console.log(Weather);
-            console.log(sorted_days_weather.current);
-            setIsResponseSorted(true);
-
-            // если не один день не выбран, выбираем первый по умолчанию
-            if (dataIdRender == "") {
-                setDataIdRender(sorted_days_weather.current[0][0].dt_txt);
-            }
         }
     }, [Weather]);
 
+    // после любого обновления компонента
     useEffect(() => {
         getWeather();
     });
 
     return (
         <div className="City5d3hWeather">
-            {Weather ? (
+            {Weather && sorted_days_weather.length > 0 ? (
                 <div className="City5d3hWeather__data_wrapper">
                     <div className="City5d3hWeather__days_list">
-                        {isResponseSorted ? (
-                            <>
-                                {sorted_days_weather.current.map((day) => {
-                                    let date_txt = get_text_date(new Date(day[0].dt_txt.slice(0, day[0].dt_txt.indexOf(" "))));
+                        {sorted_days_weather.map((day) => {
+                            // let date_txt = get_text_date(new Date(day[0].dt_txt.slice(0, day[0].dt_txt.indexOf(" "))));
+                            let date_txt = get_text_date(new Date(day[0].dt * 1000));
 
-                                    const onClick = (e: React.MouseEvent, data_id: string) => {
-                                        setDataIdRender(data_id);
-                                    };
+                            const onClick = (e: React.MouseEvent, data_id: string) => {
+                                setDataIdRender(data_id);
+                            };
 
-                                    return (
-                                        <React.Fragment key={day[0].dt_txt}>
-                                            <WeatherAltInfoTemplate
-                                                slot_header={date_txt.day_name_short}
-                                                slot_main={date_txt.dayNum_monthNameUTC}
-                                                onClick={onClick}
-                                                data_id={day[0].dt_txt}
-                                                addClassName={dataIdRender == day[0].dt_txt ? ["City5d3hWeather__day--active"] : []}
-                                            />
-                                        </React.Fragment>
-                                    );
-                                })}
-                            </>
-                        ) : null}
+                            return (
+                                <React.Fragment key={dt_from_string(day[0].dt)}>
+                                    <WeatherAltInfoTemplate
+                                        slot_header={date_txt.day_name_short}
+                                        slot_main={date_txt.dayNum_monthNameUTC}
+                                        onClick={onClick}
+                                        data_id={dt_from_string(day[0].dt)}
+                                        addClassName={dataIdRender == dt_from_string(day[0].dt) ? ["City5d3hWeather__day--active"] : []}
+                                    />
+                                </React.Fragment>
+                            );
+                        })}
                     </div>
                     <div className="City5d3hWeather__day_weather">
                         {dataIdRender !== ""
@@ -163,29 +182,63 @@ function City5d3hWeather({}: TProps = {}) {
                                   // сперва определяем положение нужного дня в массиве дней
                                   let day_id = 0;
 
-                                  for (let i = 0; i < sorted_days_weather.current.length; i++) {
+                                  for (let i = 0; i < sorted_days_weather.length; i++) {
                                       day_id = i;
-                                      if (sorted_days_weather.current[i][0].dt_txt == dataIdRender) {
+                                      if (dt_from_string(sorted_days_weather[i][0].dt) == dataIdRender) {
                                           break;
                                       }
                                   }
 
                                   // теперь обходим почасовые прогнозы и выводим разметку
-                                  return sorted_days_weather.current[day_id].map((forecast) => {
+                                  return sorted_days_weather[day_id].map((forecast) => {
+                                      let calc_sunrise = () => {
+                                          let time = Weather!.city.sunrise;
+
+                                          if (day_id == 0) {
+                                              return time;
+                                          }
+
+                                          for (let i = 0; i < day_id; i++) {
+                                              time += 86400;
+                                          }
+
+                                          return time;
+                                      };
+
+                                      let calc_sunset = () => {
+                                          let time = Weather!.city.sunset;
+
+                                          if (day_id == 0) {
+                                              return time;
+                                          }
+
+                                          for (let i = 0; i < day_id; i++) {
+                                              time += 86400;
+                                          }
+
+                                          return time;
+                                      };
+
                                       return (
                                           <div
                                               key={forecast.dt_txt}
                                               className="City5d3hWeather__day_time_weather"
                                               style={{ marginTop: "10px" }}
                                           >
-                                              <div>{forecast.dt_txt.slice(forecast.dt_txt.indexOf(" "), forecast.dt_txt.length)}</div>
+                                              {/* <div>{forecast.dt_txt.slice(forecast.dt_txt.indexOf(" "), forecast.dt_txt.length)}</div> */}
+                                              <div>
+                                                  {dt_from_string(forecast.dt).slice(
+                                                      dt_from_string(forecast.dt).indexOf(" "),
+                                                      dt_from_string(forecast.dt).length
+                                                  )}
+                                              </div>
                                               <WeatherIcon
                                                   weather_data={{
-                                                      sunrise: Weather!.city.sunrise,
-                                                      sunset: Weather!.city.sunset,
-                                                      timezone: Weather!.city.timezone,
-                                                      //dt: forecast.dt,
-                                                      dt: new Date(forecast.dt_txt).getTime() / 1000,
+                                                      // этот компонент изначально был расчитан на текущую погоду, поэтому там требовалось сдвигать sunrise. sunset. dt на timezone, сдесь для dt это не нужно
+                                                      sunrise: calc_sunrise(), // api не предостовляет информации о восходе и заходе на будующие дни, поэтому для них будем брать время восхода такоеже как и в текущем дне, для этого секундный таймштамп увеличиваем на 1 день
+                                                      sunset: calc_sunset(),
+                                                      timezone: Weather!.city.timezone, // timezone нужен для корректного расчета sunrise и sunset
+                                                      dt: forecast.dt - Weather!.city.timezone, // при расчетах WeatherIcon сдвигает это время на timezone, но в данном случае мы это невелируем, сдивигая его в противоположную сторону
                                                       weather_id: forecast.weather[0].id,
                                                   }}
                                               />

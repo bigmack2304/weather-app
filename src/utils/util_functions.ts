@@ -185,6 +185,14 @@ function get_text_date(date: Date | number = new Date()) {
         date = new Date(date);
     }
 
+    const to_twoDigit = (str: string) => {
+        if (str == "0") {
+            return "00";
+        }
+
+        return str;
+    };
+
     return {
         day_num: new Intl.DateTimeFormat([get_system_language()], { day: "numeric" }).format(date),
         day_name: new Intl.DateTimeFormat([get_system_language()], { weekday: "long" }).format(date),
@@ -193,9 +201,11 @@ function get_text_date(date: Date | number = new Date()) {
 
         year_num: new Intl.DateTimeFormat([get_system_language()], { year: "numeric" }).format(date),
         month_name: new Intl.DateTimeFormat([get_system_language()], { month: "long" }).format(date),
+        month_num: new Intl.DateTimeFormat([get_system_language()], { month: "numeric" }).format(date),
+        month_numUTC: new Intl.DateTimeFormat([get_system_language()], { month: "numeric", timeZone: "UTC" }).format(date),
         dayNum_monthName: new Intl.DateTimeFormat([get_system_language()], { month: "long", day: "numeric" }).format(date),
-        minutes: new Intl.DateTimeFormat([get_system_language()], { minute: "numeric" }).format(date),
-        hours: new Intl.DateTimeFormat([get_system_language()], { hour: "numeric" }).format(date),
+        minutes: to_twoDigit(new Intl.DateTimeFormat([get_system_language()], { minute: "2-digit" }).format(date)),
+        hours: to_twoDigit(new Intl.DateTimeFormat([get_system_language()], { hour: "2-digit" }).format(date)),
 
         day_numUTC: new Intl.DateTimeFormat([get_system_language()], { day: "numeric", timeZone: "UTC" }).format(date),
         day_nameUTC: new Intl.DateTimeFormat([get_system_language()], { weekday: "long", timeZone: "UTC" }).format(date),
@@ -204,8 +214,8 @@ function get_text_date(date: Date | number = new Date()) {
         dayNum_monthNameUTC: new Intl.DateTimeFormat([get_system_language()], { month: "long", day: "numeric", timeZone: "UTC" }).format(
             date
         ),
-        hoursUTC: new Intl.DateTimeFormat([get_system_language()], { hour: "numeric", timeZone: "UTC" }).format(date),
-        minutesUTC: new Intl.DateTimeFormat([get_system_language()], { minute: "numeric", timeZone: "UTC" }).format(date),
+        hoursUTC: to_twoDigit(new Intl.DateTimeFormat([get_system_language()], { hour: "2-digit", timeZone: "UTC" }).format(date)),
+        minutesUTC: to_twoDigit(new Intl.DateTimeFormat([get_system_language()], { minute: "2-digit", timeZone: "UTC" }).format(date)),
     };
 }
 

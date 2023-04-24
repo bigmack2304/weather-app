@@ -44,9 +44,9 @@ type TresponseObjListObj = {
         ["3h"]: number;
     };
     sys: {
-        pod: string;
+        pod: "d" | "n";
     };
-    dt_txt: string;
+    dt_txt?: string;
 };
 
 type TresponseObj = {
