@@ -5,8 +5,10 @@ import { use5d3hWeather } from "../../hooks/use5d3hWeather";
 import { IconLoader } from "../../ui/IconLoader";
 import type { TresponseObjListObj, TresponseObj } from "../../utils/fetch_5d3h_weather";
 import { WeatherAltInfoTemplate } from "../WeatherAltInfoTemplate/WeatherAltInfoTemplate";
-import { get_text_date } from "../../utils/util_functions";
+import { get_text_date, deg_to_compass } from "../../utils/util_functions";
 import { WeatherIcon } from "./../WeatherIcon/WeatherIcon";
+import { IconDirection } from "../../ui/IconDirection";
+import { HoverHint } from "../../HOC/HoverHint/HoverHint";
 
 interface ICity5d3hWeatherProps {}
 
@@ -206,17 +208,13 @@ function City5d3hWeather({}: TProps = {}) {
                                       };
 
                                       return (
-                                          <div
-                                              key={forecast.dt}
-                                              className="City5d3hWeather__day_time_weather"
-                                              style={{ marginTop: "10px" }}
-                                          >
-                                              <div>
+                                          <div key={forecast.dt} className="City5d3hWeather__day_time_weather">
+                                              <span className="City5d3hWeather__day_time_time">
                                                   {(function () {
                                                       let text_date = get_text_date(forecast.dt * 1000);
                                                       return `${text_date.hoursUTC}:${text_date.minutesUTC}`;
                                                   })()}
-                                              </div>
+                                              </span>
                                               <WeatherIcon
                                                   weather_data={{
                                                       // этот компонент изначально был расчитан на текущую погоду, поэтому там требовалось сдвигать sunrise. sunset. dt на timezone, сдесь для dt это не нужно
@@ -227,9 +225,20 @@ function City5d3hWeather({}: TProps = {}) {
                                                       weather_id: forecast.weather[0].id,
                                                   }}
                                               />
-                                              <div>{forecast.weather[0].description}</div>
-                                              <div>{`Температура ${forecast.main.temp}°c`}</div>
-                                              <hr />
+                                              <span className="City5d3hWeather__day_time_desc">{forecast.weather[0].description}</span>
+                                              {forecast.rain ? <span>{`${forecast.rain["3h"]} мм/3ч`}</span> : null}
+                                              {forecast.snow ? <span>{`${forecast.snow["3h"]} мм/3ч`}</span> : null}
+                                              {forecast.wind ? (
+                                                  <div className="City5d3hWeather__day_time_wnd">
+                                                      <span>{forecast.wind.speed.toFixed(1)} м/сек</span>
+                                                      <HoverHint hoverText={deg_to_compass(forecast.wind.deg)}>
+                                                          <IconDirection direction={forecast.wind.deg} />
+                                                      </HoverHint>
+                                                  </div>
+                                              ) : null}
+                                              <span className="City5d3hWeather__day_time_temp">{`${forecast.main.temp.toFixed(
+                                                  1
+                                              )} °c`}</span>
                                           </div>
                                       );
                                   });

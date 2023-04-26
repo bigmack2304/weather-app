@@ -4,6 +4,7 @@
     width: 100%;
     position: relative;
     flex-grow: 1;
+    padding: 10px;
 
     &__data_wrapper {
     }
@@ -13,12 +14,16 @@
         flex-direction: row;
         flex-wrap: nowrap;
         column-gap: 1px;
-        justify-content: center;
+        justify-content: space-between;
+        border-radius: $WEATCHER_INFO_BORDER_RADIUS;
+        overflow: hidden;
 
         .WeatherAltInfoTemplate {
             border-radius: 0;
             flex-grow: 1;
             padding: 2px;
+            cursor: pointer;
+            user-select: none;
 
             &__head {
                 white-space: normal;
@@ -43,6 +48,68 @@
         &--active {
             background-color: $WEATCHER_INFO_ACTIVE_BACKROUND;
         }
+    }
+
+    &__day_weather {
+        margin-top: 10px;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: stretch;
+        justify-content: space-evenly;
+        gap: 20px;
+    }
+
+    &__day_time_weather {
+        flex-basis: 22%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 5px;
+        background-color: #00000082;
+        color: white;
+        min-width: 110px;
+        max-width: 220px;
+        border-radius: $WEATCHER_INFO_BORDER_RADIUS;
+        gap: 0.4rem;
+        font-size: 1.1rem;
+        overflow: hidden;
+
+        .WeatherIcon {
+            align-self: center;
+            height: auto;
+            width: 3.5rem;
+        }
+    }
+
+    &__day_time_time {
+        width: fit-content;
+        background-color: $WEATCHER_INFO_ACTIVE_BACKROUND;
+        box-shadow: -6px -6px 0 7px $WEATCHER_INFO_ACTIVE_BACKROUND;
+        border-radius: 2px;
+        padding-right: 2px;
+    }
+
+    &__day_time_desc {
+        text-align: center;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    &__day_time_wnd {
+        display: flex;
+        flex-direction: row-reverse;
+        flex-wrap: nowrap;
+        justify-content: space-between;
+
+        .IconDirection {
+            height: auto;
+            width: 1.5rem;
+        }
+    }
+
+    &__day_time_temp {
+        font-size: 1.3rem;
     }
 
     &__loader_wrapper {
