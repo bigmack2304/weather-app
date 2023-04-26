@@ -124,6 +124,7 @@
         @include is-screen(desctop) {
             flex-direction: column;
             max-width: 660px;
+            border-radius: 0;
         }
     }
 

@@ -16,6 +16,10 @@
     overflow: hidden;
     max-width: 460px;
 
+    @include is-screen(desctop) {
+        border-radius: 0;
+    }
+
     &__desc {
         text-align: center;
         text-transform: uppercase;

@@ -7,6 +7,13 @@
     padding: 10px;
 
     &__data_wrapper {
+        @include is-screen(desctop) {
+            display: flex;
+            flex-direction: row;
+            align-items: stretch;
+            flex-wrap: nowrap;
+            gap: 40px;
+        }
     }
 
     &__days_list {
@@ -18,12 +25,26 @@
         border-radius: $WEATCHER_INFO_BORDER_RADIUS;
         overflow: hidden;
 
+        @include is-screen(desctop) {
+            width: 200px;
+            gap: 2px;
+            flex-direction: initial;
+            flex-wrap: wrap;
+            flex-grow: 0;
+            flex-shrink: 0;
+            border-radius: 0;
+        }
+
         .WeatherAltInfoTemplate {
             border-radius: 0;
             flex-grow: 1;
             padding: 2px;
             cursor: pointer;
             user-select: none;
+
+            @include is-screen(desctop) {
+                width: 49%;
+            }
 
             &__head {
                 white-space: normal;
@@ -58,6 +79,13 @@
         align-items: stretch;
         justify-content: space-evenly;
         gap: 20px;
+
+        @include is-screen(desctop) {
+            margin-top: 0;
+            justify-content: start;
+            width: 100%;
+            gap: 5px;
+        }
     }
 
     &__day_time_weather {
@@ -74,6 +102,12 @@
         gap: 0.4rem;
         font-size: 1.1rem;
         overflow: hidden;
+
+        @include is-screen(desctop) {
+            border-radius: 0px;
+            height: 300px;
+            flex-grow: 1;
+        }
 
         .WeatherIcon {
             align-self: center;

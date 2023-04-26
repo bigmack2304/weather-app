@@ -15,6 +15,10 @@
     border-radius: $WEATCHER_INFO_BORDER_RADIUS;
     padding: 4px;
 
+    @include is-screen(desctop) {
+        border-radius: 0;
+    }
+
     &__sun_rise_wrapper,
     &__sun_set_wrapper {
         display: flex;
