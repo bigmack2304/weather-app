@@ -177,7 +177,12 @@ function HoverHint({ children, hoverText = "", gap_vertical = 5, gap_horizontal 
                     arrow.classList.add("HoverHint__before--active");
                 }
 
-                pos_left = hoverData.current.target_vp_left + hoverData.current.target_w / 2 - parseInt(hintRef.current!.style.left);
+                pos_left =
+                    hoverData.current.target_vp_left +
+                    window.scrollX +
+                    hoverData.current.target_w / 2 -
+                    parseInt(hintRef.current!.style.left) -
+                    arrow.getBoundingClientRect().width / 2;
                 arrow.style.left = `${pos_left}px`;
             };
 
