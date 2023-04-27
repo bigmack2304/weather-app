@@ -110,6 +110,10 @@ function City5d3hWeather({}: TProps = {}) {
                     result[i].push(day_data);
                 }
             }
+
+            if (result[i].length == 0) {
+                result.splice(i, 1); // если после чистки остался пустой подмассив то нужно его удалить
+            }
         }
 
         return result;
