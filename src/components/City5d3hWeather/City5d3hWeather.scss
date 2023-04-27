@@ -41,9 +41,10 @@
             padding: 2px;
             cursor: pointer;
             user-select: none;
+            max-width: 149px;
 
             @include is-screen(desctop) {
-                width: 49%;
+                max-width: 99px;
             }
 
             &__head {

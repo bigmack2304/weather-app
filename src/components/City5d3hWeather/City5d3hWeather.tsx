@@ -5,7 +5,7 @@ import { use5d3hWeather } from "../../hooks/use5d3hWeather";
 import { IconLoader } from "../../ui/IconLoader";
 import type { TresponseObjListObj, TresponseObj } from "../../utils/fetch_5d3h_weather";
 import { WeatherAltInfoTemplate } from "../WeatherAltInfoTemplate/WeatherAltInfoTemplate";
-import { get_text_date, deg_to_compass } from "../../utils/util_functions";
+import { get_text_date, deg_to_compass, addon_map } from "../../utils/util_functions";
 import { WeatherIcon } from "./../WeatherIcon/WeatherIcon";
 import { IconDirection } from "../../ui/IconDirection";
 import { HoverHint } from "../../HOC/HoverHint/HoverHint";
@@ -229,7 +229,9 @@ function City5d3hWeather({}: TProps = {}) {
                                                       weather_id: forecast.weather[0].id,
                                                   }}
                                               />
-                                              <span className="City5d3hWeather__day_time_desc">{forecast.weather[0].description}</span>
+                                              <HoverHint hoverText={`Вероятность осадков ${addon_map(forecast.pop, 0.0, 1.0, 0, 100)}%`}>
+                                                  <span className="City5d3hWeather__day_time_desc">{forecast.weather[0].description}</span>
+                                              </HoverHint>
                                               {forecast.rain ? <span>{`${forecast.rain["3h"]} мм/3ч`}</span> : null}
                                               {forecast.snow ? <span>{`${forecast.snow["3h"]} мм/3ч`}</span> : null}
                                               {forecast.wind ? (
