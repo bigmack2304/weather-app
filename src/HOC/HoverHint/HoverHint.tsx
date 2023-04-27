@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef, useCallback, useLayoutEffect } from "react";
 import "./HoverHint.scss";
 import { Portal } from "../Portal/Portal";
-import { GetElementOffsetsInDocument, addon_map } from "../../utils/util_functions";
+import { GetElementOffsetsInDocument, add_to_macro_stack } from "../../utils/util_functions";
 import { first_caller_delay_callback } from "../../utils/decorators";
 
 // HOC добавляет внутреннему элементу всплывающее окно с текстом, при наведении курсора или при клике
@@ -57,7 +57,6 @@ function HoverHint({ children, hoverText = "", gap_vertical = 5, gap_horizontal 
     const onEnter = useCallback(
         (e: MouseEvent) => {
             if (isHover) return;
-            // debugger;
             // обновим данные в hoverData
             isHoverOut.current = false;
             let taget_data = (e.currentTarget as HTMLElement).getBoundingClientRect();
@@ -77,7 +76,7 @@ function HoverHint({ children, hoverText = "", gap_vertical = 5, gap_horizontal 
             const updateHover = first_caller_delay_callback(
                 () => {
                     if (isHoverOut.current) return;
-                    setIsHover(true);
+                    add_to_macro_stack(setIsHover, true);
                 },
                 () => {},
                 start_delay
@@ -85,7 +84,7 @@ function HoverHint({ children, hoverText = "", gap_vertical = 5, gap_horizontal 
 
             // решаем как показать подсказку, с задержкой или нет
             if (e.type && e.type === "click") {
-                setIsHover(true);
+                add_to_macro_stack(setIsHover, true);
             } else {
                 updateHover();
             }
@@ -97,7 +96,7 @@ function HoverHint({ children, hoverText = "", gap_vertical = 5, gap_horizontal 
     // курсор уходит с эемента
     const onOut = () => {
         isHoverOut.current = true;
-        setIsHover(false);
+        add_to_macro_stack(setIsHover, false);
     };
 
     // курсор движется над элементом
@@ -214,16 +213,18 @@ function HoverHint({ children, hoverText = "", gap_vertical = 5, gap_horizontal 
     useEffect(() => {
         (hoverHintRef.current!.children[0] as HTMLElement).addEventListener("mouseenter", onEnter);
         (hoverHintRef.current!.children[0] as HTMLElement).addEventListener("click", onEnter);
+        (hoverHintRef.current!.children[0] as HTMLElement).addEventListener("mouseleave", onOut);
 
         return () => {
             if (!hoverHintRef.current) return;
             (hoverHintRef.current.children[0] as HTMLElement).removeEventListener("mouseenter", onEnter);
             (hoverHintRef.current.children[0] as HTMLElement).removeEventListener("click", onEnter);
+            (hoverHintRef.current!.children[0] as HTMLElement).removeEventListener("mouseleave", onOut);
         };
     }, [isHover]);
 
     return (
-        <div className="HoverHint" onMouseLeave={onOut} onMouseMove={onMove} ref={hoverHintRef}>
+        <div className="HoverHint" onMouseMove={onMove} ref={hoverHintRef}>
             {children}
             {isHover ? (
                 <Portal>

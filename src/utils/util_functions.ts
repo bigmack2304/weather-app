@@ -373,6 +373,13 @@ function GetElementOffsetsInDocument(elem: HTMLElement): { top: number; left: nu
     return offsets;
 }
 
+// добавляет функцию в стек макро задачь и вызывает ее с указанными аргументами
+function add_to_macro_stack<T extends (...args: any[]) => any>(func: T, ...args: Parameters<T>) {
+    setTimeout(() => {
+        func(...args);
+    });
+}
+
 export {
     get_full_country_by_code,
     get_system_language,
@@ -394,4 +401,5 @@ export {
     addon_map,
     convert_hpa_to_mmRtSt,
     GetElementOffsetsInDocument,
+    add_to_macro_stack,
 };
