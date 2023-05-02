@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useRef, useEffect } from "react";
+import { useHandleUpdate } from "../../hooks/useHandleUpdate";
 import { AreaChart, XAxis, YAxis, Tooltip, CartesianGrid, Area, ResponsiveContainer } from "recharts";
 
 type IChartDot = {
@@ -20,10 +21,37 @@ type TChartTypeOneProps = {
 
 type TProps = Readonly<TChartTypeOneProps>;
 
+type TChartSizes = {
+    h: number;
+    w: number;
+};
+
 function ChartTypeOne({ chartData, pointsData }: TProps) {
+    const wrapperRef = useRef<HTMLDivElement>(null);
+    const chartSizes = useRef<TChartSizes>({ w: 0, h: 0 });
+    const [handleUpdate] = useHandleUpdate();
+
+    const chart_update_size = () => {
+        const sizes = wrapperRef.current?.getBoundingClientRect();
+        chartSizes.current.h = sizes!.height;
+        chartSizes.current.w = sizes!.width;
+        // debugger;
+        // handleUpdate();
+    };
+
+    useEffect(() => {
+        if (!wrapperRef.current) return;
+        //chart_update_size();
+    }, []);
+
     return (
         <ResponsiveContainer width="100%" height="100%" debounce={200}>
-            <AreaChart margin={{ top: 0, left: 0, right: 0, bottom: 0 }} data={chartData}>
+            <AreaChart
+                margin={{ top: 0, left: -30, right: 0, bottom: 0 }}
+                data={chartData}
+                width={chartSizes.current.w}
+                height={chartSizes.current.h}
+            >
                 <defs>
                     {pointsData.map((point) => {
                         return (
@@ -51,8 +79,8 @@ function ChartTypeOne({ chartData, pointsData }: TProps) {
                 })}
                 <XAxis dataKey={"name"} />
                 <YAxis />
-                <CartesianGrid strokeDasharray="3 3" />
-                <Tooltip />
+                <CartesianGrid strokeDasharray="5 5" />
+                <Tooltip active={false} />
             </AreaChart>
         </ResponsiveContainer>
     );

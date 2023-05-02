@@ -3,7 +3,15 @@
 .CityPosSearch {
     position: relative;
     min-width: 269px;
-    width: 269px;
+    //width: 269px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    flex-wrap: nowrap;
+    gap: 5px;
+    background-color: $WEATCHER_INFO_NOACTIVE_BACKROUND;
+    padding: 5px;
+    border-radius: 5px;
 
     &__hints_wrapper {
         position: absolute;
@@ -12,8 +20,8 @@
         flex-direction: column;
         align-items: center;
         row-gap: 5px;
-        width: 269px;
-        margin: 37px 0 0 10px;
+        width: 245px;
+        margin: 37px 0 0 15px;
     }
 
     &__hints_elements {
@@ -56,9 +64,12 @@
         width: 18px;
         height: 18px;
         z-index: 1;
-        position: absolute;
-        top: 3px;
-        left: 187px;
+        position: relative;
+        // top: 3px;
+        // left: 187px;
+        .IconLoader__item {
+            background-color: white;
+        }
     }
 
     &__history_outer {
@@ -78,7 +89,8 @@
         position: relative;
 
         .FormSearch__search {
-            padding-right: 25px;
+            // padding-right: 25px;
+            width: 245px;
             height: 24px;
             background-color: #ffffff69;
             border: none;

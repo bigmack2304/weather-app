@@ -149,6 +149,19 @@
         width: fit-content;
     }
 
+    &__chart {
+        margin-top: 40px;
+        height: 300px;
+        overflow: hidden;
+        background-color: #0000006e;
+        padding: 5px;
+        border-radius: 3px;
+
+        .recharts-text {
+            fill: white;
+        }
+    }
+
     &__loader_wrapper {
         position: absolute;
         top: 0;

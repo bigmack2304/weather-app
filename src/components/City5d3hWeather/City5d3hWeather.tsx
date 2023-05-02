@@ -267,7 +267,7 @@ function City5d3hWeather({}: TProps = {}) {
                                 : null}
                         </div>
                     </div>
-                    <div style={{ height: "400px", marginTop: "40px" }}>
+                    <div className="City5d3hWeather__chart">
                         <ChartTypeOne
                             chartData={
                                 rawSortedWeather.current[dayIndexRendered.current].map((day) => {
