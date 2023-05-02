@@ -11,6 +11,8 @@ import { update_meta_title, unshuft_unique_obj_to_array_force } from "../../util
 import { useLoacalStorage } from "../../hooks/useLocalStorage";
 import { useHashAddressBar } from "../../hooks/useHashAddressBar";
 import { PortalVieport } from "../../components/PortalVieport/PortalVieport";
+import "./../../utils/chart_fix";
+import "./../../global_styles/chart_fix.scss";
 
 // Начальная страница
 

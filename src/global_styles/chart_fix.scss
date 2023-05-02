@@ -1,0 +1,6 @@
+.recharts-tooltip-wrapper[style*="visibility: hidden;"] {
+    .CustomizedTooltip_wrapper {
+        z-index: -1;
+        position: relative;
+    }
+}

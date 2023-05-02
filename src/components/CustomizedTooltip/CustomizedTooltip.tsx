@@ -13,10 +13,15 @@ function CustomizedTooltip(external: TooltipProps<ValueType, NameType>) {
     const toolTipHide = first_caller_delay_callback(
         () => {
             document.querySelector(".recharts-tooltip-wrapper")!.dispatchEvent(new MouseEvent("mouseout", { bubbles: true }));
+            // refTooltip.current!.style.display = "none";
         },
         () => {},
         200
     );
+
+    useEffect(() => {
+        //   refTooltip.current!.style.display = "block";
+    });
 
     useEffect(() => {
         timerId = setTimeout(() => {
@@ -30,6 +35,7 @@ function CustomizedTooltip(external: TooltipProps<ValueType, NameType>) {
         window.addEventListener("scroll", toolTipHide);
 
         return () => {
+            // refTooltip.current!.style.display = "block";
             window.removeEventListener("resize", toolTipHide);
             window.removeEventListener("scroll", toolTipHide);
 
