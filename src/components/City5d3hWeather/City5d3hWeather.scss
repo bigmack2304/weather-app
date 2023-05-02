@@ -150,8 +150,10 @@
     }
 
     &__chart {
-        margin-top: 40px;
-        height: 300px;
+        margin: 60px auto 0 auto;
+        // height: 300px;
+        max-height: 500px;
+        max-width: 1800px;
         overflow: hidden;
         background-color: #0000006e;
         padding: 5px;
@@ -159,6 +161,7 @@
 
         .recharts-text {
             fill: white;
+            font-size: 14px;
         }
     }
 

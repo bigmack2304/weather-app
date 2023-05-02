@@ -10,6 +10,7 @@ import { WeatherIcon } from "./../WeatherIcon/WeatherIcon";
 import { IconDirection } from "../../ui/IconDirection";
 import { HoverHint } from "../../HOC/HoverHint/HoverHint";
 import { ChartTypeOne } from "../ChartTypeOne/ChartTypeOne";
+import { useHandleUpdate } from "../../hooks/useHandleUpdate";
 
 interface ICity5d3hWeatherProps {}
 
@@ -22,6 +23,8 @@ function City5d3hWeather({}: TProps = {}) {
     const dayIndexRendered = useRef<number>(0);
     const [isLoadingVisible, setIsLoadingVisible] = useState<boolean>(false);
     const [dataIdRender, setDataIdRender] = useState<string>("");
+    const refChartWrapper = useRef<HTMLDivElement>(null);
+    const [handleUpdate] = useHandleUpdate();
 
     const onErrorFetchWeather = () => {
         setIsLoadingVisible(false);
@@ -134,12 +137,43 @@ function City5d3hWeather({}: TProps = {}) {
 
     // после любого обновления прогноза
     useEffect(() => {
-        if (Weather) {
-            rawSortedWeather.current = sort_weather_response(Weather);
-            set_sorted_days_weather(delete_undue_hours(rawSortedWeather.current));
-            console.log(Weather);
-        }
+        if (!Weather) return;
+        rawSortedWeather.current = sort_weather_response(Weather);
+        set_sorted_days_weather(delete_undue_hours(rawSortedWeather.current));
+        console.log(Weather);
+
+        // const resizeCallback = () => {
+        //     if (!refChartWrapper.current) return;
+        //     const chartWrapperSizes = refChartWrapper.current!.getBoundingClientRect();
+        //     refChartWrapper.current!.style.height = `${chartWrapperSizes.width / 2}px`;
+        // };
+
+        // debugger;
+
+        // window.addEventListener("resize", resizeCallback);
+
+        return () => {
+            // window.removeEventListener("resize", resizeCallback);
+        };
     }, [Weather]);
+
+    useEffect(() => {
+        if (!refChartWrapper.current) return;
+
+        const resizeCallback = () => {
+            if (!refChartWrapper.current) return;
+            const chartWrapperSizes = refChartWrapper.current!.getBoundingClientRect();
+            refChartWrapper.current!.style.height = `${chartWrapperSizes.width / 2}px`;
+        };
+
+        resizeCallback();
+
+        window.addEventListener("resize", resizeCallback);
+
+        return () => {
+            window.removeEventListener("resize", resizeCallback);
+        };
+    }, [refChartWrapper.current]);
 
     // после любого обновления компонента
     useEffect(() => {
@@ -267,7 +301,7 @@ function City5d3hWeather({}: TProps = {}) {
                                 : null}
                         </div>
                     </div>
-                    <div className="City5d3hWeather__chart">
+                    <div className="City5d3hWeather__chart" ref={refChartWrapper}>
                         <ChartTypeOne
                             chartData={
                                 rawSortedWeather.current[dayIndexRendered.current].map((day) => {

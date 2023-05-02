@@ -1,0 +1,15 @@
+.CustomizedTooltip_wrapper {
+    background-color: white;
+    padding: 4px;
+    font-size: 0.8rem;
+    border-radius: 5px;
+    overflow: hidden;
+    border: 1px black solid;
+    box-shadow: -2px 2px 7px #0000008f;
+
+    p {
+        margin: 0 0 5px 0;
+        text-align: center;
+        font-weight: bold;
+    }
+}
