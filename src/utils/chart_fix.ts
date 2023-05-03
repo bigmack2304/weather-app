@@ -1,7 +1,7 @@
 let observer: MutationObserver;
 
 function on_added(mutations: MutationRecord[], observer: MutationObserver) {
-    console.log(mutations);
+    // console.log(mutations);
     let node = document.querySelector("#recharts_measurement_span");
 
     if (node) {

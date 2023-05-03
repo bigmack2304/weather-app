@@ -78,8 +78,17 @@
         }
     }
 
-    &__main {
+    &__main_wrapper {
         flex-grow: 1;
+        position: relative;
+
+        @include is-screen(desctop) {
+            padding: 10px 0;
+            background-color: $WEATCHER_INFO_ALT_NOACTIVE_BACKROUND;
+        }
+    }
+
+    &__main {
         display: grid;
         justify-items: center;
         align-items: center;
@@ -89,6 +98,9 @@
             "grid_alt_info grid_alt_info"
             "grid_sun_phase grid_sun_phase";
 
+        position: absolute;
+        height: 100%;
+
         grid-template-columns: 1fr 1fr;
 
         .WeatherBaseInfo {
@@ -97,6 +109,7 @@
         }
 
         @include is-screen(desctop) {
+            position: initial;
             flex-grow: 0;
             grid-template-areas:
                 "grid_base_info grid_alt_info"

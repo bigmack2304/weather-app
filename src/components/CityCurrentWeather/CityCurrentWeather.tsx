@@ -88,98 +88,100 @@ function CityCurrentWeather({}: TProps = {}) {
                         />
                     </div>
 
-                    <div className="CityCurrentWeather__main">
-                        <WeatherBaseInfo
-                            weather_data={{
-                                sunrise: currentWeather.sys.sunrise,
-                                sunset: currentWeather.sys.sunset,
-                                timezone: currentWeather.timezone,
-                                dt: currentWeather.dt,
-                                weather_id: currentWeather.weather[0].id,
-                                description: currentWeather.weather[0].description,
-                                temp: currentWeather.main.temp,
-                                feels_like: currentWeather.main.feels_like,
-                            }}
-                        />
-
-                        <div className="CityCurrentWeather__alt_info_wrapper">
-                            {currentWeather.snow ? (
-                                <WeatherAltInfoTemplate
-                                    addClassName={["CityCurrentWeather__alt_info"]}
-                                    slot_header={"Снег"}
-                                    slot_main={currentWeather.snow["1h"]}
-                                    slot_dop={"мм/ч"}
-                                />
-                            ) : null}
-
-                            {currentWeather.rain ? (
-                                <WeatherAltInfoTemplate
-                                    addClassName={["CityCurrentWeather__alt_info"]}
-                                    slot_header={"Дождь"}
-                                    slot_main={currentWeather.rain["1h"]}
-                                    slot_dop={"мм/ч"}
-                                />
-                            ) : null}
-
-                            <WeatherAltInfoTemplate
-                                addClassName={["CityCurrentWeather__alt_info"]}
-                                slot_header={"Влажность"}
-                                slot_main={`${Math.round(currentWeather.main.humidity)}`}
-                                slot_dop={"%"}
+                    <div className="CityCurrentWeather__main_wrapper">
+                        <div className="CityCurrentWeather__main">
+                            <WeatherBaseInfo
+                                weather_data={{
+                                    sunrise: currentWeather.sys.sunrise,
+                                    sunset: currentWeather.sys.sunset,
+                                    timezone: currentWeather.timezone,
+                                    dt: currentWeather.dt,
+                                    weather_id: currentWeather.weather[0].id,
+                                    description: currentWeather.weather[0].description,
+                                    temp: currentWeather.main.temp,
+                                    feels_like: currentWeather.main.feels_like,
+                                }}
                             />
 
-                            {currentWeather.clouds && currentWeather.clouds.all ? (
+                            <div className="CityCurrentWeather__alt_info_wrapper">
+                                {currentWeather.snow ? (
+                                    <WeatherAltInfoTemplate
+                                        addClassName={["CityCurrentWeather__alt_info"]}
+                                        slot_header={"Снег"}
+                                        slot_main={currentWeather.snow["1h"]}
+                                        slot_dop={"мм/ч"}
+                                    />
+                                ) : null}
+
+                                {currentWeather.rain ? (
+                                    <WeatherAltInfoTemplate
+                                        addClassName={["CityCurrentWeather__alt_info"]}
+                                        slot_header={"Дождь"}
+                                        slot_main={currentWeather.rain["1h"]}
+                                        slot_dop={"мм/ч"}
+                                    />
+                                ) : null}
+
                                 <WeatherAltInfoTemplate
                                     addClassName={["CityCurrentWeather__alt_info"]}
-                                    slot_header={"Облачность"}
-                                    slot_main={currentWeather.clouds.all}
+                                    slot_header={"Влажность"}
+                                    slot_main={`${Math.round(currentWeather.main.humidity)}`}
                                     slot_dop={"%"}
                                 />
-                            ) : null}
 
-                            {is_pressure ? (
+                                {currentWeather.clouds && currentWeather.clouds.all ? (
+                                    <WeatherAltInfoTemplate
+                                        addClassName={["CityCurrentWeather__alt_info"]}
+                                        slot_header={"Облачность"}
+                                        slot_main={currentWeather.clouds.all}
+                                        slot_dop={"%"}
+                                    />
+                                ) : null}
+
+                                {is_pressure ? (
+                                    <WeatherAltInfoTemplate
+                                        addClassName={["CityCurrentWeather__alt_info"]}
+                                        slot_header={"Давление"}
+                                        slot_main={convert_hpa_to_mmRtSt({
+                                            pressure: currentWeather.main.pressure,
+                                            grnd_level: currentWeather.main.grnd_level,
+                                        })}
+                                        slot_dop={"мм.рт.ст."}
+                                    />
+                                ) : null}
+
+                                {currentWeather.wind ? (
+                                    <WeatherAltInfoTemplate
+                                        addClassName={["CityCurrentWeather__alt_wind", "CityCurrentWeather__alt_info"]}
+                                        slot_header={"Ветер"}
+                                        slot_main={
+                                            <HoverHint hoverText={deg_to_compass(currentWeather.wind.deg)}>
+                                                <IconDirection direction={currentWeather.wind.deg} />
+                                            </HoverHint>
+                                        }
+                                        slot_dop={`${currentWeather.wind.speed} м/сек`}
+                                    />
+                                ) : null}
+
                                 <WeatherAltInfoTemplate
                                     addClassName={["CityCurrentWeather__alt_info"]}
-                                    slot_header={"Давление"}
-                                    slot_main={convert_hpa_to_mmRtSt({
-                                        pressure: currentWeather.main.pressure,
-                                        grnd_level: currentWeather.main.grnd_level,
-                                    })}
-                                    slot_dop={"мм.рт.ст."}
+                                    slot_header={"Видимость"}
+                                    slot_main={`${(currentWeather.visibility / 1000).toPrecision(2)}`}
+                                    slot_dop={"Км"}
                                 />
-                            ) : null}
+                            </div>
 
-                            {currentWeather.wind ? (
-                                <WeatherAltInfoTemplate
-                                    addClassName={["CityCurrentWeather__alt_wind", "CityCurrentWeather__alt_info"]}
-                                    slot_header={"Ветер"}
-                                    slot_main={
-                                        <HoverHint hoverText={deg_to_compass(currentWeather.wind.deg)}>
-                                            <IconDirection direction={currentWeather.wind.deg} />
-                                        </HoverHint>
-                                    }
-                                    slot_dop={`${currentWeather.wind.speed} м/сек`}
-                                />
-                            ) : null}
-
-                            <WeatherAltInfoTemplate
-                                addClassName={["CityCurrentWeather__alt_info"]}
-                                slot_header={"Видимость"}
-                                slot_main={`${(currentWeather.visibility / 1000).toPrecision(2)}`}
-                                slot_dop={"Км"}
+                            <WeatherSunPhase
+                                addClassName={["CityCurrentWeather__sun_phase"]}
+                                sun_hours={calc_sun_hours_details(
+                                    currentWeather.sys.sunrise,
+                                    currentWeather.sys.sunset,
+                                    currentWeather.timezone
+                                )}
+                                cityTime={currentWeather.dt}
+                                cityTimezone={currentWeather.timezone}
                             />
                         </div>
-
-                        <WeatherSunPhase
-                            addClassName={["CityCurrentWeather__sun_phase"]}
-                            sun_hours={calc_sun_hours_details(
-                                currentWeather.sys.sunrise,
-                                currentWeather.sys.sunset,
-                                currentWeather.timezone
-                            )}
-                            cityTime={currentWeather.dt}
-                            cityTimezone={currentWeather.timezone}
-                        />
                     </div>
                 </>
             ) : !isLoadingVisible ? (

@@ -10,7 +10,6 @@ import { WeatherIcon } from "./../WeatherIcon/WeatherIcon";
 import { IconDirection } from "../../ui/IconDirection";
 import { HoverHint } from "../../HOC/HoverHint/HoverHint";
 import { ChartTypeOne } from "../ChartTypeOne/ChartTypeOne";
-import { useHandleUpdate } from "../../hooks/useHandleUpdate";
 
 interface ICity5d3hWeatherProps {}
 
@@ -19,12 +18,11 @@ type TProps = Readonly<ICity5d3hWeatherProps>;
 function City5d3hWeather({}: TProps = {}) {
     const { lat, lon, cityName } = useContext(WeatherContext);
     const [sorted_days_weather, set_sorted_days_weather] = useState<TresponseObjListObj[][]>([]); // двумерный массив, первый слой - дни, второй - погода на 3 - 9 - 15 - 21 часов
-    const rawSortedWeather = useRef<TresponseObjListObj[][]>([]);
-    const dayIndexRendered = useRef<number>(0);
-    const [isLoadingVisible, setIsLoadingVisible] = useState<boolean>(false);
-    const [dataIdRender, setDataIdRender] = useState<string>("");
-    const refChartWrapper = useRef<HTMLDivElement>(null);
-    const [handleUpdate] = useHandleUpdate();
+    const rawSortedWeather = useRef<TresponseObjListObj[][]>([]); // тотже массив что и выше но тут в каждом дне присутствуют все часы с интервалом в 3
+    const dayIndexRendered = useRef<number>(0); // индекс дня в первом слое sorted_days_weather. День, информация о котором в данный момент выводится на экран
+    const [isLoadingVisible, setIsLoadingVisible] = useState<boolean>(false); // отображать-ли значек загрузки
+    const [dataIdRender, setDataIdRender] = useState<string>(""); // dt идонтефикатор дня, который мы отображаем
+    const refChartWrapper = useRef<HTMLDivElement>(null); // ссылка на DOM контейнер для графика
 
     const onErrorFetchWeather = () => {
         setIsLoadingVisible(false);
@@ -129,7 +127,6 @@ function City5d3hWeather({}: TProps = {}) {
     useEffect(() => {
         // если не один день не выбран, выбираем первый по умолчанию
         if (sorted_days_weather.length > 0 && dataIdRender == "") {
-            // setDataIdRender(sorted_days_weather[0][0].dt_txt);
             setDataIdRender(dt_from_string(sorted_days_weather[0][0].dt));
             console.log(sorted_days_weather);
         }
@@ -141,23 +138,10 @@ function City5d3hWeather({}: TProps = {}) {
         rawSortedWeather.current = sort_weather_response(Weather);
         set_sorted_days_weather(delete_undue_hours(rawSortedWeather.current));
         console.log(Weather);
-
-        // const resizeCallback = () => {
-        //     if (!refChartWrapper.current) return;
-        //     const chartWrapperSizes = refChartWrapper.current!.getBoundingClientRect();
-        //     refChartWrapper.current!.style.height = `${chartWrapperSizes.width / 2}px`;
-        // };
-
-        // debugger;
-
-        // window.addEventListener("resize", resizeCallback);
-
-        return () => {
-            // window.removeEventListener("resize", resizeCallback);
-        };
     }, [Weather]);
 
     useEffect(() => {
+        console.log(dayIndexRendered.current);
         if (!refChartWrapper.current) return;
 
         const resizeCallback = () => {
@@ -173,13 +157,12 @@ function City5d3hWeather({}: TProps = {}) {
         return () => {
             window.removeEventListener("resize", resizeCallback);
         };
-    }, [refChartWrapper.current]);
+    }, [refChartWrapper.current, dayIndexRendered.current]);
 
     // после любого обновления компонента
     useEffect(() => {
         getWeather();
     });
-
     return (
         <div className="City5d3hWeather">
             {Weather && sorted_days_weather.length > 0 ? (
@@ -193,6 +176,23 @@ function City5d3hWeather({}: TProps = {}) {
                                     setDataIdRender(data_id);
                                 };
 
+                                const gen_classnames = () => {
+                                    let classes: string[] = [];
+
+                                    if (dataIdRender == dt_from_string(day[0].dt)) {
+                                        classes.push("City5d3hWeather__day--active");
+                                    }
+
+                                    if (
+                                        date_txt.day_name_short.toLocaleUpperCase() == "СБ" ||
+                                        date_txt.day_name_short.toLocaleUpperCase() == "ВС"
+                                    ) {
+                                        classes.push("City5d3hWeather__day--weekend");
+                                    }
+
+                                    return classes;
+                                };
+
                                 return (
                                     <React.Fragment key={day[0].dt}>
                                         <WeatherAltInfoTemplate
@@ -200,7 +200,7 @@ function City5d3hWeather({}: TProps = {}) {
                                             slot_main={date_txt.dayNum_monthNameUTC}
                                             onClick={onClick}
                                             data_id={dt_from_string(day[0].dt)}
-                                            addClassName={dataIdRender == dt_from_string(day[0].dt) ? ["City5d3hWeather__day--active"] : []}
+                                            addClassName={gen_classnames()}
                                         />
                                     </React.Fragment>
                                 );
@@ -301,21 +301,27 @@ function City5d3hWeather({}: TProps = {}) {
                                 : null}
                         </div>
                     </div>
-                    <div className="City5d3hWeather__chart" ref={refChartWrapper}>
-                        <ChartTypeOne
-                            chartData={
-                                rawSortedWeather.current[dayIndexRendered.current].map((day) => {
-                                    return {
-                                        name: (function () {
-                                            let text_date = get_text_date(day.dt * 1000);
-                                            return `${text_date.hoursUTC}:${text_date.minutesUTC}`;
-                                        })(),
-                                        Температура: day.main.temp,
-                                    };
-                                }) as any
-                            }
-                            pointsData={[{ pointName: "Температура", pointGradientCloror: "#f0f8ff", pointLineCloror: "#d33d29" }]}
-                        />
+                    <div className="City5d3hWeather__chart_wrapper">
+                        <div
+                            className="City5d3hWeather__chart"
+                            ref={refChartWrapper}
+                            key={`${dayIndexRendered.current}-${Weather.city.name}`}
+                        >
+                            <ChartTypeOne
+                                chartData={
+                                    rawSortedWeather.current[dayIndexRendered.current].map((day) => {
+                                        return {
+                                            name: (function () {
+                                                let text_date = get_text_date(day.dt * 1000);
+                                                return `${text_date.hoursUTC}:${text_date.minutesUTC}`;
+                                            })(),
+                                            Температура: day.main.temp,
+                                        };
+                                    }) as any
+                                }
+                                pointsData={[{ pointName: "Температура", pointGradientCloror: "#f0f8ff", pointLineCloror: "#d33d29" }]}
+                            />
+                        </div>
                     </div>
                 </>
             ) : !isLoadingVisible ? (

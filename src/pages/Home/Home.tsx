@@ -61,15 +61,17 @@ function HomePage() {
     return (
         <WeatherContext.Provider value={weatherState}>
             <main className="Home" ref={homeRef}>
-                <section className="Home__weather_now">
-                    <h3 className="visually_hidden">Погода на сегодня</h3>
-                    <Header />
-                    <CityCurrentWeather />
-                </section>
-                <section className="Home__weather_week">
-                    <h3 className="visually_hidden">Погода на 5 дней</h3>
-                    <City5d3hWeather />
-                </section>
+                <Header />
+                <div className="Home__in_container">
+                    <section className="Home__weather_now">
+                        <h3 className="visually_hidden">Погода на сегодня</h3>
+                        <CityCurrentWeather />
+                    </section>
+                    <section className="Home__weather_week">
+                        <h3 className="visually_hidden">Погода на 5 дней</h3>
+                        <City5d3hWeather />
+                    </section>
+                </div>
                 <Footer />
             </main>
             <PortalVieport />

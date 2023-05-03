@@ -13,6 +13,8 @@
             align-items: stretch;
             flex-wrap: nowrap;
             gap: 40px;
+            padding: 10px 0;
+            background-color: $WEATCHER_INFO_ALT_NOACTIVE_BACKROUND;
         }
     }
 
@@ -46,6 +48,7 @@
 
             @include is-screen(desctop) {
                 max-width: 99px;
+                justify-content: center;
             }
 
             &__head {
@@ -54,6 +57,10 @@
 
             &__content_wrapper {
                 display: block;
+
+                @include is-screen(desctop) {
+                    flex-basis: auto;
+                }
             }
 
             &__content_main {
@@ -71,6 +78,10 @@
         &--active {
             background-color: $WEATCHER_INFO_ACTIVE_BACKROUND;
         }
+
+        &--weekend {
+            color: #ff3232;
+        }
     }
 
     &__day_weather {
@@ -84,7 +95,7 @@
 
         @include is-screen(desctop) {
             margin-top: 0;
-            justify-content: start;
+            justify-content: center;
             width: 100%;
             gap: 5px;
         }
@@ -149,11 +160,23 @@
         width: fit-content;
     }
 
-    &__chart {
+    &__chart_wrapper {
         margin: 60px auto 0 auto;
-        // height: 300px;
-        max-height: 500px;
-        max-width: 1800px;
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        flex-direction: row;
+
+        @include is-screen(desctop) {
+            background-color: $WEATCHER_INFO_ALT_NOACTIVE_BACKROUND;
+            padding: 10px 0;
+        }
+    }
+
+    &__chart {
+        max-height: 300px;
+        max-width: 900px;
+        width: 100%;
         overflow: hidden;
         background-color: #0000006e;
         padding: 5px;

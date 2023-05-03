@@ -20,6 +20,11 @@
 .Home {
     background: #c9c9c9;
 
+    &__in_container {
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+
     &__weather_now {
         min-height: 100vh;
         display: flex;
@@ -42,11 +47,13 @@
         flex-wrap: wrap;
         align-items: stretch;
         justify-content: flex-start;
-        margin-top: 20px;
+        padding-top: 20px;
 
         @include is-screen(desctop) {
             box-shadow: rgba(0, 0, 0, 0) 0px 0px 0px 0px;
-            margin-top: 60px;
+            min-height: fit-content;
+            padding-top: 60px;
+            padding-bottom: 30px;
         }
     }
 
