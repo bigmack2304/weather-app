@@ -330,7 +330,7 @@ function City5d3hWeather({}: TProps = {}) {
                                 );
                             })()}
                         </div>
-                        <div className="City5d3hWeather__chart" ref={refChartWrapper} key={dataIdRender}>
+                        <div className="City5d3hWeather__chart" ref={refChartWrapper}>
                             <ChartTypeOne
                                 chartData={rawSortedWeather.current[dayIndexRendered.current].map((day) => {
                                     return {
