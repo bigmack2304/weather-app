@@ -4,7 +4,13 @@ import type { ValueType, NameType } from "recharts/types/component/DefaultToolti
 import { first_caller_delay_callback } from "../../utils/decorators";
 import "./CustomizedTooltip.scss";
 
-function CustomizedTooltip(external: TooltipProps<ValueType, NameType>) {
+interface ICustomizedTooltipProps {
+    toolTipPostfix?: string;
+}
+
+type TProps = TooltipProps<ValueType, NameType> & ICustomizedTooltipProps;
+
+function CustomizedTooltip(external: TProps) {
     let isActive = external.active!;
     let timerId: number | null = null;
     let refTooltip = useRef<HTMLDivElement>(null);
@@ -43,14 +49,14 @@ function CustomizedTooltip(external: TooltipProps<ValueType, NameType>) {
         };
     }, [external]);
 
-    console.log(data);
-
     return (
         <div ref={refTooltip} className="CustomizedTooltip_wrapper">
             {data ? (
                 <>
                     <p>{data.payload.name}</p>
-                    <span>{`${data.dataKey}: ${data.payload[data.dataKey!]} °c`}</span>
+                    <span>{`${data.dataKey}: ${data.payload[data.dataKey!]} ${
+                        external.toolTipPostfix && external.toolTipPostfix !== "" ? external.toolTipPostfix : ""
+                    }`}</span>
                 </>
             ) : null}
         </div>

@@ -23,6 +23,7 @@ function City5d3hWeather({}: TProps = {}) {
     const [isLoadingVisible, setIsLoadingVisible] = useState<boolean>(false); // отображать-ли значек загрузки
     const [dataIdRender, setDataIdRender] = useState<string>(""); // dt идонтефикатор дня, который мы отображаем
     const refChartWrapper = useRef<HTMLDivElement>(null); // ссылка на DOM контейнер для графика
+    const [chartDataType, setChartDataType] = useState<string>("Температура"); // dt идонтефикатор дня, который мы отображаем
 
     const onErrorFetchWeather = () => {
         setIsLoadingVisible(false);
@@ -141,7 +142,6 @@ function City5d3hWeather({}: TProps = {}) {
     }, [Weather]);
 
     useEffect(() => {
-        console.log(dayIndexRendered.current);
         if (!refChartWrapper.current) return;
 
         const resizeCallback = () => {
@@ -165,7 +165,7 @@ function City5d3hWeather({}: TProps = {}) {
     });
     return (
         <div className="City5d3hWeather">
-            {Weather && sorted_days_weather.length > 0 ? (
+            {Weather && sorted_days_weather.length > 0 && !isLoadingVisible ? (
                 <>
                     <div className="City5d3hWeather__data_wrapper">
                         <div className="City5d3hWeather__days_list">
@@ -302,24 +302,54 @@ function City5d3hWeather({}: TProps = {}) {
                         </div>
                     </div>
                     <div className="City5d3hWeather__chart_wrapper">
-                        <div
-                            className="City5d3hWeather__chart"
-                            ref={refChartWrapper}
-                            key={`${dayIndexRendered.current}-${Weather.city.name}`}
-                        >
+                        <div className="City5d3hWeather__chart_type_list">
+                            {(function () {
+                                const onClickTemp = (e: React.MouseEvent, data_id: string) => {
+                                    setChartDataType(data_id);
+                                };
+
+                                const onClickRainfall = (e: React.MouseEvent, data_id: string) => {
+                                    setChartDataType(data_id);
+                                };
+
+                                return (
+                                    <>
+                                        <WeatherAltInfoTemplate
+                                            slot_header="Температура"
+                                            data_id={"Температура"}
+                                            onClick={onClickTemp}
+                                            addClassName={[chartDataType == "Температура" ? "City5d3hWeather__day--active" : ""]}
+                                        />
+                                        <WeatherAltInfoTemplate
+                                            slot_header="Осадки"
+                                            data_id={"Осадки"}
+                                            onClick={onClickRainfall}
+                                            addClassName={[chartDataType == "Осадки" ? "City5d3hWeather__day--active" : ""]}
+                                        />
+                                    </>
+                                );
+                            })()}
+                        </div>
+                        <div className="City5d3hWeather__chart" ref={refChartWrapper} key={dataIdRender}>
                             <ChartTypeOne
-                                chartData={
-                                    rawSortedWeather.current[dayIndexRendered.current].map((day) => {
-                                        return {
-                                            name: (function () {
-                                                let text_date = get_text_date(day.dt * 1000);
-                                                return `${text_date.hoursUTC}:${text_date.minutesUTC}`;
-                                            })(),
-                                            Температура: day.main.temp,
-                                        };
-                                    }) as any
-                                }
-                                pointsData={[{ pointName: "Температура", pointGradientCloror: "#f0f8ff", pointLineCloror: "#d33d29" }]}
+                                chartData={rawSortedWeather.current[dayIndexRendered.current].map((day) => {
+                                    return {
+                                        name: (function () {
+                                            let text_date = get_text_date(day.dt * 1000);
+                                            return `${text_date.hoursUTC}:${text_date.minutesUTC}`;
+                                        })(),
+                                        [chartDataType]:
+                                            chartDataType == "Температура"
+                                                ? day.main.temp
+                                                : day.rain
+                                                ? day.rain["3h"]
+                                                : day.snow
+                                                ? day.snow["3h"]
+                                                : 0,
+                                    };
+                                })}
+                                pointsData={[{ pointName: chartDataType, pointGradientCloror: "#f0f8ff", pointLineCloror: "#d33d29" }]}
+                                toolTipPostfix={chartDataType == "Температура" ? "°c" : "мм/3ч"}
                             />
                         </div>
                     </div>

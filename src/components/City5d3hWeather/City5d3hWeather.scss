@@ -165,7 +165,9 @@
         display: flex;
         justify-content: center;
         flex-wrap: wrap;
-        flex-direction: row;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
 
         @include is-screen(desctop) {
             background-color: $WEATCHER_INFO_ALT_NOACTIVE_BACKROUND;
@@ -188,14 +190,29 @@
         }
     }
 
+    &__chart_type_list {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 5px;
+        align-self: flex-start;
+
+        .WeatherAltInfoTemplate {
+            max-width: initial;
+            border-radius: 0;
+        }
+    }
+
     &__loader_wrapper {
-        position: absolute;
+        // position: absolute;
         top: 0;
         left: 0;
         right: 0;
         bottom: 0;
         background-color: $BACKDROP_COLLOR;
         backdrop-filter: $BACKDROP_BLUR;
+        height: 100vh;
     }
 
     &__loader {

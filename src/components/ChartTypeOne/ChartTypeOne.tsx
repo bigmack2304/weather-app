@@ -17,11 +17,12 @@ type TPointData = {
 type TChartTypeOneProps = {
     chartData: IChartDot[];
     pointsData: TPointData[];
+    toolTipPostfix?: string;
 };
 
 type TProps = Readonly<TChartTypeOneProps>;
 
-function ChartTypeOne({ chartData, pointsData }: TProps) {
+function ChartTypeOne({ chartData, pointsData, toolTipPostfix = "" }: TProps) {
     return (
         <ResponsiveContainer width="100%" height="100%" debounce={200}>
             <AreaChart margin={{ top: 0, left: 0, right: 0, bottom: 0 }} data={chartData}>
@@ -53,7 +54,7 @@ function ChartTypeOne({ chartData, pointsData }: TProps) {
                 <XAxis dataKey={"name"} />
                 <YAxis width={50} />
                 <CartesianGrid strokeDasharray="5 5" />
-                <Tooltip active={false} isAnimationActive={false} content={<CustomizedTooltip />} />
+                <Tooltip active={false} isAnimationActive={false} content={<CustomizedTooltip toolTipPostfix={toolTipPostfix} />} />
             </AreaChart>
         </ResponsiveContainer>
     );

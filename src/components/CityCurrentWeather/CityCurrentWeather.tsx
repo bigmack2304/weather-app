@@ -76,7 +76,7 @@ function CityCurrentWeather({}: TProps = {}) {
 
     return (
         <div className="CityCurrentWeather">
-            {currentWeather ? (
+            {currentWeather && !isLoadingVisible ? (
                 <>
                     <div className="CityCurrentWeather__head">
                         <h2 className="CityCurrentWeather__name">{cityName}</h2>
