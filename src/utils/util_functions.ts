@@ -73,6 +73,22 @@ function update_meta_title(cityName: string | undefined) {
     docHead.querySelector("title")!.textContent = `Погода ${text}`;
 }
 
+// обновлляем description head
+function update_meta_desc(cityName: string | undefined) {
+    const docHead = document.querySelector("head")!;
+    let text = cityName ? `в ${cityName}` : "";
+    (
+        docHead.querySelector("meta[name='description']")! as HTMLMetaElement
+    ).content = `Подробный прогноз погоды для ${text}, на сегодня, завтра, 5 дней, в weather-app. Прогноз погоды в ${text} с точностью '+-25 %'`;
+}
+
+// обновлляем keywords head
+// function update_meta_keywords(cityName: string | undefined) {
+//     const docHead = document.querySelector("head")!;
+//     let text = cityName ? `в ${cityName}` : "";
+//     docHead.querySelector("keywords")!.textContent;
+// }
+
 // добавляет обьект (в начало) в массива обьектов, только если в этом массиве нету таковоже обьекта (по значениям),
 // возвращает новый массив.
 function unshuft_unique_obj_to_array<T extends object>(arr: Readonly<T[]>, obj: Readonly<T>): T[] {
@@ -402,4 +418,5 @@ export {
     convert_hpa_to_mmRtSt,
     GetElementOffsetsInDocument,
     add_to_macro_stack,
+    update_meta_desc,
 };
