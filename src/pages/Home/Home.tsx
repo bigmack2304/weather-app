@@ -7,12 +7,13 @@ import { City5d3hWeather } from "../../components/City5d3hWeather/City5d3hWeathe
 import "./Home.scss";
 import { WeatherContext } from "../../Contexts/WeatherContext";
 import type { TWeatherContext } from "../../Contexts/WeatherContext";
-import { update_meta_title, unshuft_unique_obj_to_array_force } from "../../utils/util_functions";
+import { update_meta_title, unshuft_unique_obj_to_array_force, update_meta_desc } from "../../utils/util_functions";
 import { useLoacalStorage } from "../../hooks/useLocalStorage";
 import { useHashAddressBar } from "../../hooks/useHashAddressBar";
 import { PortalVieport } from "../../components/PortalVieport/PortalVieport";
 import "./../../utils/chart_fix";
 import "./../../global_styles/chart_fix.scss";
+import { ErrorCacher } from "../../HOC/ErrorCacher/ErrorCacher";
 
 // Начальная страница
 
@@ -43,6 +44,7 @@ function HomePage() {
 
         // обновим метаданные тайтла
         update_meta_title(cityName);
+        update_meta_desc(cityName);
 
         if (cityName && cityName !== "") {
             // записываем город в локалсторадж
@@ -65,11 +67,15 @@ function HomePage() {
                 <div className="Home__in_container">
                     <section className="Home__weather_now">
                         <h3 className="visually_hidden">Погода на сегодня</h3>
-                        <CityCurrentWeather />
+                        <ErrorCacher>
+                            <CityCurrentWeather />
+                        </ErrorCacher>
                     </section>
                     <section className="Home__weather_week">
                         <h3 className="visually_hidden">Погода на 5 дней</h3>
-                        <City5d3hWeather />
+                        <ErrorCacher>
+                            <City5d3hWeather />
+                        </ErrorCacher>
                     </section>
                 </div>
                 <Footer />

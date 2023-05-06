@@ -1,0 +1,18 @@
+.ErrorCacher {
+    outline: red solid 2px;
+
+    &__Catch {
+        font-weight: bold;
+        color: Red;
+    }
+
+    &__Error {
+        background-color: rgb(199, 199, 199);
+        font-weight: 600;
+        font-family: "Courier New", Courier, monospace;
+        font-size: 16px;
+    }
+
+    &__Desc {
+    }
+}
