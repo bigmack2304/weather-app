@@ -1,0 +1,107 @@
+@import "./../../global_styles/global_vars.scss";
+
+.CityPosSearch {
+    position: relative;
+    min-width: 269px;
+    //width: 269px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    flex-wrap: nowrap;
+    gap: 5px;
+    background-color: $WEATCHER_INFO_NOACTIVE_BACKROUND;
+    padding: 5px;
+    border-radius: 5px;
+
+    &__hints_wrapper {
+        position: absolute;
+
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        row-gap: 5px;
+        width: 245px;
+        margin: 37px 0 0 15px;
+    }
+
+    &__hints_elements {
+        overflow-wrap: break-word;
+        background-color: white;
+        border-bottom-left-radius: 5px;
+        border-bottom-right-radius: 5px;
+        overflow: hidden;
+        width: 100%;
+        max-height: 137px;
+        overflow-y: auto;
+    }
+
+    &__hint_element {
+        cursor: default;
+        padding: 3px 4px 3px 4px;
+        font-size: 16px;
+
+        &:nth-child(n + 2) {
+            border-top: 1px black solid;
+        }
+
+        // если устроиство поддерживает hover (устройство с мышкой)
+        @media (hover: hover) {
+            &:hover {
+                background-color: rgb(187, 187, 187);
+            }
+        }
+
+        &:active {
+            background-color: rgb(170, 170, 170);
+        }
+    }
+
+    &__cityName {
+        font-weight: bold;
+    }
+
+    &__loader {
+        width: 18px;
+        height: 18px;
+        z-index: 1;
+        position: relative;
+        // top: 3px;
+        // left: 187px;
+        .IconLoader__item {
+            background-color: white;
+        }
+    }
+
+    &__history_outer {
+        background-color: $BACKDROP_COLLOR;
+        backdrop-filter: $BACKDROP_BLUR;
+        position: fixed;
+        height: 100%;
+        width: 100%;
+        top: 0px;
+        left: 0px;
+        min-width: 280px;
+    }
+
+    // тут пришлось повысить спецыфичность чтобы некоторые стили применились
+    &__form {
+        z-index: 1;
+        position: relative;
+
+        .FormSearch__search {
+            // padding-right: 25px;
+            width: 245px;
+            height: 24px;
+            background-color: #ffffff69;
+            border: none;
+            border-bottom: 1px black solid;
+            border-top-left-radius: 5px;
+            border-bottom-left-radius: 5px;
+            font-size: 16px;
+
+            &:focus {
+                background-color: white;
+            }
+        }
+    }
+}

@@ -1,0 +1,11 @@
+.PortalVieport {
+    z-index: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    &--active {
+        height: fit-content;
+        width: fit-content;
+    }
+}

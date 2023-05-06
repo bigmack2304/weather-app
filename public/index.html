@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ru">
+    <head>
+        <meta charset="utf-8" />
+        <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta
+            name="description"
+            content="Подробный прогноз погоды, на сегодня, завтра, 5 дней, в weather-app. Прогноз погоды с точностью '+-25 %'"
+        />
+        <meta name="keywords" content="погода, прогноз погоды, weather-app, bigmack2304, bigmack_2304" />
+        <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+
+        <!--TODO: ДОБАВИТЬ ЦВЕТ ТЕМЫ И ИКОНКИ-->
+
+        <!--
+          manifest.json предоставляет метаданные, используемые при установке вашего веб-приложения на
+          мобильное устройство или рабочий стол пользователя. 
+          Видишь https://developers.google.com/web/fundamentals/web-app-manifest/
+        -->
+
+        <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+
+        <!--
+          Обратите внимание на использование %PUBLIC_URL% в приведенных выше тегах.
+          Он будет заменен URL-адресом папки "public" во время сборки.
+          Из HTML можно ссылаться только на файлы внутри папки "public".
+
+          В отличие от "/favicon.ico" или "favicon.ico", "%PUBLIC_URL%/favicon.ico" будет
+          корректно работает как с маршрутизацией на стороне клиента, так и с некорневым общедоступным URL.
+          Узнайте, как настроить общедоступный URL-адрес, не являющийся корневым, запустив `npm run build`.
+        -->
+
+        <title>Погода</title>
+    </head>
+    <body>
+        <noscript>Для работы этой страницы необходим java script, его можно включить в настройках браузера.</noscript>
+        <div id="root"></div>
+    </body>
+</html>

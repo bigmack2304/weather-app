@@ -1,0 +1,55 @@
+@import "./../../global_styles/global_vars.scss";
+
+.WeatherBaseInfo {
+    background-color: $WEATCHER_INFO_BACKROUND;
+    border-radius: $WEATCHER_INFO_BORDER_RADIUS;
+    font-family: $WEATCHER_INFO_FONT_FAMLY;
+    padding: 10px;
+    font-size: $WEATCHER_INFO_DESC_FONT_SIZE;
+    color: $WEATCHER_INFO_COLLOR;
+    display: grid;
+    grid-template-areas:
+        "grid-desc grid-desc"
+        "grid-icon grid-temp";
+    row-gap: 5px;
+    column-gap: 10px;
+    overflow: hidden;
+    max-width: 460px;
+
+    @include is-screen(desctop) {
+        border-radius: 0;
+    }
+
+    &__desc {
+        text-align: center;
+        text-transform: uppercase;
+        margin: 0;
+        grid-area: grid-desc;
+    }
+
+    & .WeatherIcon {
+        grid-area: grid-icon;
+        justify-self: center;
+        width: 5.5rem;
+        height: auto;
+    }
+
+    &__temp_wrapper {
+        grid-area: grid-temp;
+        display: flex;
+        flex-direction: column;
+        text-transform: initial;
+        justify-content: space-evenly;
+        text-align: center;
+        border-left: 2px white;
+        border-left-style: dashed;
+        padding-left: 5px;
+    }
+
+    &__temp {
+        font-size: 2.1rem;
+    }
+
+    &__temp_feels_like {
+    }
+}

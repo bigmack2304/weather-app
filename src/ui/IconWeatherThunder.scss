@@ -1,0 +1,17 @@
+.IconWeatherThunder {
+    display: inline-block;
+    padding: 3px;
+
+    &__yellow {
+        fill: #ffeb3b;
+    }
+    &__white {
+        fill: #afafaf;
+    }
+    &__gray {
+        fill: #858585;
+    }
+    &__rain {
+        fill: #0bedf1;
+    }
+}

@@ -1,0 +1,36 @@
+$MIN_BODY_WIDTH: 280px; // минимальный размер для body
+
+$MOBILE_SCREEN_MIN: 200px;
+$DESCTOP_SCREEN_MIN: 770px;
+
+$BACKDROP_COLLOR: #0000009c; // цвет фона когда чтото вылазиет на передний план (затемнение заднего плана)
+$BACKDROP_BLUR: blur(2px); // тоже самое только еще и блюр заднего плана
+
+$WHITE_TEXT: #e7e7e7; // белый цвет для текста
+
+// функция для более удобной установки медиа запросов
+// применение: @include is-screen(desctop) { width: 100% ;}
+
+@mixin is-screen($media) {
+    @if $media == mobile {
+        @media only screen and (min-width: #{$MOBILE_SCREEN_MIN + 1}) and (max-width: #{$DESCTOP_SCREEN_MIN - 1}) {
+            @content;
+        }
+    } @else if $media == desctop {
+        @media only screen and (min-width: $DESCTOP_SCREEN_MIN) {
+            @content;
+        }
+    }
+}
+
+// стили для контейнеров информации о погоде
+
+$WEATCHER_INFO_ALT_NOACTIVE_BACKROUND: #00000024;
+$WEATCHER_INFO_NOACTIVE_BACKROUND: #00000038;
+$WEATCHER_INFO_BACKROUND: #0000008c;
+$WEATCHER_INFO_ACTIVE_BACKROUND: #000000b0;
+$WEATCHER_INFO_BORDER_RADIUS: 10px;
+$WEATCHER_INFO_FONT_FAMLY: sans-serif;
+$WEATCHER_INFO_DESC_FONT_SIZE: 1rem;
+$WEATCHER_INFO_COLLOR: white;
+$WEATCHER_INFO_PADDING: 5px;

@@ -1,0 +1,34 @@
+@mixin base_r() {
+    fill: none;
+    stroke-linecap: round;
+    stroke-miterlimit: 10;
+    stroke-width: 3px;
+}
+
+.IconSunrise {
+    display: inline-block;
+
+    &__sun {
+        fill: #efcc00;
+    }
+
+    &__sun_r {
+        @include base_r();
+        stroke: #efcc00;
+    }
+
+    &__horizon {
+        @include base_r();
+        stroke: #522a08;
+    }
+
+    &__arrow {
+        stroke: black;
+        @include base_r();
+    }
+
+    &--invert {
+        transform: rotate(180deg);
+        transform-origin: 50% 77%;
+    }
+}

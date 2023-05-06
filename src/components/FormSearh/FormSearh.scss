@@ -1,0 +1,15 @@
+.FormSearch {
+    font-family: inherit;
+    width: 100%;
+    display: flex;
+
+    &__search {
+        font-family: inherit;
+        font-size: 1rem;
+        min-width: 50px;
+        width: 100%;
+    }
+
+    &__buttonSubmit {
+    }
+}

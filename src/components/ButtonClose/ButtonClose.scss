@@ -1,0 +1,26 @@
+$def_button_size: 10px;
+
+.ButtonClose {
+    border-radius: 50%;
+    border: none;
+    line-height: 0;
+    padding: 0;
+    box-shadow: 0px 0px 6px 1px black, inset 0px 0px 0px 0px black;
+    transition: all linear 0.15s;
+    background-color: #d4d4d4;
+
+    height: $def_button_size;
+    width: $def_button_size;
+
+    // если устроиство поддерживает hover (устройство с мышкой)
+    @media (hover: hover) {
+        &:hover {
+            background-color: #ffffff;
+        }
+    }
+
+    &:active {
+        box-shadow: 0px 0px 6px 1px black, inset 0px 1px 3px 0px black;
+        background-color: #ffffff;
+    }
+}

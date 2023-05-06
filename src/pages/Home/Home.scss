@@ -1,0 +1,107 @@
+@import "./../../global_styles/global_vars.scss";
+
+@keyframes gradient {
+    0% {
+        background-position: 0% 0%;
+    }
+    50% {
+        background-position: 0% 100%;
+    }
+    100% {
+        background-position: 0% 0%;
+    }
+}
+
+@mixin bg_settings() {
+    background-size: 400% 400%;
+    animation: gradient 15s linear infinite;
+}
+
+.Home {
+    background: #c9c9c9;
+
+    &__in_container {
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+
+    &__weather_now {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        flex-wrap: nowrap;
+        align-items: stretch;
+        justify-content: flex-start;
+        overflow: hidden;
+
+        @include is-screen(desctop) {
+            min-height: fit-content;
+        }
+    }
+
+    &__weather_week {
+        min-height: 100vh;
+        box-shadow: black 0px -3px 20px 0px;
+        display: flex;
+        flex-direction: column;
+        flex-wrap: wrap;
+        align-items: stretch;
+        justify-content: flex-start;
+        padding-top: 20px;
+
+        @include is-screen(desctop) {
+            box-shadow: rgba(0, 0, 0, 0) 0px 0px 0px 0px;
+            min-height: fit-content;
+            padding-top: 60px;
+            padding-bottom: 30px;
+        }
+    }
+
+    // фоны
+    &--bg_morning {
+        background: linear-gradient(20deg, #5e5703, #085370, #015c60, #36759b);
+        @include bg_settings();
+    }
+
+    &--bg_morning_cloudy {
+        background: linear-gradient(20deg, #727161, #45636e, #649193, #7894a5);
+        @include bg_settings();
+    }
+
+    &--bg_day {
+        background: linear-gradient(20deg, #11e9c1, #0b97ce, #2fc5cd, #518fff);
+        @include bg_settings();
+    }
+
+    &--bg_day_cloudy {
+        background: linear-gradient(20deg, #90cfc3, #78a9bd, #63a1a5, #6682b3);
+        @include bg_settings();
+    }
+
+    &--bg_evening {
+        background: linear-gradient(20deg, #8fc50e, #975a00, #cd872f, #29529b);
+        @include bg_settings();
+    }
+
+    &--bg_evening_cloudy {
+        background: linear-gradient(20deg, #8f9f69, #998363, #ab9476, #6e7c95);
+        @include bg_settings();
+    }
+
+    &--bg_night {
+        background: linear-gradient(20deg, #0c0b4a, #09284c, #181362, #102e66);
+        @include bg_settings();
+    }
+
+    .WeatherBaseInfo {
+        // margin: 10px auto 0 auto;
+    }
+
+    .WeatherSunPhase {
+        // margin: 10px auto 0 auto;
+    }
+
+    .Footer {
+        box-shadow: black 0px -3px 20px 0px;
+    }
+}

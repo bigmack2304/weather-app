@@ -1,0 +1,36 @@
+.HoverHint {
+    width: fit-content;
+    height: fit-content;
+    display: contents;
+    cursor: help;
+
+    &__hint {
+        position: relative;
+        background-color: rgb(39, 39, 39);
+        box-shadow: 0px -1px 10px 2px white;
+        color: white;
+        font-size: 1rem;
+        padding: 10px;
+        border-radius: 5px;
+    }
+}
+
+.HoverHint__after,
+.HoverHint__before {
+    position: absolute;
+    // left: calc(50% - 5px);
+    display: none;
+    border: 5px solid transparent;
+}
+
+.HoverHint__before--active {
+    display: block;
+    top: -10px;
+    border-bottom: 5px solid #272727;
+}
+
+.HoverHint__after--active {
+    display: block;
+    top: 100%;
+    border-top: 5px solid #272727;
+}

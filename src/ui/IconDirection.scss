@@ -1,0 +1,17 @@
+.IconDirection {
+    display: inline-block;
+    position: relative;
+    line-height: 0;
+    width: 40px;
+
+    &__icon {
+    }
+
+    &__face {
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+        position: absolute;
+    }
+}

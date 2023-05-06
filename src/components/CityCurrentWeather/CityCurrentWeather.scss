@@ -1,0 +1,188 @@
+@import "./../../global_styles/global_vars.scss";
+
+@mixin FontAcLineDefs() {
+    letter-spacing: 3px;
+    font-weight: bold;
+    text-shadow: 0 0 2px black;
+    color: white;
+    margin: 0;
+    text-align: center;
+    font-family: "AC Line";
+}
+
+.CityCurrentWeather {
+    position: relative;
+    flex-grow: 1;
+    overflow: hidden;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    row-gap: 20px;
+
+    @include is-screen(desctop) {
+        row-gap: 50px;
+        flex-grow: 0;
+        min-height: 40vh;
+    }
+
+    &__head {
+        margin-top: 30px;
+    }
+
+    &__data_details {
+        @include FontAcLineDefs();
+        font-size: 1.12rem;
+    }
+
+    &__name {
+        @include FontAcLineDefs();
+        font-size: 2.2rem;
+    }
+
+    &__default {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        backdrop-filter: $BACKDROP_BLUR;
+        background-color: $BACKDROP_COLLOR;
+
+        &_text {
+            text-align: center;
+            font-size: 1.38rem;
+            color: $WHITE_TEXT;
+            text-shadow: 0 0 9px black;
+        }
+    }
+
+    &__loader_wrapper {
+        //position: absolute;
+        height: 100vh;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: $BACKDROP_COLLOR;
+        backdrop-filter: $BACKDROP_BLUR;
+    }
+
+    &__loader {
+        position: relative;
+        width: 150px;
+        height: 150px;
+        top: calc(50% - 75px);
+        left: calc(50% - 75px);
+
+        .IconLoader__item {
+            background-color: #e4e4e4;
+        }
+    }
+
+    &__main_wrapper {
+        flex-grow: 1;
+        position: relative;
+
+        @include is-screen(desctop) {
+            padding: 10px 0;
+            background-color: $WEATCHER_INFO_ALT_NOACTIVE_BACKROUND;
+        }
+    }
+
+    &__main {
+        display: grid;
+        justify-items: center;
+        align-items: center;
+        gap: 20px;
+        grid-template-areas:
+            "grid_base_info grid_base_info"
+            "grid_alt_info grid_alt_info"
+            "grid_sun_phase grid_sun_phase";
+
+        position: absolute;
+        height: 100%;
+
+        grid-template-columns: 1fr 1fr;
+
+        .WeatherBaseInfo {
+            width: 100%;
+            grid-area: grid_base_info;
+        }
+
+        @include is-screen(desctop) {
+            position: initial;
+            flex-grow: 0;
+            grid-template-areas:
+                "grid_base_info grid_alt_info"
+                "grid_sun_phase grid_alt_info";
+
+            .WeatherBaseInfo {
+                align-self: start;
+            }
+        }
+    }
+
+    &__alt_info_wrapper {
+        grid-area: grid_alt_info;
+        display: flex;
+        gap: 2px;
+        flex-wrap: wrap;
+        flex-direction: row;
+        align-items: stretch;
+        justify-content: center;
+
+        border-radius: $WEATCHER_INFO_BORDER_RADIUS;
+        overflow: hidden;
+        width: 100%;
+
+        @include is-screen(desctop) {
+            flex-direction: column;
+            max-width: 660px;
+            border-radius: 0;
+        }
+    }
+
+    .CityCurrentWeather__alt_info {
+        max-width: 100%;
+        min-width: 122px;
+        border-radius: 0;
+        flex-grow: 1;
+        flex-basis: 33%;
+
+        @include is-screen(desctop) {
+            align-items: center;
+            justify-content: space-between;
+            flex-direction: row;
+
+            .WeatherAltInfoTemplate__content_wrapper {
+                align-items: center;
+                justify-content: flex-end;
+                flex-basis: auto;
+                max-width: 860px;
+
+                .WeatherAltInfoTemplate__content_main {
+                    flex-basis: auto;
+                }
+
+                .WeatherAltInfoTemplate__content_dop {
+                    width: fit-content;
+                    flex-basis: auto;
+                }
+            }
+        }
+    }
+
+    &__alt_wind {
+        .IconDirection {
+            width: 2.7rem;
+        }
+    }
+
+    &__sun_phase {
+        grid-area: grid_sun_phase;
+
+        @include is-screen(desctop) {
+            align-self: end;
+        }
+    }
+}
