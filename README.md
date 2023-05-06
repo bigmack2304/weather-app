@@ -31,7 +31,9 @@
 -   HTML 5
 -   CSS 3
 -   SCSS
+
     **Дополнительно**
+
 -   prettier
 -   github
 -   github Actions
