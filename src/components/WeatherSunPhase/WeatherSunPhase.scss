@@ -70,7 +70,7 @@
         // position: absolute;
         border-top: 2px white;
         border-style: dashed;
-        width: 100%;
+        flex-grow: 1;
     }
 
     &__g2 {
