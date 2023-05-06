@@ -318,13 +318,19 @@ function City5d3hWeather({}: TProps = {}) {
                                             slot_header="Температура"
                                             data_id={"Температура"}
                                             onClick={onClickTemp}
-                                            addClassName={[chartDataType == "Температура" ? "City5d3hWeather__day--active" : ""]}
+                                            addClassName={[
+                                                chartDataType == "Температура" ? "City5d3hWeather__day--active" : "",
+                                                "City5d3hWeather__chart_type_item",
+                                            ]}
                                         />
                                         <WeatherAltInfoTemplate
                                             slot_header="Осадки"
                                             data_id={"Осадки"}
                                             onClick={onClickRainfall}
-                                            addClassName={[chartDataType == "Осадки" ? "City5d3hWeather__day--active" : ""]}
+                                            addClassName={[
+                                                chartDataType == "Осадки" ? "City5d3hWeather__day--active" : "",
+                                                "City5d3hWeather__chart_type_item",
+                                            ]}
                                         />
                                     </>
                                 );

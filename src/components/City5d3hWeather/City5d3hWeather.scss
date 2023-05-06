@@ -204,6 +204,11 @@
         }
     }
 
+    &__chart_type_item {
+        cursor: pointer;
+        user-select: none;
+    }
+
     &__loader_wrapper {
         // position: absolute;
         top: 0;
