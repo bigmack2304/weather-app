@@ -25,8 +25,10 @@ yarn-error.log*
 
 # files
 src/**/*.css
+
 jsTesting.js
 
 !src/global_styles/normalize.css
 !src/global_styles/def_styles.css
 !src/fonts/**/*.css
+
