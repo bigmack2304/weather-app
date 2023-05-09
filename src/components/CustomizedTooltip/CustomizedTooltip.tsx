@@ -14,7 +14,8 @@ function CustomizedTooltip(external: TProps) {
     let isActive = external.active!;
     let timerId: number | null = null;
     let refTooltip = useRef<HTMLDivElement>(null);
-    let data = external.payload![0];
+    //let data = external.payload![0];
+    let data = external.payload && external.payload.length > 0 ? external.payload[0] : null;
 
     const toolTipHide = first_caller_delay_callback(
         () => {
