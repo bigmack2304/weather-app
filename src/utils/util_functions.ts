@@ -21,10 +21,11 @@ function get_system_language(): string {
 }
 
 /*
-    возврощает true если ширина окна менее 440px
+    возврощает true если ширина окна менее 770px
+    Обязательно должно соответствовать значению в global_vars.scss
 */
-function is_mobile_screen(): boolean {
-    return window.innerWidth >= 440 ? false : true;
+function is_mobile_screen_size(): boolean {
+    return window.innerWidth <= 769 ? true : false;
 }
 
 /*
@@ -51,7 +52,7 @@ function is_hover_screen() {
     PS: метод не самый лучший, но для начала сойдет
 */
 function is_device_mobile() {
-    return is_mobile_screen() || is_multiTuch() ? true : false;
+    return is_mobile_screen_size() || is_multiTuch() ? true : false;
 }
 
 // возвращает название города в соответствии с текущей локалью, из обьекта  типа fetchCityLatLon.TResponseObj
@@ -421,4 +422,5 @@ export {
     GetElementOffsetsInDocument,
     add_to_macro_stack,
     update_meta_desc,
+    is_mobile_screen_size,
 };

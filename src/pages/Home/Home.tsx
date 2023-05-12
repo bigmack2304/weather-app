@@ -1,10 +1,11 @@
 import React, { memo, useState, useContext, useEffect, useRef } from "react";
+import "./Home.scss";
 import { deep_object_is_equal } from "../../utils/is_equal";
 import { Footer } from "../../components/Footer/Footer";
 import { Header } from "../../components/Header/Header";
 import { CityCurrentWeather } from "../../components/CityCurrentWeather/CityCurrentWeather";
 import { City5d3hWeather } from "../../components/City5d3hWeather/City5d3hWeather";
-import "./Home.scss";
+import type { ICity5d3hWeatherProps } from "../../components/City5d3hWeather/City5d3hWeather";
 import { WeatherContext } from "../../Contexts/WeatherContext";
 import type { TWeatherContext } from "../../Contexts/WeatherContext";
 import { update_meta_title, unshuft_unique_obj_to_array_force, update_meta_desc } from "../../utils/util_functions";
@@ -14,6 +15,9 @@ import { PortalVieport } from "../../components/PortalVieport/PortalVieport";
 import "./../../utils/chart_fix";
 import "./../../global_styles/chart_fix.scss";
 import { ErrorCacher } from "../../HOC/ErrorCacher/ErrorCacher";
+import { HocOnResizeUpdate } from "../../HOC/OnResizeUpdate/OnResizeUpdate";
+
+const City5d3hWeather_onResizeUpdate = HocOnResizeUpdate<ICity5d3hWeatherProps>(City5d3hWeather); // City5d3hWeather нужно перерендоревать при ресайзе
 
 // Начальная страница
 
@@ -74,7 +78,7 @@ function HomePage() {
                     <section className="Home__weather_week">
                         <h3 className="visually_hidden">Погода на 5 дней</h3>
                         <ErrorCacher>
-                            <City5d3hWeather />
+                            <City5d3hWeather_onResizeUpdate />
                         </ErrorCacher>
                     </section>
                 </div>
