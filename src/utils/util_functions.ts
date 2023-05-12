@@ -199,6 +199,7 @@ function deg_to_compass(val: number) {
 const intl_day_num = new Intl.DateTimeFormat([get_system_language()], { day: "numeric" });
 const intl_day_name = new Intl.DateTimeFormat([get_system_language()], { weekday: "long" });
 const intl_day_name_short = new Intl.DateTimeFormat([get_system_language()], { weekday: "short" });
+const intl_day_name_shortUTC = new Intl.DateTimeFormat([get_system_language()], { weekday: "short", timeZone: "UTC" });
 const intl_year_num = new Intl.DateTimeFormat([get_system_language()], { year: "numeric" });
 const intl_month_name = new Intl.DateTimeFormat([get_system_language()], { month: "long" });
 const intl_month_num = new Intl.DateTimeFormat([get_system_language()], { month: "numeric" });
@@ -231,6 +232,7 @@ function get_text_date(date: Date | number = new Date()) {
         day_num: intl_day_num.format(date),
         day_name: intl_day_name.format(date),
         day_name_short: intl_day_name_short.format(date),
+        day_name_shortUTC: intl_day_name_shortUTC.format(date),
         year_num: intl_year_num.format(date),
         month_name: intl_month_name.format(date),
         month_num: intl_month_num.format(date),

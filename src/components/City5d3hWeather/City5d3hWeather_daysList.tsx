@@ -21,7 +21,7 @@ function City5d3hWeather__daysList({ sortedForecast, setDataIdRender, dataIdRend
             classes.push("City5d3hWeather__day--active");
         }
 
-        if (date_txt.day_name_short.toLocaleUpperCase() == "СБ" || date_txt.day_name_short.toLocaleUpperCase() == "ВС") {
+        if (date_txt.day_name_shortUTC.toLocaleUpperCase() == "СБ" || date_txt.day_name_shortUTC.toLocaleUpperCase() == "ВС") {
             classes.push("City5d3hWeather__day--weekend");
         }
 
@@ -40,7 +40,7 @@ function City5d3hWeather__daysList({ sortedForecast, setDataIdRender, dataIdRend
                 return (
                     <React.Fragment key={day[0].dt}>
                         <WeatherAltInfoTemplate
-                            slot_header={date_txt.day_name_short}
+                            slot_header={date_txt.day_name_shortUTC}
                             slot_main={date_txt.dayNum_monthNameUTC}
                             onClick={onClick}
                             data_id={dt_from_string(day[0].dt)}
