@@ -140,6 +140,7 @@ function delete_obj_from_array<T extends object>(arr: Readonly<T[]>, obj: Readon
     return temp_arr;
 }
 
+// tested
 // преобразует любое число в значение от 0 до 359,
 // 0->0, 359->359, 361->1,360->0, 400->40 ... (Закольцоввывает любое число на 360)
 function number_to_deg360(value: number) {
@@ -147,17 +148,20 @@ function number_to_deg360(value: number) {
     return positive_value % 360;
 }
 
+// tested
 // инвертирует направление (deg-360) например deg_invesion(181) -> 1
 function deg_invesion(deg: number) {
     let positive_deg = to_positive_value(deg);
     return number_to_deg360(positive_deg + 180);
 }
 
+// tested
 // если число отрицательное то преобразуем его в положительное
 function to_positive_value(value: number) {
     return value >= 0 ? value : Math.abs(0 - value);
 }
 
+// tested
 // преобразует градусы в текст 0 - северное 180 - южное итд
 function deg_to_compass(val: number) {
     // 0 45 90 135 180 225 270 315
@@ -196,6 +200,7 @@ function deg_to_compass(val: number) {
     }
 }
 
+// tested
 // преобразует Date или таймштамп в строку со времянем
 const intl_day_num = new Intl.DateTimeFormat([get_system_language()], { day: "numeric" });
 const intl_day_name = new Intl.DateTimeFormat([get_system_language()], { weekday: "long" });
@@ -207,13 +212,13 @@ const intl_month_num = new Intl.DateTimeFormat([get_system_language()], { month:
 const intl_month_numUTC = new Intl.DateTimeFormat([get_system_language()], { month: "numeric", timeZone: "UTC" });
 const intl_dayNum_monthName = new Intl.DateTimeFormat([get_system_language()], { month: "long", day: "numeric" });
 const intl_minutes = new Intl.DateTimeFormat([get_system_language()], { minute: "2-digit" });
-const intl_hours = new Intl.DateTimeFormat([get_system_language()], { hour: "2-digit" });
+const intl_hours = new Intl.DateTimeFormat([get_system_language()], { hour: "2-digit", hour12: false });
 const intl_day_numUTC = new Intl.DateTimeFormat([get_system_language()], { day: "numeric", timeZone: "UTC" });
 const intl_day_nameUTC = new Intl.DateTimeFormat([get_system_language()], { weekday: "long", timeZone: "UTC" });
 const intl_year_numUTC = new Intl.DateTimeFormat([get_system_language()], { year: "numeric", timeZone: "UTC" });
 const intl_month_nameUTC = new Intl.DateTimeFormat([get_system_language()], { month: "long", timeZone: "UTC" });
 const intl_dayNum_monthNameUTC = new Intl.DateTimeFormat([get_system_language()], { month: "long", day: "numeric", timeZone: "UTC" });
-const intl_hoursUTC = new Intl.DateTimeFormat([get_system_language()], { hour: "2-digit", timeZone: "UTC" });
+const intl_hoursUTC = new Intl.DateTimeFormat([get_system_language()], { hour: "2-digit", timeZone: "UTC", hour12: false });
 const intl_minutesUTC = new Intl.DateTimeFormat([get_system_language()], { minute: "2-digit", timeZone: "UTC" });
 
 function get_text_date(date: Date | number = new Date()) {
@@ -251,6 +256,7 @@ function get_text_date(date: Date | number = new Date()) {
     };
 }
 
+// tested
 // ДЛЯ получения времяни восхода и захода солнца из weather api
 function calc_sun_hours_details(sunrise_timestamp_sec: number, sunset_timestamp_sec: number, shift_timezone: number = 0) {
     // Date принимает таймштамп в милисекундах
@@ -273,7 +279,10 @@ function calc_sun_hours_details(sunrise_timestamp_sec: number, sunset_timestamp_
     return sun_hours_details;
 }
 
+// tested
 // возвращает наименование времяни суток в городе с учетом восхода и захода солнца
+// sun_data таймштамп в милисекундах
+// time_data dt в секундах
 function calc_weather_day_time(
     sun_data: ReturnType<typeof calc_sun_hours_details>,
     time_data: { dt: number; timezone: number }
@@ -306,6 +315,7 @@ function calc_weather_day_time(
     return "UNKNOWN";
 }
 
+// tested
 // расчитывает ип фона для приложения, в зависимости от времяни и условий погоды
 function calc_backgraund_type(sun_data: ReturnType<typeof calc_sun_hours_details>, currentWeather: currentWeather.TResponse) {
     if (!currentWeather) return;
@@ -354,6 +364,7 @@ function calc_backgraund_type(sun_data: ReturnType<typeof calc_sun_hours_details
     return generated_name;
 }
 
+// tested
 // Приобразуем значение из одного диапозона в тоже значение но в другом диапозоне
 function addon_map(val: number, val_min: number, val_max: number, need_min: number, need_max: number) {
     let shkal_orig, shkal_new, new_val;
@@ -367,6 +378,7 @@ function addon_map(val: number, val_min: number, val_max: number, need_min: numb
     return new_val;
 }
 
+// tested
 // поучаем давление из hpa в милиметры ртутного стоба
 function convert_hpa_to_mmRtSt(val: { pressure: number | undefined; grnd_level: number | undefined }) {
     if (val.pressure) {
@@ -392,6 +404,7 @@ function GetElementOffsetsInDocument(elem: HTMLElement): { top: number; left: nu
     return offsets;
 }
 
+// tested
 // добавляет функцию в стек макро задачь и вызывает ее с указанными аргументами
 function add_to_macro_stack<T extends (...args: any[]) => any>(func: T, ...args: Parameters<T>) {
     setTimeout(() => {
