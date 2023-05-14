@@ -98,7 +98,7 @@ function CityPosSearch({}: TProps) {
     // тут нужно удалять элемент из истории (нажатие на крестик элемента под формой)
     const onHistoryListClose = (metaDataId: string) => {
         let decode_metaDataId = JSON.parse(metaDataId) as TStorageHistoryCity;
-        let new_history = delete_obj_from_array(localStorageData.history, decode_metaDataId);
+        let new_history = delete_obj_from_array(localStorageData.history, decode_metaDataId) as TStorageHistoryCity[];
         setLocalStorageData({ ...localStorageData, history: [...new_history] });
     };
 
