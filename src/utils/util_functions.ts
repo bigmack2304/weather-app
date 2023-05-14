@@ -20,6 +20,7 @@ function get_system_language(): string {
     return language.toLowerCase();
 }
 
+// tested
 /*
     возврощает true если ширина окна менее 770px
     Обязательно должно соответствовать значению в global_vars.scss
@@ -140,6 +141,7 @@ function delete_obj_from_array<T extends object>(arr: Readonly<T[]>, obj: Readon
     return temp_arr;
 }
 
+// tested
 // преобразует любое число в значение от 0 до 359,
 // 0->0, 359->359, 361->1,360->0, 400->40 ... (Закольцоввывает любое число на 360)
 function number_to_deg360(value: number) {
@@ -147,17 +149,20 @@ function number_to_deg360(value: number) {
     return positive_value % 360;
 }
 
+// tested
 // инвертирует направление (deg-360) например deg_invesion(181) -> 1
 function deg_invesion(deg: number) {
     let positive_deg = to_positive_value(deg);
     return number_to_deg360(positive_deg + 180);
 }
 
+// tested
 // если число отрицательное то преобразуем его в положительное
 function to_positive_value(value: number) {
     return value >= 0 ? value : Math.abs(0 - value);
 }
 
+// tested
 // преобразует градусы в текст 0 - северное 180 - южное итд
 function deg_to_compass(val: number) {
     // 0 45 90 135 180 225 270 315

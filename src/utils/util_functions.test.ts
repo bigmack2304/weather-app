@@ -61,3 +61,38 @@ test("test function deg_to_compass", () => {
     const case3 = util_functions.deg_to_compass(191);
     expect(case3).toBe("южный");
 });
+
+test("test function is_mobile_screen_size", () => {
+    // Setup
+    const originalWindow = { ...window };
+    const windowSpy = jest.spyOn(global, "window", "get");
+
+    // tests
+    windowSpy.mockImplementation(
+        () =>
+            ({
+                ...originalWindow,
+                innerWidth: 50,
+            } as typeof window)
+    );
+
+    expect(util_functions.is_mobile_screen_size()).toEqual(true);
+
+    windowSpy.mockImplementation(
+        () =>
+            ({
+                ...originalWindow,
+                innerWidth: 770,
+            } as typeof window)
+    );
+
+    expect(util_functions.is_mobile_screen_size()).toEqual(false);
+
+    // Cleanup
+    windowSpy.mockRestore();
+});
+
+// test("test function get_text_date", () => {
+
+//     expect(util_functions.get_text_date()).toEqual(false);
+// });
