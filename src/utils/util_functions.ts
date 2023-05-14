@@ -11,6 +11,7 @@ function get_full_country_by_code(countryCode: string) {
     return intlDisplayNames.of(countryCode);
 }
 
+// tested
 // получить код используемого устройством языка ("ru", "en", ...)
 function get_system_language(): string {
     let language = window.navigator.language;
@@ -56,6 +57,7 @@ function is_device_mobile() {
     return is_mobile_screen_size() || is_multiTuch() ? true : false;
 }
 
+// tested
 // возвращает название города в соответствии с текущей локалью, из обьекта  типа fetchCityLatLon.TResponseObj
 // если ланной локали там не найдется то вернет дефолтное название
 function get_localed_city_name(city: fetchCityLatLon.TResponseObj) {
@@ -68,6 +70,7 @@ function get_localed_city_name(city: fetchCityLatLon.TResponseObj) {
     return city.name;
 }
 
+// tested
 // задает новое имя для страницы
 function update_meta_title(cityName: string | undefined) {
     const docHead = document.querySelector("head")!;
@@ -75,13 +78,14 @@ function update_meta_title(cityName: string | undefined) {
     docHead.querySelector("title")!.textContent = `Погода ${text}`;
 }
 
+// tested
 // обновлляем description head
 function update_meta_desc(cityName: string | undefined) {
     const docHead = document.querySelector("head")!;
     let text = cityName ? `в ${cityName}` : "";
     (
         docHead.querySelector("meta[name='description']")! as HTMLMetaElement
-    ).content = `Подробный прогноз погоды для ${text}, на сегодня, завтра, 5 дней, в weather-app. Прогноз погоды в ${text} с точностью '+-25 %'`;
+    ).content = `Подробный прогноз погоды ${text}, на сегодня, завтра, 5 дней, в weather-app. Прогноз погоды ${text} с точностью '+-25 %'`;
 }
 
 // обновлляем keywords head
@@ -91,9 +95,10 @@ function update_meta_desc(cityName: string | undefined) {
 //     docHead.querySelector("keywords")!.textContent;
 // }
 
+// tested
 // добавляет обьект (в начало) в массива обьектов, только если в этом массиве нету таковоже обьекта (по значениям),
 // возвращает новый массив.
-function unshuft_unique_obj_to_array<T extends object>(arr: Readonly<T[]>, obj: Readonly<T>): T[] {
+function unshuft_unique_obj_to_array<T extends object>(arr: Readonly<T[]>, obj: Readonly<object>): object[] {
     let is_new_object_unique = true;
 
     for (let elem of arr) {
@@ -109,10 +114,11 @@ function unshuft_unique_obj_to_array<T extends object>(arr: Readonly<T[]>, obj: 
     return arr as T[];
 }
 
+// tested
 // добавляет обьект (в начало) в массива обьектов, еслли в массиве уже был такойже обьект (по значениям),
 // то он удаляется, возвращает новый массив.
-function unshuft_unique_obj_to_array_force<T extends object>(arr: Readonly<T[]>, obj: Readonly<T>): T[] {
-    let temp_arr: T[] = [...arr];
+function unshuft_unique_obj_to_array_force<T extends object>(arr: Readonly<T[]>, obj: Readonly<object>): object[] {
+    let temp_arr: object[] = [...arr];
 
     temp_arr = temp_arr.filter((value) => {
         if (deep_object_is_equal(value, obj)) {
@@ -126,9 +132,10 @@ function unshuft_unique_obj_to_array_force<T extends object>(arr: Readonly<T[]>,
     return temp_arr;
 }
 
+// tested
 // находит такойже обьект (по значениям) в массиве обьектов, и удаляет его из массива
 // возвращает новый массив
-function delete_obj_from_array<T extends object>(arr: Readonly<T[]>, obj: Readonly<T>): T[] {
+function delete_obj_from_array<T extends object>(arr: Readonly<T[]>, obj: Readonly<object>): object[] {
     let temp_arr: T[] = [...arr];
 
     temp_arr = temp_arr.filter((value) => {
@@ -437,4 +444,5 @@ export {
     add_to_macro_stack,
     update_meta_desc,
     is_mobile_screen_size,
+    is_multiTuch,
 };

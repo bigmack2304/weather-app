@@ -62,34 +62,41 @@ test("test function deg_to_compass", () => {
     expect(case3).toBe("южный");
 });
 
-test("test function is_mobile_screen_size", () => {
-    // Setup
-    const originalWindow = { ...window };
-    const windowSpy = jest.spyOn(global, "window", "get");
+describe("test function is_mobile_screen_size", () => {
+    let originalWindow = { ...window };
+    let windowSpy: any;
 
-    // tests
-    windowSpy.mockImplementation(
-        () =>
-            ({
-                ...originalWindow,
-                innerWidth: 50,
-            } as typeof window)
-    );
+    beforeEach(() => {
+        windowSpy = jest.spyOn(global, "window", "get");
+    });
 
-    expect(util_functions.is_mobile_screen_size()).toEqual(true);
+    afterEach(() => {
+        windowSpy.mockRestore();
+    });
 
-    windowSpy.mockImplementation(
-        () =>
-            ({
-                ...originalWindow,
-                innerWidth: 770,
-            } as typeof window)
-    );
+    test("test mobile size", () => {
+        windowSpy.mockImplementation(
+            () =>
+                ({
+                    ...originalWindow,
+                    innerWidth: 50,
+                } as typeof window)
+        );
 
-    expect(util_functions.is_mobile_screen_size()).toEqual(false);
+        expect(util_functions.is_mobile_screen_size()).toEqual(true);
+    });
 
-    // Cleanup
-    windowSpy.mockRestore();
+    test("test desctop size", () => {
+        windowSpy.mockImplementation(
+            () =>
+                ({
+                    ...originalWindow,
+                    innerWidth: 770,
+                } as typeof window)
+        );
+
+        expect(util_functions.is_mobile_screen_size()).toEqual(false);
+    });
 });
 
 test("test function get_text_date", () => {
@@ -213,4 +220,155 @@ test("test function convert_hpa_to_mmRtSt", () => {
 
     const case3 = util_functions.convert_hpa_to_mmRtSt({ pressure: undefined, grnd_level: 24 });
     expect(case3).toBe(18);
+});
+
+test("test function delete_obj_from_array", () => {
+    const data = [
+        { a: 1, b: 2 },
+        { a: "sd", s: 44 },
+        { a: { g: 1 }, b: ["a", 1, { a: 1 }] },
+    ];
+
+    expect(util_functions.delete_obj_from_array(data, { a: "sd", s: 44 })).toEqual([
+        { a: 1, b: 2 },
+        { a: { g: 1 }, b: ["a", 1, { a: 1 }] },
+    ]);
+
+    expect(util_functions.delete_obj_from_array(data, { a: { g: 1 }, b: ["a", 1, { a: 1 }] })).toEqual([
+        { a: 1, b: 2 },
+        { a: "sd", s: 44 },
+    ]);
+});
+
+test("test function unshuft_unique_obj_to_array_force", () => {
+    const data = [
+        { a: 1, b: 2 },
+        { a: "sd", s: 44 },
+        { a: [1, 2, 3], b: "sdsd" },
+    ];
+
+    expect(util_functions.unshuft_unique_obj_to_array_force(data, { a: "sd", s: 44 })).toEqual([
+        { a: "sd", s: 44 },
+        { a: 1, b: 2 },
+        { a: [1, 2, 3], b: "sdsd" },
+    ]);
+
+    expect(util_functions.unshuft_unique_obj_to_array_force(data, { a: 1, b: 2 })).toEqual([
+        { a: 1, b: 2 },
+        { a: "sd", s: 44 },
+        { a: [1, 2, 3], b: "sdsd" },
+    ]);
+
+    expect(util_functions.unshuft_unique_obj_to_array_force(data, { a: 22, b: 33 })).toEqual([
+        { a: 22, b: 33 },
+        { a: 1, b: 2 },
+        { a: "sd", s: 44 },
+        { a: [1, 2, 3], b: "sdsd" },
+    ]);
+
+    expect(util_functions.unshuft_unique_obj_to_array_force(data, { a: [1, 2, 3], b: "sdsd" })).toEqual([
+        { a: [1, 2, 3], b: "sdsd" },
+        { a: 1, b: 2 },
+        { a: "sd", s: 44 },
+    ]);
+});
+
+test("test function unshuft_unique_obj_to_array", () => {
+    const data = [
+        { a: 1, b: 2 },
+        { a: "sd", s: 44 },
+    ];
+
+    expect(util_functions.unshuft_unique_obj_to_array(data, { a: 1111, s: 444 })).toEqual([
+        { a: 1111, s: 444 },
+        { a: 1, b: 2 },
+        { a: "sd", s: 44 },
+    ]);
+
+    expect(util_functions.unshuft_unique_obj_to_array(data, { a: "sd", s: 44 })).toEqual([
+        { a: 1, b: 2 },
+        { a: "sd", s: 44 },
+    ]);
+});
+
+describe("test function update_meta_desc", () => {
+    let data = { content: "" };
+    let querySelectorSpy: any;
+
+    beforeEach(() => {
+        querySelectorSpy = jest.spyOn(document, "querySelector");
+
+        querySelectorSpy.mockImplementation(() => {
+            return {
+                querySelector: (selector: string) => {
+                    return data;
+                },
+            } as any;
+        });
+    });
+
+    afterEach(() => {
+        querySelectorSpy.mockRestore();
+    });
+
+    test("test city named", () => {
+        util_functions.update_meta_desc("SSS");
+        expect(data).toEqual({
+            content: `Подробный прогноз погоды в SSS, на сегодня, завтра, 5 дней, в weather-app. Прогноз погоды в SSS с точностью '+-25 %'`,
+        });
+    });
+
+    test("test city not named", () => {
+        util_functions.update_meta_desc(undefined);
+        expect(data).toEqual({
+            content: `Подробный прогноз погоды , на сегодня, завтра, 5 дней, в weather-app. Прогноз погоды  с точностью '+-25 %'`,
+        });
+    });
+});
+
+describe("test function get_localed_city_name", () => {
+    let navigatorSpy: jest.SpyInstance<string>;
+    let data = { local_names: { ru228: "test ok" }, name: "SSS" };
+
+    beforeEach(() => {
+        navigatorSpy = jest.spyOn(global.window.navigator, "language", "get");
+    });
+
+    afterEach(() => {
+        navigatorSpy.mockRestore();
+    });
+
+    test("test use locale", () => {
+        navigatorSpy.mockImplementationOnce(() => {
+            return "ru228";
+        });
+        expect(util_functions.get_localed_city_name(data as any)).toEqual("test ok");
+    });
+
+    test("test use name", () => {
+        navigatorSpy.mockImplementationOnce(() => {
+            return "none";
+        });
+        expect(util_functions.get_localed_city_name(data as any)).toEqual("SSS");
+    });
+});
+
+describe("test function get_system_language", () => {
+    let navigatorSpy: jest.SpyInstance<string>;
+
+    beforeEach(() => {
+        navigatorSpy = jest.spyOn(global.window.navigator, "language", "get");
+
+        navigatorSpy.mockImplementationOnce(() => {
+            return "ru228";
+        });
+    });
+
+    afterEach(() => {
+        navigatorSpy.mockRestore();
+    });
+
+    test("test", () => {
+        expect(util_functions.get_system_language()).toEqual("ru228");
+    });
 });
