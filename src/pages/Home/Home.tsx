@@ -16,6 +16,7 @@ import "./../../utils/chart_fix";
 import "./../../global_styles/chart_fix.scss";
 import { ErrorCacher } from "../../HOC/ErrorCacher/ErrorCacher";
 import { HocOnResizeUpdate } from "../../HOC/OnResizeUpdate/OnResizeUpdate";
+import type { TStorageHistoryCity } from "../../appLocalStorage/appLoacalStorage";
 
 const City5d3hWeather_onResizeUpdate = HocOnResizeUpdate<ICity5d3hWeatherProps>(City5d3hWeather); // City5d3hWeather нужно перерендоревать при ресайзе
 
@@ -53,7 +54,7 @@ function HomePage() {
         if (cityName && cityName !== "") {
             // записываем город в локалсторадж
             let new_data = { name: weatherState.cityName!, lat: weatherState.lat!, lon: weatherState.lon! };
-            let new_history = unshuft_unique_obj_to_array_force(localStorageData.history, new_data);
+            let new_history = unshuft_unique_obj_to_array_force(localStorageData.history, new_data) as TStorageHistoryCity[];
             setLocalStorageData({ ...localStorageData, history: [...new_history] });
 
             // обновляем хэш
