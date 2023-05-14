@@ -20,32 +20,31 @@ function City5d3hWeather_dayWeather({ dataIdRender, sorted_days_weather, weather
     let day_id = Number(decode_dataIdRender(dataIdRender).index);
 
     // api не предоставляет время восхода и заката для будующих дней, поэтому выщитываем его самостоятельно, исходя из текущего дня
-    const calc_sunrise = () => {
-        let time = weather!.city.sunrise;
 
-        if (day_id == 0) {
-            return time;
-        }
+    const calc_sunrise = (dt: number, timezone: number) => {
+        let base_sunrise = weather!.city.sunrise;
+        let jsDate = new Date((base_sunrise + timezone) * 1000);
+        let jsDate_h = jsDate.getUTCHours();
+        let jsDate_m = jsDate.getUTCMinutes();
 
-        for (let i = 0; i < day_id; i++) {
-            time += 86400;
-        }
+        let calced_sunrise = new Date(dt * 1000);
+        calced_sunrise.setUTCHours(jsDate_h);
+        calced_sunrise.setUTCMinutes(jsDate_m);
 
-        return time;
+        return calced_sunrise.getTime() / 1000 - timezone;
     };
 
-    const calc_sunset = () => {
-        let time = weather!.city.sunset;
+    const calc_sunset = (dt: number, timezone: number) => {
+        let base_sunset = weather!.city.sunset;
+        let jsDate = new Date((base_sunset + timezone) * 1000);
+        let jsDate_h = jsDate.getUTCHours();
+        let jsDate_m = jsDate.getUTCMinutes();
 
-        if (day_id == 0) {
-            return time;
-        }
+        let calced_sunset = new Date(dt * 1000);
+        calced_sunset.setUTCHours(jsDate_h);
+        calced_sunset.setUTCMinutes(jsDate_m);
 
-        for (let i = 0; i < day_id; i++) {
-            time += 86400;
-        }
-
-        return time;
+        return calced_sunset.getTime() / 1000 - timezone;
     };
 
     return (
@@ -64,8 +63,8 @@ function mobile_html(
     day_id: number,
     sorted_days_weather: TresponseObjListObj[][],
     weather: TResponse,
-    calc_sunrise: () => number,
-    calc_sunset: () => number
+    calc_sunrise: (val: number, val2: number) => number,
+    calc_sunset: (val: number, val2: number) => number
 ) {
     return (
         <>
@@ -94,8 +93,8 @@ function mobile_html(
                             <WeatherIcon
                                 weather_data={{
                                     // этот компонент изначально был расчитан на текущую погоду, поэтому там требовалось сдвигать sunrise. sunset. dt на timezone, сдесь для dt это не нужно
-                                    sunrise: calc_sunrise(), // api не предостовляет информации о восходе и заходе на будующие дни, поэтому для них будем брать время восхода такоеже как и в текущем дне, для этого секундный таймштамп увеличиваем на 1 день
-                                    sunset: calc_sunset(),
+                                    sunrise: calc_sunrise(forecast.dt, weather!.city.timezone), // api не предостовляет информации о восходе и заходе на будующие дни, поэтому для них будем брать время восхода такоеже как и в текущем дне, для этого секундный таймштамп увеличиваем на 1 день
+                                    sunset: calc_sunset(forecast.dt, weather!.city.timezone),
                                     timezone: weather!.city.timezone, // timezone нужен для корректного расчета sunrise и sunset
                                     dt: forecast.dt - weather!.city.timezone, // при расчетах WeatherIcon сдвигает это время на timezone, но в данном случае мы это невелируем, сдивигая его в противоположную сторону
                                     weather_id: forecast.weather[0].id,
@@ -133,8 +132,8 @@ function desctop_html(
     day_id: number,
     sorted_days_weather: TresponseObjListObj[][],
     weather: TResponse,
-    calc_sunrise: () => number,
-    calc_sunset: () => number
+    calc_sunrise: (val: number, val2: number) => number,
+    calc_sunset: (val: number, val2: number) => number
 ) {
     return (
         <>
@@ -150,8 +149,8 @@ function desctop_html(
                         <WeatherIcon
                             weather_data={{
                                 // этот компонент изначально был расчитан на текущую погоду, поэтому там требовалось сдвигать sunrise. sunset. dt на timezone, сдесь для dt это не нужно
-                                sunrise: calc_sunrise(), // api не предостовляет информации о восходе и заходе на будующие дни, поэтому для них будем брать время восхода такоеже как и в текущем дне, для этого секундный таймштамп увеличиваем на 1 день
-                                sunset: calc_sunset(),
+                                sunrise: calc_sunrise(forecast.dt, weather!.city.timezone), // api не предостовляет информации о восходе и заходе на будующие дни, поэтому для них будем брать время восхода такоеже как и в текущем дне, для этого секундный таймштамп увеличиваем на 1 день
+                                sunset: calc_sunset(forecast.dt, weather!.city.timezone),
                                 timezone: weather!.city.timezone, // timezone нужен для корректного расчета sunrise и sunset
                                 dt: forecast.dt - weather!.city.timezone, // при расчетах WeatherIcon сдвигает это время на timezone, но в данном случае мы это невелируем, сдивигая его в противоположную сторону
                                 weather_id: forecast.weather[0].id,
@@ -181,3 +180,6 @@ function desctop_html(
 }
 
 export { City5d3hWeather_dayWeather };
+
+// if (now_timestamp > sun_data.sunset.timestamp || now_timestamp < sun_data.sunrise.timestamp) {
+// if (1684443600000 > 1684531080000 || 1684443600000 < 1684472700000) {
