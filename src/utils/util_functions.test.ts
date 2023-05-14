@@ -92,9 +92,6 @@ test("test function is_mobile_screen_size", () => {
     windowSpy.mockRestore();
 });
 
-// test("test function get_text_date", () => {
-
-//     expect(util_functions.get_text_date()).toEqual(false);
 test("test function get_text_date", () => {
     const case1 = util_functions.get_text_date();
     expect(case1.day_numUTC).toBe(new Date().getUTCDate().toString());
