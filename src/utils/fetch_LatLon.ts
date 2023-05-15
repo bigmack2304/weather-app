@@ -71,7 +71,12 @@ function generate_url(cityName: string, limit: TLimit = 1): URL {
     return temp_url;
 }
 
-async function fetch_lat_lon({ cityName = "", limit = 1, callBack = () => {}, errorCallback = () => {} }: Readonly<IFetchLatLonArgs> = {}) {
+async function fetch_lat_lon({
+    cityName = "",
+    limit = 1,
+    callBack = (response: TFullResponse) => {},
+    errorCallback = () => {},
+}: Readonly<IFetchLatLonArgs> = {}) {
     let full_url = generate_url(cityName, limit);
     let response: TFullResponse;
 

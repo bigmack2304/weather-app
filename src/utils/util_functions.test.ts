@@ -339,14 +339,14 @@ describe("test function get_localed_city_name", () => {
     });
 
     test("test use locale", () => {
-        navigatorSpy.mockImplementationOnce(() => {
+        navigatorSpy.mockImplementation(() => {
             return "ru228";
         });
         expect(util_functions.get_localed_city_name(data as any)).toEqual("test ok");
     });
 
     test("test use name", () => {
-        navigatorSpy.mockImplementationOnce(() => {
+        navigatorSpy.mockImplementation(() => {
             return "none";
         });
         expect(util_functions.get_localed_city_name(data as any)).toEqual("SSS");
