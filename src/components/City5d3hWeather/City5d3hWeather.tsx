@@ -153,7 +153,12 @@ function City5d3hWeather({}: TProps = {}) {
         if (sorted_days_weather.length > 0 && dataIdRender == "") {
             setDataIdRender(`${dt_from_string(sorted_days_weather[0][0].dt)}--0`);
             console.log(sorted_days_weather);
-        }
+        } // else {
+        //     let decode_data_id_renderer = decode_dataIdRender(dataIdRender);
+        //     setDataIdRender(
+        //         `${dt_from_string(sorted_days_weather[Number(decode_data_id_renderer.index)][0].dt)}--${decode_data_id_renderer.index}`
+        //     );
+        // }
     }, [sorted_days_weather]);
 
     // после любого обновления прогноза
