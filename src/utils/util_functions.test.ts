@@ -372,3 +372,41 @@ describe("test function get_system_language", () => {
         expect(util_functions.get_system_language()).toEqual("ru228");
     });
 });
+
+describe("test function is_multiTuch", () => {
+    let navigatorSpy: jest.SpyInstance;
+
+    beforeEach(() => {
+        navigatorSpy = jest.spyOn(global.window, "navigator", "get");
+    });
+
+    afterEach(() => {
+        navigatorSpy.mockRestore();
+    });
+
+    window.navigator.maxTouchPoints > 1;
+
+    test("test multi tuch", () => {
+        navigatorSpy.mockImplementationOnce(() => {
+            return { maxTouchPoints: 2 };
+        });
+
+        expect(util_functions.is_multiTuch()).toEqual(true);
+    });
+
+    test("test not multi tuch", () => {
+        navigatorSpy.mockImplementationOnce(() => {
+            return { maxTouchPoints: 1 };
+        });
+
+        expect(util_functions.is_multiTuch()).toEqual(false);
+    });
+});
+
+test("test function get_full_country_by_code", () => {
+    const case1 = util_functions.get_full_country_by_code("US");
+    expect(case1).toBe("United States");
+
+    const case2 = util_functions.get_full_country_by_code("RU");
+    expect(case2).toBe("Russia");
+});

@@ -6,6 +6,7 @@ import { deep_object_is_equal } from "./is_equal";
 // испоьзование get_full_country_by_code.of("код страны, US например")
 const intlDisplayNames = new Intl.DisplayNames([get_system_language()], { type: "region" });
 
+// tested
 // более удобный интерфейс для intlDisplayNames
 function get_full_country_by_code(countryCode: string) {
     return intlDisplayNames.of(countryCode);
@@ -30,6 +31,7 @@ function is_mobile_screen_size(): boolean {
     return window.innerWidth <= 769 ? true : false;
 }
 
+// tested
 /*
     возврощает true если на устройстве мультитач
     (для пк в 98% вернет false, тк мало у кого сенсорный экран)
@@ -88,6 +90,7 @@ function update_meta_desc(cityName: string | undefined) {
     ).content = `Подробный прогноз погоды ${text}, на сегодня, завтра, 5 дней, в weather-app. Прогноз погоды ${text} с точностью '+-25 %'`;
 }
 
+// tested
 // обновлляем keywords head
 // function update_meta_keywords(cityName: string | undefined) {
 //     const docHead = document.querySelector("head")!;
