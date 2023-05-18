@@ -1,7 +1,6 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./CityCurrentWeather.scss";
 import { useCurrentWeather } from "../../hooks/useCurrentWeather";
-import { WeatherContext } from "../../Contexts/WeatherContext";
 import { IconDirection } from "../../ui/IconDirection";
 import { calc_backgraund_type, calc_sun_hours_details, convert_hpa_to_mmRtSt, deg_to_compass } from "../../utils/util_functions";
 import { IconLoader } from "../../ui/IconLoader";
@@ -10,8 +9,8 @@ import { WeatherBaseInfo } from "../WeatherBaseInfo/WeatherBaseInfo";
 import { WeatherAltInfoTemplate } from "../WeatherAltInfoTemplate/WeatherAltInfoTemplate";
 import "./../../fonts/acline/acline.css";
 import { HoverHint } from "../../HOC/HoverHint/HoverHint";
-
 import { WeatherSunPhase } from "../WeatherSunPhase/WeatherSunPhase";
+import { useAppStoreSelector } from "../../redux/redux_hooks";
 
 interface ICityCurrentWeatherProps {}
 
@@ -26,7 +25,8 @@ type TProps = Readonly<ICityCurrentWeatherProps>;
 // 12 – ураган (более 30 м/с);
 
 function CityCurrentWeather({}: TProps = {}) {
-    const { lat, lon, cityName, pageRef } = useContext(WeatherContext);
+    const { lat, lon, cityName } = useAppStoreSelector((state) => state.weatherGeo);
+    const { pageRef } = useAppStoreSelector((state) => state.homePage);
     const [isLoadingVisible, setIsLoadingVisible] = useState<boolean>(false);
 
     const onErrorCurrentWeather = () => {

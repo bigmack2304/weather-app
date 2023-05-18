@@ -1,6 +1,5 @@
-import React, { useContext, useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import "./City5d3hWeather.scss";
-import { WeatherContext } from "../../Contexts/WeatherContext";
 import { use5d3hWeather } from "../../hooks/use5d3hWeather";
 import { IconLoader } from "../../ui/IconLoader";
 import type { TresponseObjListObj, TresponseObj } from "../../utils/fetch_5d3h_weather";
@@ -9,6 +8,7 @@ import { City5d3hWeather__daysList } from "./City5d3hWeather_daysList";
 import { City5d3hWeather_dayWeather } from "./City5d3hWeather_dayWeather";
 import { City5d3hWeather_chartTypeList } from "./City5d3hWeather_chartTypeList";
 import { City5d3hWeather_chart } from "./City5d3hWeather_chart";
+import { useAppStoreSelector } from "../../redux/redux_hooks";
 
 interface ICity5d3hWeatherProps {}
 
@@ -44,7 +44,7 @@ function decode_dataIdRender(value: string) {
 }
 
 function City5d3hWeather({}: TProps = {}) {
-    const { lat, lon, cityName } = useContext(WeatherContext);
+    const { lat, lon, cityName } = useAppStoreSelector((state) => state.weatherGeo);
     // sorted_days_weather и rawSortedWeather это массив, в котором сперва находятся другие массивы (это дни), в них находятся обьекты, каждый обьект это прогноз на опредеенное время.
     const [sorted_days_weather, set_sorted_days_weather] = useState<TresponseObjListObj[][]>([]); // двумерный массив, первый слой - дни, второй - погода на 3 - 9 - 15 - 21 часов
     const rawSortedWeather = useRef<TresponseObjListObj[][]>([]); // тотже массив что и выше но тут в каждом дне присутствуют все часы с интервалом в 3

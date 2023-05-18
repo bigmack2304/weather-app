@@ -1,11 +1,9 @@
-import React, { memo, useEffect, useState, useContext } from "react";
-import { WeatherContext } from "../../Contexts/WeatherContext";
+import React, { memo, useEffect, useState } from "react";
 import { FormSearh } from "../FormSearh/FormSearh";
 import { deep_object_is_equal } from "../../utils/is_equal";
 import { useSearchCityPos } from "../../hooks/useSearchCityPos";
 import type * as fetchCityLatLon from "../../utils/fetch_LatLon";
 import type { TStorageHistoryCity } from "./../../appLocalStorage/appLoacalStorage";
-import { ButtonClose } from "../ButtonClose/ButtonClose";
 import { get_full_country_by_code, get_localed_city_name, get_system_language, delete_obj_from_array } from "../../utils/util_functions";
 import { IconLoader } from "../../ui/IconLoader";
 import { useLoacalStorage } from "../../hooks/useLocalStorage";
@@ -20,6 +18,9 @@ import { Portal } from "../../HOC/Portal/Portal";
 // городов, юсер кликает на нужный ему город, после этого также происходит вызов
 // selectCityCallback с координатами выбранного города
 
+import { updateCity } from "../../redux/slises/weather_lat_lon";
+import { useAppStoreDispatch } from "../../redux/redux_hooks";
+
 interface ICityPosSearchProps {}
 
 type TProps = Readonly<ICityPosSearchProps>;
@@ -29,7 +30,7 @@ function CityPosSearch({}: TProps) {
     let [isHistoryVisible, setIsHistoryVisible] = useState<boolean>(false);
     let [localStorageData, setLocalStorageData] = useLoacalStorage(true);
     let [readFormValue, setReadFormValue] = useState<string>(""); // эта строка изменяется в след на изменением текста в форме
-    const selectCityCallback = useContext(WeatherContext).selectCityCallback;
+    const storeDispatch = useAppStoreDispatch();
 
     // если при запросе произошла ошибка
     const onErrorFetchCityPos = () => {
@@ -81,7 +82,7 @@ function CityPosSearch({}: TProps) {
 
     // начать поиск города по выбранному результату GEO запроса
     const selectCallback = (selectedCity: fetchCityLatLon.TResponseObj) => {
-        selectCityCallback(selectedCity.lat, selectedCity.lon, get_localed_city_name(selectedCity));
+        storeDispatch(updateCity({ lat: selectedCity.lat, lon: selectedCity.lon, cityName: get_localed_city_name(selectedCity) }));
         removeResponse();
     };
 
@@ -105,7 +106,7 @@ function CityPosSearch({}: TProps) {
     // тут нужно начинать поиск по выбранному городу (нажатие на какойто элемент под формой)
     const onHistorySelect = (metaDataId: string) => {
         let decode_metaDataId = JSON.parse(metaDataId) as TStorageHistoryCity;
-        selectCityCallback(decode_metaDataId.lat, decode_metaDataId.lon, decode_metaDataId.name);
+        storeDispatch(updateCity({ lat: decode_metaDataId.lat, lon: decode_metaDataId.lon, cityName: decode_metaDataId.name }));
         closeHistory();
     };
 
