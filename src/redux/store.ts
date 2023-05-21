@@ -10,9 +10,9 @@ const store = configureStore({
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware({
             serializableCheck: {
-                ignoredActions: ["homePage/updatePageRef"],
+                ignoredActions: [],
                 ignoredActionPaths: [],
-                ignoredPaths: ["homePage.pageRef.current"],
+                ignoredPaths: [],
             },
         }),
 });

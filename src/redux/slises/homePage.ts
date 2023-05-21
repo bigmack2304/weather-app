@@ -2,28 +2,25 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import React from "react";
 
 interface IHomePageSlice {
-    pageRef?: React.RefObject<HTMLElement>;
+    pageSelector?: string;
 }
 
 const initialState: IHomePageSlice = {
-    pageRef: undefined,
+    pageSelector: undefined,
 };
 
 const homePageSlice = createSlice({
     name: "homePage",
     initialState: initialState,
     reducers: {
-        updatePageRef: (state, action: PayloadAction<React.RefObject<HTMLElement>>) => {
-            return {
-                ...state,
-                pageRef: action.payload,
-            };
+        updatePageSelector: (state, action: PayloadAction<string>) => {
+            state.pageSelector = action.payload;
         },
     },
 });
 
-const { updatePageRef } = homePageSlice.actions;
+const { updatePageSelector } = homePageSlice.actions;
 
 export type { IHomePageSlice };
 export default homePageSlice.reducer;
-export { updatePageRef, homePageSlice };
+export { updatePageSelector, homePageSlice };

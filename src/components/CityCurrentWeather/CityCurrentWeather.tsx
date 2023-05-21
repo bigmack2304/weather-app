@@ -26,15 +26,18 @@ type TProps = Readonly<ICityCurrentWeatherProps>;
 
 function CityCurrentWeather({}: TProps = {}) {
     const { lat, lon, cityName } = useAppStoreSelector((state) => state.weatherGeo);
-    const { pageRef } = useAppStoreSelector((state) => state.homePage);
+    const { pageSelector: homePageSelector } = useAppStoreSelector((state) => state.homePage);
     const [isLoadingVisible, setIsLoadingVisible] = useState<boolean>(false);
+    const [isFetchError, setIsFetchError] = useState<boolean>(false); // ошибка загрузки данных
 
     const onErrorCurrentWeather = () => {
         setIsLoadingVisible(false);
+        setIsFetchError(true);
     };
 
     const onStartCurrentWeather = () => {
         setIsLoadingVisible(true);
+        setIsFetchError(false);
     };
 
     const onEndCurrentWeather = () => {
@@ -57,15 +60,19 @@ function CityCurrentWeather({}: TProps = {}) {
             console.log(currentWeather);
 
             let sun_data = calc_sun_hours_details(currentWeather.sys.sunrise, currentWeather.sys.sunset, currentWeather.timezone);
+            let homepage: HTMLElement | null = null;
 
-            if (pageRef && pageRef.current) {
-                for (let elem of Array.from(pageRef.current.classList)) {
-                    if (elem.startsWith("Home--bg_")) {
-                        pageRef.current.classList.remove(elem);
+            if (homePageSelector && homePageSelector != "") {
+                homepage = document.querySelector<HTMLElement>(homePageSelector);
+            }
+
+            if (homepage) {
+                for (let elem of Array.from(homepage.classList)) {
+                    if ((elem as string).startsWith("Home--bg_")) {
+                        homepage.classList.remove(elem);
                     }
                 }
-
-                pageRef.current.classList.add(`Home--bg_${calc_backgraund_type(sun_data, currentWeather)}`);
+                homepage.classList.add(`Home--bg_${calc_backgraund_type(sun_data, currentWeather)}`);
             }
         }
     }, [currentWeather]);
@@ -76,7 +83,7 @@ function CityCurrentWeather({}: TProps = {}) {
 
     return (
         <div className="CityCurrentWeather">
-            {currentWeather && !isLoadingVisible ? (
+            {currentWeather && !isLoadingVisible && !isFetchError ? (
                 <>
                     <div className="CityCurrentWeather__head">
                         <h2 className="CityCurrentWeather__name">{cityName}</h2>
@@ -184,14 +191,14 @@ function CityCurrentWeather({}: TProps = {}) {
                         </div>
                     </div>
                 </>
-            ) : !isLoadingVisible ? (
+            ) : !isLoadingVisible && !isFetchError ? (
                 <>
                     <div className="CityCurrentWeather__default">
                         <p className="CityCurrentWeather__default_text">Начните поиск.</p>
                     </div>
                 </>
             ) : null}
-
+            {isFetchError ? <div className="CityCurrentWeather__fetch_error">Ошибка при загрузки данных о текущей погоде.</div> : null}
             {isLoadingVisible ? (
                 <div className="CityCurrentWeather__loader_wrapper">
                     <IconLoader addClassName={["CityCurrentWeather__loader"]} />

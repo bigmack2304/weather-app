@@ -1,4 +1,4 @@
-import React, { memo, useState, useContext, useEffect, useRef } from "react";
+import React, { memo, useEffect, useRef } from "react";
 import "./Home.scss";
 import { deep_object_is_equal } from "../../utils/is_equal";
 import { Footer } from "../../components/Footer/Footer";
@@ -17,7 +17,7 @@ import { HocOnResizeUpdate } from "../../HOC/OnResizeUpdate/OnResizeUpdate";
 import type { TStorageHistoryCity } from "../../appLocalStorage/appLoacalStorage";
 
 import { updateCity } from "../../redux/slises/weather_lat_lon";
-import { updatePageRef } from "../../redux/slises/homePage";
+import { updatePageSelector } from "../../redux/slises/homePage";
 import { useAppStoreDispatch, useAppStoreSelector } from "../../redux/redux_hooks";
 
 const City5d3hWeather_onResizeUpdate = HocOnResizeUpdate<ICity5d3hWeatherProps>(City5d3hWeather); // City5d3hWeather нужно перерендоревать при ресайзе
@@ -26,7 +26,6 @@ const City5d3hWeather_onResizeUpdate = HocOnResizeUpdate<ICity5d3hWeatherProps>(
 
 function HomePage() {
     let [localStorageData, setLocalStorageData] = useLoacalStorage(false);
-    let homeRef = useRef<HTMLElement>(null);
     let [is_hashOnFirstLoad, set_hash, clear_hash, get_hash] = useHashAddressBar();
 
     let stateWeatherGeo = useAppStoreSelector((state) => state.weatherGeo);
@@ -41,7 +40,11 @@ function HomePage() {
         };
 
         stateWeatherGeoDispatch(updateCity({ lat: firstLoadState.lat, lon: firstLoadState.lon, cityName: firstLoadState.cityName }));
-        stateWeatherGeoDispatch(updatePageRef(homeRef));
+        stateWeatherGeoDispatch(updatePageSelector("main[class*='Home']"));
+
+        return () => {
+            stateWeatherGeoDispatch(updatePageSelector(""));
+        };
     }, []);
 
     useEffect(() => {
@@ -67,7 +70,7 @@ function HomePage() {
 
     return (
         <>
-            <main className="Home" ref={homeRef}>
+            <main className="Home">
                 <Header />
                 <div className="Home__in_container">
                     <section className="Home__weather_now">

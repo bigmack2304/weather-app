@@ -49,16 +49,19 @@ function City5d3hWeather({}: TProps = {}) {
     const [sorted_days_weather, set_sorted_days_weather] = useState<TresponseObjListObj[][]>([]); // двумерный массив, первый слой - дни, второй - погода на 3 - 9 - 15 - 21 часов
     const rawSortedWeather = useRef<TresponseObjListObj[][]>([]); // тотже массив что и выше но тут в каждом дне присутствуют все часы с интервалом в 3
     const [isLoadingVisible, setIsLoadingVisible] = useState<boolean>(false); // отображать-ли значек загрузки
+    const [isFetchError, setIsFetchError] = useState<boolean>(false); // ошибка загрузки данных
     const [dataIdRender, setDataIdRender] = useState<string>(""); // dt идонтефикатор дня, который мы отображаем // строка "дд.мм.гг_отображаемого_дня--index_его_в_массиве"
     const refChartWrapper = useRef<HTMLDivElement>(null); // ссылка на DOM контейнер для графика
     const [chartDataType, setChartDataType] = useState<string>("Температура"); // dt идонтефикатор дня, который мы отображаем
 
     const onErrorFetchWeather = () => {
         setIsLoadingVisible(false);
+        setIsFetchError(true);
     };
 
     const onStartFetchWeather = () => {
         setIsLoadingVisible(true);
+        setIsFetchError(false);
     };
 
     const onEndFetchWeather = () => {
@@ -194,7 +197,7 @@ function City5d3hWeather({}: TProps = {}) {
 
     return (
         <div className="City5d3hWeather">
-            {Weather && sorted_days_weather.length > 0 && !isLoadingVisible ? (
+            {Weather && sorted_days_weather.length > 0 && !isLoadingVisible && !isFetchError ? (
                 <>
                     <div className="City5d3hWeather__data_wrapper">
                         <City5d3hWeather__daysList
@@ -225,9 +228,10 @@ function City5d3hWeather({}: TProps = {}) {
                         </div>
                     </div>
                 </>
-            ) : !isLoadingVisible ? (
+            ) : !isLoadingVisible && !isFetchError ? (
                 <div className="City5d3hWeather__default"></div>
             ) : null}
+            {isFetchError ? <div className="City5d3hWeather__fetch_error">Ошибка при загрузки данных о погоде на 5 дней.</div> : null}
             {isLoadingVisible ? (
                 <div className="City5d3hWeather__loader_wrapper">
                     <IconLoader addClassName={["City5d3hWeather__loader"]} />
