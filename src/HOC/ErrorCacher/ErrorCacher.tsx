@@ -19,6 +19,8 @@ class ErrorCacher extends React.Component<Tprops, Istate> {
             error: null,
             info: "",
         };
+
+        this.onReloadClick = this.onReloadClick.bind(this);
     }
 
     public static getDerivedStateFromError(err: Error): Partial<Istate> {
@@ -34,6 +36,10 @@ class ErrorCacher extends React.Component<Tprops, Istate> {
         // Можно также сохранить информацию об ошибке в соответствующую службу журнала ошибок
     }
 
+    public onReloadClick(e: React.MouseEvent) {
+        this.setState({ hasError: false });
+    }
+
     public render() {
         if (this.state.hasError) {
             // Можно отрендерить запасной UI произвольного вида
@@ -42,6 +48,7 @@ class ErrorCacher extends React.Component<Tprops, Istate> {
                     <h1 className="ErrorCacher__Catch">Перехвачена ошибка</h1>
                     <pre className="ErrorCacher__Error">{String(this.state.error)}</pre>
                     <p className="ErrorCacher__Desc">{this.state.info}</p>
+                    <button onClick={this.onReloadClick}>Перезагрузить</button>
                 </div>
             );
         }
