@@ -17,7 +17,7 @@ const weatherGeoSlice = createSlice({
     name: "weatherGeo",
     initialState: initialState,
     reducers: {
-        updateCity: (state, action: PayloadAction<Pick<IWeatherGeoSlice, "lat" | "lon" | "cityName">>) => {
+        updateCity: (state, action: PayloadAction<IWeatherGeoSlice>) => {
             state.cityName = action.payload.cityName;
             state.lat = action.payload.lat;
             state.lon = action.payload.lon;
