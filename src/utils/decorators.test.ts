@@ -115,3 +115,54 @@ describe("test low_update_decorator", () => {
         expect(counter).toEqual(3);
     });
 });
+
+describe("test cache_decorator", () => {
+    let result: any;
+    let call_count = 0;
+
+    const test_fun1 = decorators.cache_decorator((a, b) => {
+        call_count++;
+        return a + b;
+    });
+
+    const test_fun2 = decorators.cache_decorator((a, b) => {
+        call_count++;
+        return { ...a, ...b };
+    });
+
+    test("test 1", () => {
+        result = test_fun1(2, 3);
+        expect(call_count).toBe(1);
+        expect(result).toBe(5);
+    });
+
+    test("test 2", () => {
+        result = test_fun1(4, 4);
+        expect(call_count).toBe(2);
+        expect(result).toBe(8);
+    });
+
+    test("test 3", () => {
+        result = test_fun1(2, 3);
+        expect(call_count).toBe(2);
+        expect(result).toBe(5);
+    });
+
+    test("test 4", () => {
+        result = test_fun2({ a: 1 }, { b: 2 });
+        expect(call_count).toBe(3);
+        expect(result).toEqual({ a: 1, b: 2 });
+    });
+
+    test("test 5", () => {
+        result = test_fun2({ a: 1 }, { b: 2 });
+        expect(call_count).toBe(3);
+        expect(result).toEqual({ a: 1, b: 2 });
+    });
+
+    test("test 5", () => {
+        result = test_fun2({ a: 1 }, { b: 2 });
+        expect(call_count).toBe(3);
+        expect(result).toEqual({ a: 1, b: 2 });
+    });
+});
