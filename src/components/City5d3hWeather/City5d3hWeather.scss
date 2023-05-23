@@ -77,6 +77,7 @@
     &__day {
         &--active {
             background-color: $WEATCHER_INFO_ACTIVE_BACKROUND;
+            box-shadow: inset 0px 0px 0 1px white;
         }
 
         &--weekend {
