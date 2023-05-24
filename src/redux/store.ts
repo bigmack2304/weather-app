@@ -1,6 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
 import weatherGeoReducer from "./slises/weather_lat_lon";
 import homePageReducer from "./slises/homePage";
+import { store_middleware_logger } from "./middleware/logger";
 
 const store = configureStore({
     reducer: {
@@ -14,7 +15,7 @@ const store = configureStore({
                 ignoredActionPaths: [],
                 ignoredPaths: [],
             },
-        }),
+        }), // .prepend(store_middleware_logger),  // логгер изменений стейта, отключен так как есть redux dev tools
 });
 
 type RootState = ReturnType<typeof store.getState>;
