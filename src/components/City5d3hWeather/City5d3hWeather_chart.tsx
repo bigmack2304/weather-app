@@ -4,6 +4,7 @@ import { ChartTypeOne } from "../ChartTypeOne/ChartTypeOne";
 import { decode_dataIdRender } from "./City5d3hWeather";
 import type { TresponseObjListObj, TresponseObj } from "../../utils/fetch_5d3h_weather";
 import { get_text_date } from "../../utils/util_functions";
+import { addon_map } from "../../utils/util_functions";
 
 type TCity5d3hWeather_chartProps = {
     rawSortedWeather: React.MutableRefObject<TresponseObjListObj[][]>;
@@ -15,40 +16,34 @@ type TProps = Readonly<TCity5d3hWeather_chartProps>;
 
 function City5d3hWeather_chart({ rawSortedWeather, dataIdRender, chartDataType }: TProps) {
     const getChartData = (val: string, day: TresponseObjListObj) => {
-        let result = 0;
+        let result: object = {};
 
         switch (val) {
             case "Температура":
-                result = day.main.temp;
+                result = {
+                    Температура: day.main.temp,
+                    ["Ощущается как"]: day.main.feels_like,
+                };
                 break;
 
             case "Осадки":
+                result = {
+                    Осадки: 0,
+                };
+
                 if (day.rain) {
-                    result = day.rain["3h"];
+                    result = { ...result, Осадки: day.rain["3h"] };
                 }
 
                 if (day.snow) {
-                    result = day.snow["3h"];
+                    result = { ...result, Осадки: day.snow["3h"] };
                 }
-                break;
 
-            default:
-                break;
-        }
+                result = {
+                    ...result,
+                    ["Вер.осадков"]: addon_map(day.pop, 0.0, 1.0, 0, 100).toFixed(0),
+                };
 
-        return result;
-    };
-
-    const units_of_measurement = (val: string) => {
-        let result = "";
-
-        switch (val) {
-            case "Температура":
-                result = "°c";
-                break;
-
-            case "Осадки":
-                result = "мм/3ч";
                 break;
 
             default:
@@ -64,11 +59,11 @@ function City5d3hWeather_chart({ rawSortedWeather, dataIdRender, chartDataType }
                 let text_date = get_text_date(day.dt * 1000);
                 return {
                     name: `${text_date.hoursUTC}:${text_date.minutesUTC}`,
-                    [chartDataType]: getChartData(chartDataType, day),
+                    // [chartDataType]: getChartData(chartDataType, day),
+                    ...getChartData(chartDataType, day),
                 };
             })}
             pointsData={[{ pointName: chartDataType, pointGradientCloror: "#f0f8ff", pointLineCloror: "#d33d29" }]}
-            toolTipPostfix={units_of_measurement(chartDataType)}
         />
     );
 }

@@ -7,6 +7,10 @@
     border: 1px black solid;
     box-shadow: -2px 2px 7px #0000008f;
 
+    &__item {
+        display: block;
+    }
+
     p {
         margin: 0 0 5px 0;
         text-align: center;

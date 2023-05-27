@@ -4,9 +4,7 @@ import type { ValueType, NameType } from "recharts/types/component/DefaultToolti
 import { first_caller_delay_callback } from "../../utils/decorators";
 import "./CustomizedTooltip.scss";
 
-interface ICustomizedTooltipProps {
-    toolTipPostfix?: string;
-}
+interface ICustomizedTooltipProps {}
 
 type TProps = TooltipProps<ValueType, NameType> & ICustomizedTooltipProps;
 
@@ -50,14 +48,50 @@ function CustomizedTooltip(external: TProps) {
         };
     }, [external]);
 
+    const get_jsx_from_payload = () => {
+        let jsx_arr: any[] = [];
+        let postfix: string = "";
+
+        if (!data || !data.payload) return <></>;
+
+        for (let elem in data.payload) {
+            postfix = "";
+            if (elem == "name") continue;
+            if (elem.toLocaleLowerCase() == "температура") {
+                postfix = "°c";
+            }
+            if (elem.toLocaleLowerCase() == "ощущается как") {
+                postfix = "°c";
+            }
+            if (elem.toLocaleLowerCase() == "осадки") {
+                postfix = "мм/3ч";
+            }
+            if (elem.toLocaleLowerCase() == "вер.осадков") {
+                postfix = "%";
+            }
+
+            let new_item = (
+                <span className="CustomizedTooltip_wrapper__item">
+                    {elem}: {data.payload[elem]} {postfix}
+                </span>
+            );
+
+            jsx_arr = [...jsx_arr, new_item];
+        }
+
+        return jsx_arr;
+    };
+
     return (
         <div ref={refTooltip} className="CustomizedTooltip_wrapper">
             {data ? (
                 <>
                     <p>{data.payload.name}</p>
-                    <span>{`${data.dataKey}: ${data.payload[data.dataKey!]} ${
+
+                    {get_jsx_from_payload()}
+                    {/* <span>{`${data.dataKey}: ${data.payload[data.dataKey!]} ${
                         external.toolTipPostfix && external.toolTipPostfix !== "" ? external.toolTipPostfix : ""
-                    }`}</span>
+                    }`}</span> */}
                 </>
             ) : null}
         </div>
