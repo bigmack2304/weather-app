@@ -13,7 +13,14 @@ function get_href() {
 // возвращает хеш страницы в виде обьекта
 function get_hash_href(): IHash {
     let this_url = new URL(get_href());
-    let hash = decodeURIComponent(this_url.hash); // тут хеш закодирован, декодируем
+    let hash: string; // тут хеш закодирован, декодируем
+    let result: object;
+
+    try {
+        hash = decodeURIComponent(this_url.hash);
+    } catch {
+        hash = "";
+    }
 
     if (hash == "") {
         hash = "{}";
@@ -23,7 +30,13 @@ function get_hash_href(): IHash {
         hash = hash.slice(1); // убераем ненужный символ в начале
     }
 
-    return JSON.parse(hash);
+    try {
+        result = JSON.parse(hash);
+    } catch {
+        result = {};
+    }
+
+    return result;
 }
 
 // устанавливает своиство + значение в хеш страницы
