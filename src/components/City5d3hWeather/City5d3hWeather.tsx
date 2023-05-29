@@ -6,8 +6,7 @@ import type { TresponseObjListObj, TresponseObj } from "../../utils/fetch_5d3h_w
 import { get_text_date } from "../../utils/util_functions";
 import { City5d3hWeather__daysList } from "./City5d3hWeather_daysList";
 import { City5d3hWeather_dayWeather } from "./City5d3hWeather_dayWeather";
-import { City5d3hWeather_chartTypeList } from "./City5d3hWeather_chartTypeList";
-import { City5d3hWeather_chart } from "./City5d3hWeather_chart";
+import { City5d3hWeather_chartBlock } from "./City5d3hWeather_chartBlock";
 import { useAppStoreSelector } from "../../redux/redux_hooks";
 
 interface ICity5d3hWeatherProps {}
@@ -51,8 +50,6 @@ function City5d3hWeather({}: TProps = {}) {
     const [isLoadingVisible, setIsLoadingVisible] = useState<boolean>(false); // отображать-ли значек загрузки
     const [isFetchError, setIsFetchError] = useState<boolean>(false); // ошибка загрузки данных
     const [dataIdRender, setDataIdRender] = useState<string>(""); // dt идонтефикатор дня, который мы отображаем // строка "дд.мм.гг_отображаемого_дня--index_его_в_массиве"
-    const refChartWrapper = useRef<HTMLDivElement>(null); // ссылка на DOM контейнер для графика
-    const [chartDataType, setChartDataType] = useState<string>("Температура"); // dt идонтефикатор дня, который мы отображаем
 
     const onErrorFetchWeather = () => {
         setIsLoadingVisible(false);
@@ -172,24 +169,6 @@ function City5d3hWeather({}: TProps = {}) {
         console.log(Weather);
     }, [Weather]);
 
-    useEffect(() => {
-        if (!refChartWrapper.current) return;
-
-        const resizeCallback = () => {
-            if (!refChartWrapper.current) return;
-            const chartWrapperSizes = refChartWrapper.current!.getBoundingClientRect();
-            refChartWrapper.current!.style.height = `${chartWrapperSizes.width / 2}px`;
-        };
-
-        resizeCallback();
-
-        window.addEventListener("resize", resizeCallback);
-
-        return () => {
-            window.removeEventListener("resize", resizeCallback);
-        };
-    }, [refChartWrapper.current]);
-
     // после любого обновления компонента
     useEffect(() => {
         getWeather();
@@ -216,16 +195,7 @@ function City5d3hWeather({}: TProps = {}) {
                         </div>
                     </div>
                     <div className="City5d3hWeather__chart_wrapper">
-                        <div className="City5d3hWeather__chart_type_list">
-                            <City5d3hWeather_chartTypeList chartDataType={chartDataType} setChartDataType={setChartDataType} />
-                        </div>
-                        <div className="City5d3hWeather__chart" ref={refChartWrapper}>
-                            <City5d3hWeather_chart
-                                rawSortedWeather={rawSortedWeather}
-                                dataIdRender={dataIdRender}
-                                chartDataType={chartDataType}
-                            />
-                        </div>
+                        <City5d3hWeather_chartBlock rawSortedWeather={rawSortedWeather} dataIdRender={dataIdRender} />
                     </div>
                 </>
             ) : !isLoadingVisible && !isFetchError ? (
