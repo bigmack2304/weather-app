@@ -186,4 +186,9 @@
             align-self: end;
         }
     }
+
+    &__fetch_error {
+        background-color: white;
+        padding: 5px;
+    }
 }

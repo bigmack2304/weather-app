@@ -44,7 +44,7 @@ function CityCurrentWeather({}: TProps = {}) {
         setIsLoadingVisible(false);
     };
 
-    let [currentWeather, getWeather] = useCurrentWeather({
+    let [currentWeather, getWeather, forceGetWeather] = useCurrentWeather({
         cityName,
         lat,
         lon,
@@ -52,6 +52,11 @@ function CityCurrentWeather({}: TProps = {}) {
         fetchStartCallback: onStartCurrentWeather,
         fetchEndCallback: onEndCurrentWeather,
     });
+
+    const reload_comonent = () => {
+        setIsFetchError(false);
+        forceGetWeather();
+    };
 
     const is_pressure = currentWeather && (currentWeather.main.pressure || currentWeather.main.grnd_level) ? true : false;
 
@@ -198,7 +203,12 @@ function CityCurrentWeather({}: TProps = {}) {
                     </div>
                 </>
             ) : null}
-            {isFetchError ? <div className="CityCurrentWeather__fetch_error">Ошибка при загрузки данных о текущей погоде.</div> : null}
+            {isFetchError ? (
+                <div className="CityCurrentWeather__fetch_error">
+                    <p>Ошибка при загрузки данных о текущей погоде.</p>
+                    <button onClick={reload_comonent}>Перезагрузить</button>
+                </div>
+            ) : null}
             {isLoadingVisible ? (
                 <div className="CityCurrentWeather__loader_wrapper">
                     <IconLoader addClassName={["CityCurrentWeather__loader"]} />
