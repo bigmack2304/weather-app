@@ -2,6 +2,7 @@ import React, { useRef, useEffect } from "react";
 import type { TooltipProps } from "recharts";
 import type { ValueType, NameType } from "recharts/types/component/DefaultTooltipContent";
 import { first_caller_delay_callback } from "../../utils/decorators";
+import { generateHashCode } from "../../utils/util_functions";
 import "./CustomizedTooltip.scss";
 
 interface ICustomizedTooltipProps {}
@@ -70,9 +71,10 @@ function CustomizedTooltip(external: TProps) {
                 postfix = "%";
             }
 
+            let content: string = `${elem}: ${data.payload[elem]} ${postfix}`;
             let new_item = (
-                <span className="CustomizedTooltip_wrapper__item">
-                    {elem}: {data.payload[elem]} {postfix}
+                <span className="CustomizedTooltip__item" key={generateHashCode(content)}>
+                    {content}
                 </span>
             );
 
@@ -87,11 +89,7 @@ function CustomizedTooltip(external: TProps) {
             {data ? (
                 <>
                     <p>{data.payload.name}</p>
-
                     {get_jsx_from_payload()}
-                    {/* <span>{`${data.dataKey}: ${data.payload[data.dataKey!]} ${
-                        external.toolTipPostfix && external.toolTipPostfix !== "" ? external.toolTipPostfix : ""
-                    }`}</span> */}
                 </>
             ) : null}
         </div>
