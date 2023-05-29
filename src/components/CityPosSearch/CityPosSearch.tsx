@@ -37,7 +37,15 @@ function CityPosSearch({}: TProps) {
         setIsLoadingVisible(false);
     };
 
-    let [cityPosResponse, fetchCityPos, removeResponse] = useSearchCityPos(onErrorFetchCityPos);
+    const onStartFetchCityPos = () => {
+        setIsLoadingVisible(true);
+    };
+
+    const onEndFetchCityPos = () => {
+        setIsLoadingVisible(false);
+    };
+
+    let [cityPosResponse, fetchCityPos, removeResponse] = useSearchCityPos(onErrorFetchCityPos, onEndFetchCityPos, onStartFetchCityPos);
     let sorted_cityPosResponse: fetchCityLatLon.TResponseObj[] = cityPosResponse ? [...cityPosResponse] : [];
 
     sorted_cityPosResponse = sorted_cityPosResponse.sort((a, b) => {
@@ -64,14 +72,12 @@ function CityPosSearch({}: TProps) {
             if (cityPosResponse.length === 1) {
                 selectCallback(cityPosResponse[0]);
             }
-            setIsLoadingVisible(false);
         }
     }, [cityPosResponse]);
 
     // вызывается при субмите формы
     const searchCity = (seachVal: string) => {
         fetchCityPos(seachVal);
-        setIsLoadingVisible(true);
         closeHistory();
         setReadFormValue("");
     };
