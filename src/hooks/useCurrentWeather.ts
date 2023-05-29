@@ -33,21 +33,33 @@ function useCurrentWeather({
     let [weather, setWeather] = useState<TypesCurrentWeather.TResponse>();
     let memoPos = useRef<TrefMemoPos>({ prewLat: -999.999, prewLon: -999.999 }); // первоначально инициаизируем несуществующими координатами
     let isFetching = useRef<boolean>(false); // состояние Fetch, идетли сейчас запрос ?
+    let abortController = useRef<null | AbortController>(null);
 
     const fetchingResponseCallback = (resp: TypesCurrentWeather.TResponse) => {
         isFetching.current = false;
+        abortController.current = null;
         setWeather(resp);
         fetchEndCallback();
     };
 
     const fetchingErrorCallback = () => {
         isFetching.current = false;
+        abortController.current = null;
         errorCallback();
     };
 
     const fetchingStartCallback = () => {
+        if (isFetching.current && abortController.current != null) {
+            abortController.current.abort();
+            console.log("old fetch aborted");
+            abortController.current = null;
+        }
         isFetching.current = true;
         fetchStartCallback();
+    };
+
+    const getAbortController = (obj: AbortController) => {
+        abortController.current = obj;
     };
 
     const update_memoPos = () => {
@@ -67,22 +79,35 @@ function useCurrentWeather({
     };
 
     const force_fetch = () => {
-        if (lat && lon && !isFetching.current) {
+        if (lat && lon) {
             fetchingStartCallback();
-            fetch_current_weather({ lat, lon, callBack: fetchingResponseCallback, errorCallback: fetchingErrorCallback });
+            fetch_current_weather({
+                lat,
+                lon,
+                callBack: fetchingResponseCallback,
+                errorCallback: fetchingErrorCallback,
+                getController: getAbortController,
+            });
             return;
         }
     };
 
     const startFetch = () => {
-        if (lat && lon && !isFetching.current) {
+        // if (lat && lon && !isFetching.current) {
+        if (lat && lon) {
             if (memoPos.current.prewLat === lat || memoPos.current.prewLon === lon) return;
 
             update_memoPos();
 
             if (!weather) {
                 fetchingStartCallback();
-                fetch_current_weather({ lat, lon, callBack: fetchingResponseCallback, errorCallback: fetchingErrorCallback });
+                fetch_current_weather({
+                    lat,
+                    lon,
+                    callBack: fetchingResponseCallback,
+                    errorCallback: fetchingErrorCallback,
+                    getController: getAbortController,
+                });
             } else {
                 // если новые координаты +- теже что и координаты текущего города то ничего не делаем
                 // координаты от GEOAPI и из API запроса погоды могут немного отличватся
@@ -90,7 +115,13 @@ function useCurrentWeather({
                     // дополнительно проверяем что искомый город отличается от текущего
                     if (weather.name !== cityName) {
                         fetchingStartCallback();
-                        fetch_current_weather({ lat, lon, callBack: fetchingResponseCallback, errorCallback: fetchingErrorCallback });
+                        fetch_current_weather({
+                            lat,
+                            lon,
+                            callBack: fetchingResponseCallback,
+                            errorCallback: fetchingErrorCallback,
+                            getController: getAbortController,
+                        });
                     }
                 }
             }
