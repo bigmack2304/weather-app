@@ -65,7 +65,7 @@ function City5d3hWeather({}: TProps = {}) {
         setIsLoadingVisible(false);
     };
 
-    let [Weather, getWeather] = use5d3hWeather({
+    let [Weather, getWeather, forceGetWeather] = use5d3hWeather({
         cityName,
         lat,
         lon,
@@ -73,6 +73,11 @@ function City5d3hWeather({}: TProps = {}) {
         fetchStartCallback: onStartFetchWeather,
         fetchEndCallback: onEndFetchWeather,
     });
+
+    const reload_comonent = () => {
+        setIsFetchError(false);
+        forceGetWeather();
+    };
 
     // сортирует ответ на массив дней с прогнозами
     const sort_weather_response = (weather: TresponseObj) => {
@@ -201,7 +206,12 @@ function City5d3hWeather({}: TProps = {}) {
             ) : !isLoadingVisible && !isFetchError ? (
                 <div className="City5d3hWeather__default"></div>
             ) : null}
-            {isFetchError ? <div className="City5d3hWeather__fetch_error">Ошибка при загрузки данных о погоде на 5 дней.</div> : null}
+            {isFetchError ? (
+                <div className="City5d3hWeather__fetch_error">
+                    <p>Ошибка при загрузки данных о текущей погоде.</p>
+                    <button onClick={reload_comonent}>Перезагрузить</button>
+                </div>
+            ) : null}
             {isLoadingVisible ? (
                 <div className="City5d3hWeather__loader_wrapper">
                     <IconLoader addClassName={["City5d3hWeather__loader"]} />

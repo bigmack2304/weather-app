@@ -291,4 +291,9 @@
             background-color: $BACKDROP_COLLOR;
         }
     }
+
+    &__fetch_error {
+        background-color: white;
+        padding: 5px;
+    }
 }
