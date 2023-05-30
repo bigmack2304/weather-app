@@ -19,10 +19,15 @@
 
 .Home {
     background: #c9c9c9;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 
     &__in_container {
-        max-width: 1400px;
+        //width: calc(min(100vw, 1400px));
+        width: calc(clamp(#{$MIN_BODY_WIDTH}, 100%, 1400px)); // обернул в calc тк. scss компилятор не мог нормально преобразовать clamp
         margin: 0 auto;
+        flex-grow: 1;
     }
 
     &__weather_now {

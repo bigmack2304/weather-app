@@ -1,7 +1,6 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./CityCurrentWeather.scss";
 import { useCurrentWeather } from "../../hooks/useCurrentWeather";
-import { WeatherContext } from "../../Contexts/WeatherContext";
 import { IconDirection } from "../../ui/IconDirection";
 import { calc_backgraund_type, calc_sun_hours_details, convert_hpa_to_mmRtSt, deg_to_compass } from "../../utils/util_functions";
 import { IconLoader } from "../../ui/IconLoader";
@@ -10,8 +9,8 @@ import { WeatherBaseInfo } from "../WeatherBaseInfo/WeatherBaseInfo";
 import { WeatherAltInfoTemplate } from "../WeatherAltInfoTemplate/WeatherAltInfoTemplate";
 import "./../../fonts/acline/acline.css";
 import { HoverHint } from "../../HOC/HoverHint/HoverHint";
-
 import { WeatherSunPhase } from "../WeatherSunPhase/WeatherSunPhase";
+import { useAppStoreSelector } from "../../redux/redux_hooks";
 
 interface ICityCurrentWeatherProps {}
 
@@ -26,22 +25,26 @@ type TProps = Readonly<ICityCurrentWeatherProps>;
 // 12 – ураган (более 30 м/с);
 
 function CityCurrentWeather({}: TProps = {}) {
-    const { lat, lon, cityName, pageRef } = useContext(WeatherContext);
+    const { lat, lon, cityName } = useAppStoreSelector((state) => state.weatherGeo);
+    const { pageSelector: homePageSelector } = useAppStoreSelector((state) => state.homePage);
     const [isLoadingVisible, setIsLoadingVisible] = useState<boolean>(false);
+    const [isFetchError, setIsFetchError] = useState<boolean>(false); // ошибка загрузки данных
 
     const onErrorCurrentWeather = () => {
         setIsLoadingVisible(false);
+        setIsFetchError(true);
     };
 
     const onStartCurrentWeather = () => {
         setIsLoadingVisible(true);
+        setIsFetchError(false);
     };
 
     const onEndCurrentWeather = () => {
         setIsLoadingVisible(false);
     };
 
-    let [currentWeather, getWeather] = useCurrentWeather({
+    let [currentWeather, getWeather, forceGetWeather] = useCurrentWeather({
         cityName,
         lat,
         lon,
@@ -50,6 +53,11 @@ function CityCurrentWeather({}: TProps = {}) {
         fetchEndCallback: onEndCurrentWeather,
     });
 
+    const reload_comonent = () => {
+        setIsFetchError(false);
+        forceGetWeather();
+    };
+
     const is_pressure = currentWeather && (currentWeather.main.pressure || currentWeather.main.grnd_level) ? true : false;
 
     useEffect(() => {
@@ -57,15 +65,19 @@ function CityCurrentWeather({}: TProps = {}) {
             console.log(currentWeather);
 
             let sun_data = calc_sun_hours_details(currentWeather.sys.sunrise, currentWeather.sys.sunset, currentWeather.timezone);
+            let homepage: HTMLElement | null = null;
 
-            if (pageRef && pageRef.current) {
-                for (let elem of Array.from(pageRef.current.classList)) {
-                    if (elem.startsWith("Home--bg_")) {
-                        pageRef.current.classList.remove(elem);
+            if (homePageSelector && homePageSelector != "") {
+                homepage = document.querySelector<HTMLElement>(homePageSelector);
+            }
+
+            if (homepage) {
+                for (let elem of Array.from(homepage.classList)) {
+                    if ((elem as string).startsWith("Home--bg_")) {
+                        homepage.classList.remove(elem);
                     }
                 }
-
-                pageRef.current.classList.add(`Home--bg_${calc_backgraund_type(sun_data, currentWeather)}`);
+                homepage.classList.add(`Home--bg_${calc_backgraund_type(sun_data, currentWeather)}`);
             }
         }
     }, [currentWeather]);
@@ -76,7 +88,7 @@ function CityCurrentWeather({}: TProps = {}) {
 
     return (
         <div className="CityCurrentWeather">
-            {currentWeather && !isLoadingVisible ? (
+            {currentWeather && !isLoadingVisible && !isFetchError ? (
                 <>
                     <div className="CityCurrentWeather__head">
                         <h2 className="CityCurrentWeather__name">{cityName}</h2>
@@ -184,14 +196,19 @@ function CityCurrentWeather({}: TProps = {}) {
                         </div>
                     </div>
                 </>
-            ) : !isLoadingVisible ? (
+            ) : !isLoadingVisible && !isFetchError ? (
                 <>
                     <div className="CityCurrentWeather__default">
                         <p className="CityCurrentWeather__default_text">Начните поиск.</p>
                     </div>
                 </>
             ) : null}
-
+            {isFetchError ? (
+                <div className="CityCurrentWeather__fetch_error">
+                    <p>Ошибка при загрузки данных о текущей погоде.</p>
+                    <button onClick={reload_comonent}>Перезагрузить</button>
+                </div>
+            ) : null}
             {isLoadingVisible ? (
                 <div className="CityCurrentWeather__loader_wrapper">
                     <IconLoader addClassName={["CityCurrentWeather__loader"]} />

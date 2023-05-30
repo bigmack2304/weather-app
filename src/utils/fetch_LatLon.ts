@@ -61,6 +61,7 @@ interface IFetchLatLonArgs {
     limit?: TLimit; // сколько выводить городов с одинаковым имянем
     callBack?: (response: TFullResponse) => void; // колбек, вызывается при получении ответа с сервера, с аргументом ответа
     errorCallback?: () => void; // коллбек, вызывается при возникновении исключения в фече либо если город не найден
+    getController?: (obj: AbortController) => void; // коллбек, вызывается перед запросом, в параметры получает AbortController
 }
 
 function generate_url(cityName: string, limit: TLimit = 1): URL {
@@ -71,12 +72,20 @@ function generate_url(cityName: string, limit: TLimit = 1): URL {
     return temp_url;
 }
 
-async function fetch_lat_lon({ cityName = "", limit = 1, callBack = () => {}, errorCallback = () => {} }: Readonly<IFetchLatLonArgs> = {}) {
+async function fetch_lat_lon({
+    cityName = "",
+    limit = 1,
+    callBack = (response: TFullResponse) => {},
+    errorCallback = () => {},
+    getController = () => {},
+}: Readonly<IFetchLatLonArgs> = {}) {
     let full_url = generate_url(cityName, limit);
     let response: TFullResponse;
 
     try {
-        let get_response = await fetch(full_url);
+        let controller = new AbortController();
+        getController(controller);
+        let get_response = await fetch(full_url, { signal: controller.signal });
         let raw_response = await get_response.json();
 
         if (!Array.isArray(raw_response) && "cod" in raw_response) {
@@ -85,10 +94,15 @@ async function fetch_lat_lon({ cityName = "", limit = 1, callBack = () => {}, er
 
         response = raw_response;
     } catch (err) {
+        if (err instanceof Error && err.message.includes("The user aborted a request.")) {
+            return;
+        }
+
         console.group("ERROR INFO");
         console.error(`Ошибка запроса по адресу ${full_url}`);
         console.error(err);
         console.groupEnd();
+
         errorCallback();
     }
 

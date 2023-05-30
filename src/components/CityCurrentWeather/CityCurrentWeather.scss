@@ -101,6 +101,7 @@
 
         position: absolute;
         height: 100%;
+        width: 100%;
 
         grid-template-columns: 1fr 1fr;
 
@@ -184,5 +185,10 @@
         @include is-screen(desctop) {
             align-self: end;
         }
+    }
+
+    &__fetch_error {
+        background-color: white;
+        padding: 5px;
     }
 }

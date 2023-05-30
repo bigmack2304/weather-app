@@ -90,6 +90,7 @@ interface IFetchCurrentWeatherArgs {
     lon: number;
     callBack?: (response: TResponse) => void;
     errorCallback?: () => void;
+    getController?: (obj: AbortController) => void;
 }
 
 type TresponseObj = {
@@ -152,13 +153,30 @@ function generate_url(lat: number, lon: number): URL {
     return temp_url;
 }
 
-async function fetch_current_weather({ lat, lon, callBack = () => {}, errorCallback = () => {} }: Readonly<IFetchCurrentWeatherArgs>) {
+/*
+    fetch_current_weather делает запрос на инфу о погоде, все необходимое возвращает через колбеки
+    lat lon координаты по которым нужно получить погоду
+    callBack: это функция которую мы можем указать, при получении ответа, будет вызванна эта функция и ей в параметры
+                прилетит ответ с сервера.
+    errorCallback: просто функция которая будет вызвана если произойдет исключение (AbortController не в щет)
+    getController: вызывается перед запросом, в параметры получает AbortController для того чтобы можно было отменить fetch
+*/
+
+async function fetch_current_weather({
+    lat,
+    lon,
+    callBack = () => {},
+    errorCallback = () => {},
+    getController = () => {},
+}: Readonly<IFetchCurrentWeatherArgs>) {
     let full_url = generate_url(lat, lon);
 
     let response: TResponse;
 
     try {
-        let get_response = await fetch(full_url);
+        let controller = new AbortController();
+        getController(controller);
+        let get_response = await fetch(full_url, { signal: controller.signal });
         let raw_response = await get_response.json();
 
         if (raw_response.cod && raw_response.cod !== 200) {
@@ -167,10 +185,15 @@ async function fetch_current_weather({ lat, lon, callBack = () => {}, errorCallb
 
         response = raw_response;
     } catch (err) {
+        if (err instanceof Error && err.message.includes("The user aborted a request.")) {
+            // а нифига в этом случае не делаем
+            return;
+        }
         console.group("ERROR INFO");
         console.error(`Ошибка запроса по адресу ${full_url}`);
         console.error(err);
         console.groupEnd();
+
         errorCallback();
     }
 

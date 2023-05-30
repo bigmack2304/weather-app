@@ -34,7 +34,7 @@ function HocOnResizeUpdate<TWrapperProps extends {}>(
 
         return (
             <React.Fragment>
-                <WrappedComponent {...wrappedFullProps} />;
+                <WrappedComponent {...wrappedFullProps} />
             </React.Fragment>
         );
     };

@@ -1,5 +1,6 @@
 .ErrorCacher {
-    outline: red solid 2px;
+    border: red solid 2px;
+    background-color: white;
 
     &__Catch {
         font-weight: bold;

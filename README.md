@@ -25,13 +25,16 @@
 #### Используемые технологии
 
 -   React (CRA)
+-   Redux Tool Kit
 -   Type script
 -   Java script
--   JSX
 -   HTML 5
 -   CSS 3
 -   SCSS
+-   Jest
+
     **Дополнительно**
+
 -   prettier
 -   github
 -   github Actions

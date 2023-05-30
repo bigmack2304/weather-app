@@ -1,3 +1,5 @@
+import { deep_array_is_equal } from "./is_equal";
+
 type TanyFunc = (...args: any[]) => any;
 
 interface ICallStackElement {
@@ -103,4 +105,45 @@ function low_update_decorator<T extends TanyFunc>(func: T, callback = () => {}, 
     };
 }
 
-export { caller_delay_callback, first_caller_delay_callback, low_update_decorator };
+/*
+    декоратор для кеширования значений возвращаемых функциями.
+*/
+function cache_decorator<T extends TanyFunc, R extends ReturnType<T>>(func: T) {
+    type TCacheItem = {
+        params: Parameters<T>;
+        result: R;
+    };
+
+    const ERR_RESPONSE = "!! decorators.is_cached: value not cached !!";
+    let cache: TCacheItem[] = [];
+
+    const get_cached = (args: Parameters<T>): typeof ERR_RESPONSE | TCacheItem => {
+        // на случай если одним из аргументов будет обьект ссылающийся сам на себя, тогда в deep_array_is_equal будет исключение
+        try {
+            for (let cache_item of cache) {
+                if (deep_array_is_equal(cache_item.params, args)) {
+                    return cache_item;
+                }
+            }
+        } catch {
+            return ERR_RESPONSE;
+        }
+        return ERR_RESPONSE;
+    };
+
+    return (...args: Parameters<T>) => {
+        let result: R;
+        let is_value_cache = get_cached(args);
+
+        if (is_value_cache === ERR_RESPONSE) {
+            result = func(...args);
+            cache.push({ params: args, result: result });
+        } else {
+            result = is_value_cache.result;
+        }
+
+        return result;
+    };
+}
+
+export { caller_delay_callback, first_caller_delay_callback, low_update_decorator, cache_decorator };
