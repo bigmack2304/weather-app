@@ -24,19 +24,19 @@
 
 #### Используемые технологии
 
--   React (CRA)
--   Redux Tool Kit
--   Type script
--   Java script
 -   HTML 5
 -   CSS 3
 -   SCSS
+-   Java script
+-   Type script
+-   React (CRA)
+-   React router
+-   Redux Tool Kit
 -   Jest
 
     **Дополнительно**
 
--   prettier
--   github
+-   git
 -   github Actions
 -   github Pages
 
