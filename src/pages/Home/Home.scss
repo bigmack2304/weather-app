@@ -29,7 +29,7 @@
     }
 
     &__weather_now {
-        min-height: 100vh;
+        min-height: calc(max(500px, 100vh));
         display: flex;
         flex-direction: column;
         flex-wrap: nowrap;
@@ -43,7 +43,7 @@
     }
 
     &__weather_week {
-        min-height: 100vh;
+        min-height: calc(max(500px, 100vh));
         box-shadow: black 0px -3px 20px 0px;
         display: flex;
         flex-direction: column;
