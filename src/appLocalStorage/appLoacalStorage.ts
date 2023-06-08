@@ -24,6 +24,7 @@ function get_stprage_data() {
 }
 
 function set_storage_data(data: IAppLocalStorage) {
+    dispatchEventStorageUpdate();
     localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
 }
 
@@ -42,5 +43,5 @@ function storage_init() {
     }
 }
 
-export { STORAGE_KEY, STORAGE_DEF_VALUE, get_stprage_data, set_storage_data, dispatchEventStorageUpdate };
+export { STORAGE_KEY, STORAGE_DEF_VALUE, get_stprage_data, set_storage_data };
 export type { TStorageHistoryCity, IAppLocalStorage };
