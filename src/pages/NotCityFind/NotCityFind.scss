@@ -1,0 +1,15 @@
+@import "./../../global_styles/global_vars.scss";
+
+.NotCityFind {
+    backdrop-filter: $BACKDROP_BLUR;
+    background-color: $BACKDROP_COLLOR;
+    flex-grow: 1;
+    box-shadow: inset 0px -15px 18px -13px black;
+
+    &__default_text {
+        text-align: center;
+        font-size: 1.38rem;
+        color: $WHITE_TEXT;
+        text-shadow: 0 0 9px black;
+    }
+}
