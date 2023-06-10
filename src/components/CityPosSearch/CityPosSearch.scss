@@ -2,7 +2,7 @@
 
 .CityPosSearch {
     position: relative;
-    min-width: 269px;
+    //min-width: 269px;
     //width: 269px;
     display: flex;
     flex-direction: row;
@@ -20,7 +20,8 @@
         flex-direction: column;
         align-items: center;
         row-gap: 5px;
-        width: 245px;
+        // width: 245px;
+        width: $FORM_SEARCH_SIZE;
         margin: 37px 0 0 15px;
     }
 
@@ -90,9 +91,9 @@
 
         .FormSearch__search {
             // padding-right: 25px;
-            width: 245px;
+            // width: 245px;
             height: 24px;
-            background-color: #ffffff69;
+            // background-color: #ffffff69;
             border: none;
             border-bottom: 1px black solid;
             border-top-left-radius: 5px;

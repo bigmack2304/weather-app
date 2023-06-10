@@ -23,6 +23,10 @@ $WHITE_TEXT: #e7e7e7; // белый цвет для текста
     }
 }
 
+// form search size
+
+$FORM_SEARCH_SIZE: calc(clamp(163px, 50vw, 350px));
+
 // стили для контейнеров информации о погоде
 
 $WEATCHER_INFO_ALT_NOACTIVE_BACKROUND: #00000024;
