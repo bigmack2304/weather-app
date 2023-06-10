@@ -6,6 +6,7 @@ import { BrowserRouter, HashRouter, Routes, Route } from "react-router-dom";
 import { BasePageTemplate } from "../BasePageTemplate/BasePageTemplate";
 import { NotCityFind } from "../NotCityFind/NotCityFind";
 import { NotFoundPage } from "../NotFoundPage/NotFoundPage";
+import { HomeProvider } from "../../HOC/HomeProvider/HomeProvider";
 
 // Корень всего приложения
 
@@ -16,10 +17,31 @@ function App() {
                 <HashRouter>
                     <Routes>
                         <Route path="/" element={<BasePageTemplate />}>
-                            <Route index element={<HomePage />} />
+                            <Route
+                                index
+                                element={
+                                    <HomeProvider>
+                                        <HomePage />
+                                    </HomeProvider>
+                                }
+                            />
                             <Route path="/not_city_find" element={<NotCityFind />} />
-                            <Route path="/search" element={<HomePage />} />
-                            <Route path="/search/:city_name/:lat/:lon" element={<HomePage />} />
+                            <Route
+                                path="/search"
+                                element={
+                                    <HomeProvider>
+                                        <HomePage />
+                                    </HomeProvider>
+                                }
+                            />
+                            <Route
+                                path="/search/:city_name/:lat/:lon"
+                                element={
+                                    <HomeProvider>
+                                        <HomePage />
+                                    </HomeProvider>
+                                }
+                            />
                             <Route path="*" element={<NotFoundPage />} />
                         </Route>
                     </Routes>
