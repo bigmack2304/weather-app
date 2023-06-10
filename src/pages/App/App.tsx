@@ -17,9 +17,9 @@ function App() {
                     <Routes>
                         <Route path="/" element={<BasePageTemplate />}>
                             <Route index element={<HomePage />} />
-                            <Route path="not_city_find" element={<NotCityFind />} />
-                            <Route path="search" element={<HomePage />} />
-                            <Route path="search/:city_name/:lat/:lon" element={<HomePage />} />
+                            <Route path="/not_city_find" element={<NotCityFind />} />
+                            <Route path="/search" element={<HomePage />} />
+                            <Route path="/search/:city_name/:lat/:lon" element={<HomePage />} />
                             <Route path="*" element={<NotFoundPage />} />
                         </Route>
                     </Routes>

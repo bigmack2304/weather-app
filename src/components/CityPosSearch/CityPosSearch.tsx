@@ -10,6 +10,7 @@ import { useLoacalStorage } from "../../hooks/useLocalStorage";
 import { ClosableItem } from "../ClosableItem/ClosableItem";
 import "./CityPosSearch.scss";
 import { Portal } from "../../HOC/Portal/Portal";
+import { useNavigate } from "react-router-dom";
 
 // компонент делает запрос на сервер для определления координат города
 // указанного в форме, после ответа, если найден один город то происходит вызов
@@ -31,6 +32,7 @@ function CityPosSearch({}: TProps) {
     let [localStorageData, setLocalStorageData] = useLoacalStorage(true);
     let [readFormValue, setReadFormValue] = useState<string>(""); // эта строка изменяется в след на изменением текста в форме
     const storeDispatch = useAppStoreDispatch();
+    const router_navigate = useNavigate();
 
     // если при запросе произошла ошибка
     const onErrorFetchCityPos = () => {
@@ -90,6 +92,7 @@ function CityPosSearch({}: TProps) {
     const selectCallback = (selectedCity: fetchCityLatLon.TResponseObj) => {
         storeDispatch(updateCity({ lat: selectedCity.lat, lon: selectedCity.lon, cityName: get_localed_city_name(selectedCity) }));
         removeResponse();
+        router_navigate("/search");
     };
 
     // тут нужно показать историю (начало ввода в форму)
@@ -114,6 +117,7 @@ function CityPosSearch({}: TProps) {
         let decode_metaDataId = JSON.parse(metaDataId) as TStorageHistoryCity;
         storeDispatch(updateCity({ lat: decode_metaDataId.lat, lon: decode_metaDataId.lon, cityName: decode_metaDataId.name }));
         closeHistory();
+        router_navigate("/search");
     };
 
     return (
