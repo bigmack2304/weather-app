@@ -27,21 +27,21 @@ function App() {
                             />
                             <Route path="not_city_find" element={<NotCityFind />} />
                             <Route
-                                path="search"
+                                path="search/*"
                                 element={
                                     <HomeProvider>
                                         <HomePage />
                                     </HomeProvider>
                                 }
                             />
-                            <Route
+                            {/* <Route
                                 path="search/:city_name/:lat/:lon"
                                 element={
                                     <HomeProvider>
                                         <HomePage />
                                     </HomeProvider>
                                 }
-                            />
+                            /> */}
                             <Route path="*" element={<NotFoundPage />} />
                         </Route>
                     </Routes>
