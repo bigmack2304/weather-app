@@ -34,14 +34,6 @@ function App() {
                                     </HomeProvider>
                                 }
                             />
-                            {/* <Route
-                                path="search/:city_name/:lat/:lon"
-                                element={
-                                    <HomeProvider>
-                                        <HomePage />
-                                    </HomeProvider>
-                                }
-                            /> */}
                             <Route path="*" element={<NotFoundPage />} />
                         </Route>
                     </Routes>
