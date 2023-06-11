@@ -25,9 +25,9 @@ function App() {
                                     </HomeProvider>
                                 }
                             />
-                            <Route path="/not_city_find" element={<NotCityFind />} />
+                            <Route path="not_city_find" element={<NotCityFind />} />
                             <Route
-                                path="/search"
+                                path="search"
                                 element={
                                     <HomeProvider>
                                         <HomePage />
@@ -35,7 +35,7 @@ function App() {
                                 }
                             />
                             <Route
-                                path="/search/:city_name/:lat/:lon"
+                                path="search/:city_name/:lat/:lon"
                                 element={
                                     <HomeProvider>
                                         <HomePage />
