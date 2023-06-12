@@ -62,6 +62,7 @@ interface IFetchLatLonArgs {
     callBack?: (response: TFullResponse) => void; // колбек, вызывается при получении ответа с сервера, с аргументом ответа
     errorCallback?: () => void; // коллбек, вызывается при возникновении исключения в фече либо если город не найден
     getController?: (obj: AbortController) => void; // коллбек, вызывается перед запросом, в параметры получает AbortController
+    notFoundCallback?: () => void; // коллбек, вызывается в случае если город не найден
 }
 
 function generate_url(cityName: string, limit: TLimit = 1): URL {
@@ -78,6 +79,7 @@ async function fetch_lat_lon({
     callBack = (response: TFullResponse) => {},
     errorCallback = () => {},
     getController = () => {},
+    notFoundCallback = () => {},
 }: Readonly<IFetchLatLonArgs> = {}) {
     let full_url = generate_url(cityName, limit);
     let response: TFullResponse;
@@ -109,7 +111,7 @@ async function fetch_lat_lon({
     if (Array.isArray(response) && response.length === 0) {
         console.warn(`По запросу ${full_url} ничего не найдено.`);
         response = undefined;
-        errorCallback();
+        notFoundCallback();
     }
 
     callBack(response);

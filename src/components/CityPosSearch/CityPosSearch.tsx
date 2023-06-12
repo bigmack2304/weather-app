@@ -11,6 +11,7 @@ import { ClosableItem } from "../ClosableItem/ClosableItem";
 import "./CityPosSearch.scss";
 import { Portal } from "../../HOC/Portal/Portal";
 import { useNavigate } from "react-router-dom";
+import { SearchCityNotFound } from "../SearchCityNotFound/SearchCityNotFound";
 
 // компонент делает запрос на сервер для определления координат города
 // указанного в форме, после ответа, если найден один город то происходит вызов
@@ -30,9 +31,15 @@ function CityPosSearch({}: TProps) {
     let [isLoadingVisible, setIsLoadingVisible] = useState<boolean>(false);
     let [isHistoryVisible, setIsHistoryVisible] = useState<boolean>(false);
     let [localStorageData, setLocalStorageData] = useLoacalStorage(true);
+    let [isNotFoundVisible, setIsNotFoundVisible] = useState<boolean>(false);
     let [readFormValue, setReadFormValue] = useState<string>(""); // эта строка изменяется в след на изменением текста в форме
     const storeDispatch = useAppStoreDispatch();
     const router_navigate = useNavigate();
+
+    const onNotFoundCallback = () => {
+        setIsLoadingVisible(false);
+        setIsNotFoundVisible(true);
+    };
 
     // если при запросе произошла ошибка
     const onErrorFetchCityPos = () => {
@@ -47,7 +54,12 @@ function CityPosSearch({}: TProps) {
         setIsLoadingVisible(false);
     };
 
-    let [cityPosResponse, fetchCityPos, removeResponse] = useSearchCityPos(onErrorFetchCityPos, onEndFetchCityPos, onStartFetchCityPos);
+    let [cityPosResponse, fetchCityPos, removeResponse] = useSearchCityPos(
+        onErrorFetchCityPos,
+        onEndFetchCityPos,
+        onStartFetchCityPos,
+        onNotFoundCallback
+    );
     let sorted_cityPosResponse: fetchCityLatLon.TResponseObj[] = cityPosResponse ? [...cityPosResponse] : [];
 
     sorted_cityPosResponse = sorted_cityPosResponse.sort((a, b) => {
@@ -120,6 +132,11 @@ function CityPosSearch({}: TProps) {
         router_navigate("/search");
     };
 
+    // закрываем модалку о ненайденном городе
+    const onSearchCityNotFoundClose = () => {
+        setIsNotFoundVisible(false);
+    };
+
     return (
         <div className="CityPosSearch">
             <FormSearh
@@ -181,6 +198,12 @@ function CityPosSearch({}: TProps) {
             ) : null}
 
             {isLoadingVisible ? <IconLoader addClassName={["CityPosSearch__loader"]} /> : null}
+
+            {isNotFoundVisible ? (
+                <Portal>
+                    <SearchCityNotFound onClose={onSearchCityNotFoundClose} />
+                </Portal>
+            ) : null}
         </div>
     );
 }
