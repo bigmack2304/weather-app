@@ -9,7 +9,7 @@ import "./../../global_styles/chart_fix.scss";
 import { ErrorCacher } from "../../HOC/ErrorCacher/ErrorCacher";
 import { HocOnResizeUpdate } from "../../HOC/OnResizeUpdate/OnResizeUpdate";
 import { updatePageSelector } from "../../redux/slises/homePage";
-import { useAppStoreDispatch } from "../../redux/redux_hooks";
+import { useAppStoreDispatch, useAppStoreSelector } from "../../redux/redux_hooks";
 
 const City5d3hWeather_onResizeUpdate = HocOnResizeUpdate<ICity5d3hWeatherProps>(City5d3hWeather); // City5d3hWeather нужно перерендоревать при ресайзе
 
@@ -18,6 +18,7 @@ interface IHomePageProps {}
 type TProps = Readonly<IHomePageProps>;
 
 function HomePage({}: TProps) {
+    const { backgroundClass } = useAppStoreSelector((state) => state.homePage);
     let stateWeatherGeoDispatch = useAppStoreDispatch();
 
     // при вервой загрузке обновляем  селектор этого компонента в сторе
@@ -30,7 +31,7 @@ function HomePage({}: TProps) {
 
     return (
         <>
-            <div className="Home">
+            <div className={`Home ${backgroundClass ?? ""}`}>
                 <div className="Home__in_container">
                     <section className="Home__weather_now">
                         <h3 className="visually_hidden">Погода на сегодня</h3>

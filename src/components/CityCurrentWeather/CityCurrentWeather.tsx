@@ -10,23 +10,16 @@ import { WeatherAltInfoTemplate } from "../WeatherAltInfoTemplate/WeatherAltInfo
 import "./../../fonts/acline/acline.css";
 import { HoverHint } from "../../HOC/HoverHint/HoverHint";
 import { WeatherSunPhase } from "../WeatherSunPhase/WeatherSunPhase";
-import { useAppStoreSelector } from "../../redux/redux_hooks";
+import { useAppStoreSelector, useAppStoreDispatch } from "../../redux/redux_hooks";
+import { updateBackgroundClass } from "../../redux/slises/homePage";
 
 interface ICityCurrentWeatherProps {}
 
 type TProps = Readonly<ICityCurrentWeatherProps>;
 
-// сила ветра
-// 0 – штиль (безветрие);
-// 1 – 3 – слабый (скорость 2 – 5 м/с);
-// 4 – 5 – умеренный (5 – 10 м/с);
-// 6 – 8 – сильный (10 – 18 м/с);
-// 9 – 11 – шторм (18 – 30 м/с);
-// 12 – ураган (более 30 м/с);
-
 function CityCurrentWeather({}: TProps = {}) {
     const { lat, lon, cityName } = useAppStoreSelector((state) => state.weatherGeo);
-    const { pageSelector: homePageSelector } = useAppStoreSelector((state) => state.homePage);
+    const reduxStoreDispatch = useAppStoreDispatch();
     const [isLoadingVisible, setIsLoadingVisible] = useState<boolean>(false);
     const [isFetchError, setIsFetchError] = useState<boolean>(false); // ошибка загрузки данных
 
@@ -63,22 +56,8 @@ function CityCurrentWeather({}: TProps = {}) {
     useEffect(() => {
         if (currentWeather) {
             console.log(currentWeather);
-
             let sun_data = calc_sun_hours_details(currentWeather.sys.sunrise, currentWeather.sys.sunset, currentWeather.timezone);
-            let homepage: HTMLElement | null = null;
-
-            if (homePageSelector && homePageSelector != "") {
-                homepage = document.querySelector<HTMLElement>(homePageSelector);
-            }
-
-            if (homepage) {
-                for (let elem of Array.from(homepage.classList)) {
-                    if ((elem as string).startsWith("Home--bg_")) {
-                        homepage.classList.remove(elem);
-                    }
-                }
-                homepage.classList.add(`Home--bg_${calc_backgraund_type(sun_data, currentWeather)}`);
-            }
+            reduxStoreDispatch(updateBackgroundClass(`Home--bg_${calc_backgraund_type(sun_data, currentWeather)}`));
         }
     }, [currentWeather]);
 

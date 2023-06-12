@@ -3,10 +3,12 @@ import React from "react";
 
 interface IHomePageSlice {
     pageSelector?: string;
+    backgroundClass?: string;
 }
 
 const initialState: IHomePageSlice = {
     pageSelector: undefined,
+    backgroundClass: undefined,
 };
 
 const homePageSlice = createSlice({
@@ -16,11 +18,14 @@ const homePageSlice = createSlice({
         updatePageSelector: (state, action: PayloadAction<string>) => {
             state.pageSelector = action.payload;
         },
+        updateBackgroundClass: (state, action: PayloadAction<string>) => {
+            state.backgroundClass = action.payload;
+        },
     },
 });
 
-const { updatePageSelector } = homePageSlice.actions;
+const { updatePageSelector, updateBackgroundClass } = homePageSlice.actions;
 
 export type { IHomePageSlice };
 export default homePageSlice.reducer;
-export { updatePageSelector, homePageSlice };
+export { updatePageSelector, homePageSlice, updateBackgroundClass };
