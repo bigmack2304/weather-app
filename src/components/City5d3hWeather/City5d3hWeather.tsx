@@ -203,8 +203,6 @@ function City5d3hWeather({}: TProps = {}) {
                         <City5d3hWeather_chartBlock rawSortedWeather={rawSortedWeather} dataIdRender={dataIdRender} />
                     </div>
                 </>
-            ) : !isLoadingVisible && !isFetchError ? (
-                <div className="City5d3hWeather__default"></div>
             ) : null}
             {isFetchError ? (
                 <div className="City5d3hWeather__fetch_error">

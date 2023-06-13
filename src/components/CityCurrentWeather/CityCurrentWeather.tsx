@@ -175,13 +175,8 @@ function CityCurrentWeather({}: TProps = {}) {
                         </div>
                     </div>
                 </>
-            ) : !isLoadingVisible && !isFetchError ? (
-                <>
-                    <div className="CityCurrentWeather__default">
-                        <p className="CityCurrentWeather__default_text">Начните поиск.</p>
-                    </div>
-                </>
             ) : null}
+
             {isFetchError ? (
                 <div className="CityCurrentWeather__fetch_error">
                     <p>Ошибка при загрузки данных о текущей погоде.</p>

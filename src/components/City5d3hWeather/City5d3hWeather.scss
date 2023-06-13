@@ -272,26 +272,6 @@
         }
     }
 
-    &__default {
-        // position: absolute;
-        // top: 0;
-        // left: 0;
-        // right: 0;
-        // bottom: 0;
-        // backdrop-filter: $BACKDROP_BLUR;
-        // background-color: $BACKDROP_COLLOR;
-
-        @include is-screen(mobile) {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            backdrop-filter: $BACKDROP_BLUR;
-            background-color: $BACKDROP_COLLOR;
-        }
-    }
-
     &__fetch_error {
         background-color: white;
         padding: 5px;
