@@ -27,15 +27,7 @@ function App() {
                             />
                             <Route path="not_city_find" element={<NotCityFind />} />
                             <Route
-                                path="search"
-                                element={
-                                    <HomeProvider>
-                                        <HomePage />
-                                    </HomeProvider>
-                                }
-                            />
-                            <Route
-                                path="search/:city_name/:lat/:lon"
+                                path="search/*"
                                 element={
                                     <HomeProvider>
                                         <HomePage />

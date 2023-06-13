@@ -58,7 +58,7 @@ function HomeProvider({ children }: TProps) {
             setIsNonCity(true);
         } else {
             setIsNonCity(false);
-            router_navigate(`/search/:${cityName}/:${lat}/:${lon}`);
+            router_navigate(`:${cityName}/:${lat}/:${lon}`);
             stateWeatherGeoDispatch(updateCity({ lat, lon, cityName }));
         }
 
@@ -72,7 +72,7 @@ function HomeProvider({ children }: TProps) {
         if (cityName && lat && lon) {
             update_meta_title(cityName);
             update_meta_desc(cityName);
-            router_navigate(`/search/:${cityName}/:${lat}/:${lon}`);
+            router_navigate(`:${cityName}/:${lat}/:${lon}`);
         }
     }, [stateWeatherGeo.cityName, stateWeatherGeo.lat, stateWeatherGeo.lon]);
 
