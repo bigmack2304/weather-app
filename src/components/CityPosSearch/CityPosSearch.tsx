@@ -110,6 +110,7 @@ function CityPosSearch({}: TProps) {
     // тут нужно показать историю (начало ввода в форму)
     const onFormFocus = () => {
         setIsHistoryVisible(true);
+        setIsNotFoundVisible(false);
     };
 
     // тут нужно скрывать историю (потеря фокуса над формаой)
@@ -169,7 +170,6 @@ function CityPosSearch({}: TProps) {
                                 );
                             })}
                         </div>
-                        {/* <ButtonClose clickCallback={removeResponse} addClassName={["CityPosSearch__geo_hints_buttonClose"]} /> */}
                     </div>
                 </Portal>
             ) : null}
