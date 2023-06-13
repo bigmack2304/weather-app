@@ -21,7 +21,7 @@ function HomeProvider({ children }: TProps) {
     let stateWeatherGeoDispatch = useAppStoreDispatch();
     let stateWeatherGeo = useAppStoreSelector((state) => state.weatherGeo);
     const [localStorageData, setLocalStorageData] = useLoacalStorage(false);
-    const [isNonCity, setIsNonCity] = useState<boolean>(true); // будет true если
+    const [isNonCity, setIsNonCity] = useState<boolean>(false); // будет true если город не определен (при первой загрузке компонента)
     let urlLatNormalized: number | undefined = undefined;
     let urlLonNormalized: number | undefined = undefined;
     let urlCityNameNormalized: string | undefined = undefined;
