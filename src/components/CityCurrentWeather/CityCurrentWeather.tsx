@@ -179,7 +179,7 @@ function CityCurrentWeather({}: TProps = {}) {
 
             {isFetchError ? (
                 <div className="CityCurrentWeather__fetch_error">
-                    <p>Ошибка при загрузки данных о текущей погоде.</p>
+                    <p>Ошибка при загрузке данных о текущей погоде.</p>
                     <button onClick={reload_comonent}>Перезагрузить</button>
                 </div>
             ) : null}
