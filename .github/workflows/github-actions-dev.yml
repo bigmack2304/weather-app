@@ -20,7 +20,7 @@ jobs:
       - name: Install modules
         run: npm ci
         env:
-          REACT_APP_WEATHER_API_KEY: "${{ secrets.WEATHER_API_KEY }}"
+          REACT_APP_WEATHER_API_KEY: ${{ secrets.WEATHER_API_KEY }}
 
       - name: Tests
         run: npm run test
