@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useLayoutEffect } from "react";
+import React, { useEffect, useState } from "react";
 import type { IHomePageProps } from "../../pages/Home/Home";
 import { useNavigate, useParams, Navigate } from "react-router-dom";
 import { useAppStoreDispatch, useAppStoreSelector } from "../../redux/redux_hooks";
@@ -25,7 +25,6 @@ function HomeProvider({ children }: TProps) {
     let urlLatNormalized: number | undefined = undefined;
     let urlLonNormalized: number | undefined = undefined;
     let urlCityNameNormalized: string | undefined = undefined;
-
     let { lat: urlLat, lon: urlLon, city_name: urlCityName } = useParams(); // пока это сырые данные, нужно удалить двоиточия и преобразовать lat lon в числа
     // нормализуем urlLat urlLon urlCityName
     // думаю именно такое решение будет более эффективно по времяни
@@ -49,7 +48,7 @@ function HomeProvider({ children }: TProps) {
     normalizer();
 
     // при вервой загрузке определим как загружать город, по ссылке, из стора или из локал стораджа
-    useLayoutEffect(() => {
+    useEffect(() => {
         let cityName = urlCityNameNormalized || stateWeatherGeo.cityName || localStorageData.history[0]?.name;
         let lat = urlLatNormalized || stateWeatherGeo.lat || localStorageData.history[0]?.lat;
         let lon = urlLonNormalized || stateWeatherGeo.lon || localStorageData.history[0]?.lon;
@@ -90,4 +89,4 @@ function HomeProvider({ children }: TProps) {
     return <>{isNonCity ? <Navigate to={"/not_city_find"} /> : children}</>;
 }
 
-export { HomeProvider };
+export { HomeProvider as default };
