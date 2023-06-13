@@ -53,5 +53,5 @@ function HomePage({}: TProps) {
 
 const HomePage_memo = memo(HomePage, deep_object_is_equal);
 
-export { HomePage, HomePage_memo };
+export { HomePage as default, HomePage_memo };
 export type { IHomePageProps };

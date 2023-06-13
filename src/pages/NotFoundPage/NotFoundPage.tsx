@@ -10,4 +10,4 @@ function NotFoundPage() {
         </div>
     );
 }
-export { NotFoundPage };
+export { NotFoundPage as default };

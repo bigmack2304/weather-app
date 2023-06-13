@@ -15,4 +15,4 @@ function NotCityFind() {
     );
 }
 
-export { NotCityFind };
+export { NotCityFind as default };
