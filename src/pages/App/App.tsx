@@ -4,14 +4,16 @@ import { Provider } from "react-redux";
 import { BrowserRouter, HashRouter, Routes, Route, Navigate } from "react-router-dom";
 import { BasePageTemplate } from "../BasePageTemplate/BasePageTemplate";
 import { LoadingPage } from "../LoadingPage/LoadingPage";
+import HomePage from "../Home/Home";
+import HomeProvider from "../../HOC/HomeProvider/HomeProvider";
 
 // Корень всего приложения
 
 function App() {
     const NotCityFind = lazy(() => import("../NotCityFind/NotCityFind"));
     const NotFoundPage = lazy(() => import("../NotFoundPage/NotFoundPage"));
-    const HomePage = lazy(() => import("../Home/Home"));
-    const HomeProvider = lazy(() => import("../../HOC/HomeProvider/HomeProvider"));
+    // const HomePage = lazy(() => import("../Home/Home"));
+    // const HomeProvider = lazy(() => import("../../HOC/HomeProvider/HomeProvider"));
 
     return (
         <Fragment>
@@ -31,21 +33,17 @@ function App() {
                             <Route
                                 path="search"
                                 element={
-                                    <Suspense fallback={<LoadingPage />}>
-                                        <HomeProvider>
-                                            <HomePage />
-                                        </HomeProvider>
-                                    </Suspense>
+                                    <HomeProvider>
+                                        <HomePage />
+                                    </HomeProvider>
                                 }
                             />
                             <Route
                                 path="search/:city_name/:lat/:lon"
                                 element={
-                                    <Suspense fallback={<LoadingPage />}>
-                                        <HomeProvider>
-                                            <HomePage />
-                                        </HomeProvider>
-                                    </Suspense>
+                                    <HomeProvider>
+                                        <HomePage />
+                                    </HomeProvider>
                                 }
                             />
                             <Route
