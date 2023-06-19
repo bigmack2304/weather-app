@@ -1,7 +1,6 @@
 import React, { memo, useEffect, useState } from "react";
 import { FormSearh } from "../FormSearh/FormSearh";
 import { deep_object_is_equal } from "../../utils/is_equal";
-import { useSearchCityPos } from "../../hooks/useSearchCityPos";
 import type * as fetchCityLatLon from "../../utils/fetch_LatLon";
 import type { TStorageHistoryCity } from "./../../appLocalStorage/appLoacalStorage";
 import { get_full_country_by_code, get_localed_city_name, get_system_language, delete_obj_from_array } from "../../utils/util_functions";
@@ -20,47 +19,23 @@ import { SearchCityNotFound } from "../SearchCityNotFound/SearchCityNotFound";
 // городов, юсер кликает на нужный ему город, после этого также происходит вызов
 // selectCityCallback с координатами выбранного города
 
-import { updateCity } from "../../redux/slises/weather_lat_lon";
-import { useAppStoreDispatch } from "../../redux/redux_hooks";
+import { updateCity, setNotFound, fetchGeo, setFetchData } from "../../redux/slises/weather_lat_lon";
+import { useAppStoreDispatch, useAppStoreSelector } from "../../redux/redux_hooks";
 
 interface ICityPosSearchProps {}
 
 type TProps = Readonly<ICityPosSearchProps>;
 
 function CityPosSearch({}: TProps) {
-    let [isLoadingVisible, setIsLoadingVisible] = useState<boolean>(false);
     let [isHistoryVisible, setIsHistoryVisible] = useState<boolean>(false);
     let [localStorageData, setLocalStorageData] = useLoacalStorage(true);
-    let [isNotFoundVisible, setIsNotFoundVisible] = useState<boolean>(false);
     let [readFormValue, setReadFormValue] = useState<string>(""); // эта строка изменяется в след на изменением текста в форме
     const storeDispatch = useAppStoreDispatch();
     const router_navigate = useNavigate();
 
-    const onNotFoundCallback = () => {
-        setIsLoadingVisible(false);
-        setIsNotFoundVisible(true);
-    };
+    const { isFetchLoading, isNotFound, fetchData } = useAppStoreSelector((state) => state.weatherGeo);
 
-    // если при запросе произошла ошибка
-    const onErrorFetchCityPos = () => {
-        setIsLoadingVisible(false);
-    };
-
-    const onStartFetchCityPos = () => {
-        setIsLoadingVisible(true);
-    };
-
-    const onEndFetchCityPos = () => {
-        setIsLoadingVisible(false);
-    };
-
-    let [cityPosResponse, fetchCityPos, removeResponse] = useSearchCityPos(
-        onErrorFetchCityPos,
-        onEndFetchCityPos,
-        onStartFetchCityPos,
-        onNotFoundCallback
-    );
-    let sorted_cityPosResponse: fetchCityLatLon.TResponseObj[] = cityPosResponse ? [...cityPosResponse] : [];
+    let sorted_cityPosResponse: fetchCityLatLon.TResponseObj[] = fetchData ? [...fetchData] : [];
 
     sorted_cityPosResponse = sorted_cityPosResponse.sort((a, b) => {
         let sys_locale = get_system_language();
@@ -82,22 +57,26 @@ function CityPosSearch({}: TProps) {
     });
 
     useEffect(() => {
-        if (cityPosResponse && cityPosResponse.length !== 0) {
-            if (cityPosResponse.length === 1) {
-                selectCallback(cityPosResponse[0]);
+        if (fetchData && fetchData.length !== 0) {
+            if (fetchData.length === 1) {
+                selectCallback(fetchData[0]);
             }
         }
-    }, [cityPosResponse]);
+    }, [fetchData]);
 
     // вызывается при субмите формы
     const searchCity = (seachVal: string) => {
-        fetchCityPos(seachVal);
+        storeDispatch(fetchGeo({ cityName: seachVal }));
         closeHistory();
         setReadFormValue("");
     };
 
     const onFormChange = (str: string) => {
         setReadFormValue(str);
+    };
+
+    const removeResponse = () => {
+        storeDispatch(setFetchData(undefined));
     };
 
     // начать поиск города по выбранному результату GEO запроса
@@ -110,7 +89,7 @@ function CityPosSearch({}: TProps) {
     // тут нужно показать историю (начало ввода в форму)
     const onFormFocus = () => {
         setIsHistoryVisible(true);
-        setIsNotFoundVisible(false);
+        storeDispatch(setNotFound(false));
     };
 
     // тут нужно скрывать историю (потеря фокуса над формаой)
@@ -135,7 +114,7 @@ function CityPosSearch({}: TProps) {
 
     // закрываем модалку о ненайденном городе
     const onSearchCityNotFoundClose = () => {
-        setIsNotFoundVisible(false);
+        storeDispatch(setNotFound(false));
     };
 
     return (
@@ -148,9 +127,9 @@ function CityPosSearch({}: TProps) {
                 addClassName={["CityPosSearch__form"]}
             />
 
-            {cityPosResponse && cityPosResponse.length > 1 ? (
+            {fetchData && fetchData.length > 1 ? (
                 <Portal>
-                    <div className="CityPosSearch__history_outer" onClick={removeResponse}></div>
+                    <div className="CityPosSearch__hints_outer" onClick={removeResponse}></div>
                     <div className="CityPosSearch__hints_wrapper">
                         <div className="CityPosSearch__hints_elements">
                             {sorted_cityPosResponse.map((city) => {
@@ -174,7 +153,7 @@ function CityPosSearch({}: TProps) {
                 </Portal>
             ) : null}
 
-            {isHistoryVisible && filtred_storage_history.length !== 0 && !cityPosResponse ? (
+            {isHistoryVisible && filtred_storage_history.length !== 0 && !fetchData ? (
                 <Portal>
                     <div className="CityPosSearch__history_outer" onClick={closeHistory}></div>
                     <div className="CityPosSearch__hints_wrapper">
@@ -197,9 +176,9 @@ function CityPosSearch({}: TProps) {
                 </Portal>
             ) : null}
 
-            {isLoadingVisible ? <IconLoader addClassName={["CityPosSearch__loader"]} /> : null}
+            {isFetchLoading ? <IconLoader addClassName={["CityPosSearch__loader"]} /> : null}
 
-            {isNotFoundVisible ? (
+            {isNotFound ? (
                 <Portal>
                     <SearchCityNotFound onClose={onSearchCityNotFoundClose} />
                 </Portal>

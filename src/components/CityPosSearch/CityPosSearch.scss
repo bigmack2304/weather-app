@@ -1,5 +1,16 @@
 @import "./../../global_styles/global_vars.scss";
 
+@mixin portal_outer {
+    background-color: $BACKDROP_COLLOR;
+    backdrop-filter: $BACKDROP_BLUR;
+    position: fixed;
+    height: 100%;
+    width: 100%;
+    top: 0px;
+    left: 0px;
+    min-width: 280px;
+}
+
 .CityPosSearch {
     position: relative;
     //min-width: 269px;
@@ -74,14 +85,11 @@
     }
 
     &__history_outer {
-        background-color: $BACKDROP_COLLOR;
-        backdrop-filter: $BACKDROP_BLUR;
-        position: fixed;
-        height: 100%;
-        width: 100%;
-        top: 0px;
-        left: 0px;
-        min-width: 280px;
+        @include portal_outer;
+    }
+
+    &__hints_outer {
+        @include portal_outer;
     }
 
     // тут пришлось повысить спецыфичность чтобы некоторые стили применились

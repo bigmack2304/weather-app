@@ -65,7 +65,7 @@ interface IFetchLatLonArgs {
     notFoundCallback?: () => void; // коллбек, вызывается в случае если город не найден
 }
 
-function generate_url(cityName: string, limit: TLimit = 1): URL {
+function generate_url(cityName: string, limit: TLimit = 5): URL {
     let temp_url = new URL(WEATHER_API_ADRESS_GEO);
     temp_url.searchParams.set("q", cityName);
     temp_url.searchParams.set("limit", limit.toString());
@@ -117,5 +117,5 @@ async function fetch_lat_lon({
     callBack(response);
 }
 
-export { fetch_lat_lon };
+export { fetch_lat_lon, generate_url };
 export type { IFetchLatLonArgs, TFullResponse, TLimit, TResponseObj };
