@@ -6,6 +6,7 @@ import type { TStorageHistoryCity } from "../../appLocalStorage/appLoacalStorage
 
 import { generate_url } from "../../utils/fetch_LatLon";
 import type { TLimit, TFullResponse } from "../../utils/fetch_LatLon";
+import { CITY_AUTO_DETECT_NAME } from "../../utils/global_vars";
 
 type TFetchGeoArgs = {
     cityName: string;
@@ -20,6 +21,7 @@ interface IWeatherGeoSlice {
     isFetchLoading: boolean;
     isNotFound: boolean;
     fetchData: TFullResponse;
+    isAutoDetect: boolean;
 }
 
 const initialState: IWeatherGeoSlice = {
@@ -30,6 +32,7 @@ const initialState: IWeatherGeoSlice = {
     isFetchLoading: false,
     isNotFound: false,
     fetchData: undefined,
+    isAutoDetect: false,
 };
 
 const weatherGeoSlice = createSlice({
@@ -37,10 +40,13 @@ const weatherGeoSlice = createSlice({
     initialState: initialState,
     reducers: {
         updateCity: (state, action: PayloadAction<Required<Pick<IWeatherGeoSlice, "lat" | "lon" | "cityName">>>) => {
-            let localStorageData = get_stprage_data();
-            let new_data = { name: action.payload.cityName, lat: action.payload.lat, lon: action.payload.lon };
-            let new_history = unshuft_unique_obj_to_array_force(localStorageData.history, new_data) as TStorageHistoryCity[];
-            set_storage_data({ ...localStorageData, history: [...new_history] });
+            // не будем заносить в историю первую стадию автоопределения местоположения
+            if (action.payload.cityName !== CITY_AUTO_DETECT_NAME) {
+                let localStorageData = get_stprage_data();
+                let new_data = { name: action.payload.cityName, lat: action.payload.lat, lon: action.payload.lon };
+                let new_history = unshuft_unique_obj_to_array_force(localStorageData.history, new_data) as TStorageHistoryCity[];
+                set_storage_data({ ...localStorageData, history: new_history });
+            }
 
             state.cityName = action.payload.cityName;
             state.lat = action.payload.lat;
@@ -61,6 +67,10 @@ const weatherGeoSlice = createSlice({
 
         setNotFound: (state, action: PayloadAction<boolean>) => {
             state.isNotFound = action.payload;
+        },
+
+        setAutoDetect: (state, action: PayloadAction<boolean>) => {
+            state.isAutoDetect = action.payload;
         },
     },
     extraReducers: (builder) => {
@@ -120,8 +130,8 @@ const fetchGeo = createAsyncThunk<TFullResponse, TFetchGeoArgs>("weatherGeo/fetc
     }
 });
 
-const { updateCity, setFetchError, setFetchLoading, setNotFound, setFetchData } = weatherGeoSlice.actions;
+const { updateCity, setFetchError, setFetchLoading, setNotFound, setFetchData, setAutoDetect } = weatherGeoSlice.actions;
 
 export type { IWeatherGeoSlice };
 export default weatherGeoSlice.reducer;
-export { updateCity, setFetchError, setFetchLoading, setNotFound, fetchGeo, setFetchData, weatherGeoSlice };
+export { updateCity, setFetchError, setFetchLoading, setNotFound, fetchGeo, setFetchData, weatherGeoSlice, setAutoDetect };
