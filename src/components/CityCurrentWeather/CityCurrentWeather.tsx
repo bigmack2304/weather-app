@@ -12,13 +12,14 @@ import { HoverHint } from "../../HOC/HoverHint/HoverHint";
 import { WeatherSunPhase } from "../WeatherSunPhase/WeatherSunPhase";
 import { useAppStoreSelector, useAppStoreDispatch } from "../../redux/redux_hooks";
 import { updateBackgroundClass } from "../../redux/slises/homePage";
+import { updateCity } from "../../redux/slises/weather_lat_lon";
 
 interface ICityCurrentWeatherProps {}
 
 type TProps = Readonly<ICityCurrentWeatherProps>;
 
 function CityCurrentWeather({}: TProps = {}) {
-    const { lat, lon, cityName } = useAppStoreSelector((state) => state.weatherGeo);
+    const { lat, lon, cityName, isAutoDetect } = useAppStoreSelector((state) => state.weatherGeo);
     const reduxStoreDispatch = useAppStoreDispatch();
     const [isLoadingVisible, setIsLoadingVisible] = useState<boolean>(false);
     const [isFetchError, setIsFetchError] = useState<boolean>(false); // ошибка загрузки данных
@@ -58,6 +59,16 @@ function CityCurrentWeather({}: TProps = {}) {
             console.log(currentWeather);
             let sun_data = calc_sun_hours_details(currentWeather.sys.sunrise, currentWeather.sys.sunset, currentWeather.timezone);
             reduxStoreDispatch(updateBackgroundClass(`Home--bg_${calc_backgraund_type(sun_data, currentWeather)}`));
+
+            if (isAutoDetect) {
+                reduxStoreDispatch(
+                    updateCity({
+                        cityName: currentWeather.name,
+                        lat: lat ?? currentWeather.coord.lat,
+                        lon: lon ?? currentWeather.coord.lon,
+                    })
+                );
+            }
         }
     }, [currentWeather]);
 
@@ -70,7 +81,9 @@ function CityCurrentWeather({}: TProps = {}) {
             {currentWeather && !isLoadingVisible && !isFetchError ? (
                 <>
                     <div className="CityCurrentWeather__head">
-                        <h2 className="CityCurrentWeather__name">{cityName}</h2>
+                        <h2 className="CityCurrentWeather__name">
+                            {cityName} {isAutoDetect ? <span className="CityCurrentWeather__name_auto">(автоопределение)</span> : null}{" "}
+                        </h2>
                         <WeatherNowTime
                             times={{ dt: currentWeather.dt, timezone: currentWeather.timezone }}
                             get_hours={false}

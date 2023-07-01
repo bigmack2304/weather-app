@@ -2,9 +2,10 @@ import React, { useEffect, useState } from "react";
 import type { IHomePageProps } from "../../pages/Home/Home";
 import { useNavigate, useParams, Navigate } from "react-router-dom";
 import { useAppStoreDispatch, useAppStoreSelector } from "../../redux/redux_hooks";
-import { updateCity } from "../../redux/slises/weather_lat_lon";
+import { updateCity, setAutoDetect } from "../../redux/slises/weather_lat_lon";
 import { useLoacalStorage } from "../../hooks/useLocalStorage";
 import { update_meta_title, update_meta_desc } from "../../utils/util_functions";
+import { CITY_AUTO_DETECT_NAME } from "../../utils/global_vars";
 
 interface IHomeProvider {
     children: React.ReactElement<IHomePageProps>;
@@ -52,6 +53,29 @@ function HomeProvider({ children }: TProps) {
         let cityName = urlCityNameNormalized || stateWeatherGeo.cityName || localStorageData.history[0]?.name;
         let lat = urlLatNormalized || stateWeatherGeo.lat || localStorageData.history[0]?.lat;
         let lon = urlLonNormalized || stateWeatherGeo.lon || localStorageData.history[0]?.lon;
+
+        const getGeoLocation = () => {
+            if (!navigator.geolocation) return undefined;
+            if (cityName !== undefined && lat !== undefined && lon !== undefined) return;
+
+            const success = (position: GeolocationPosition) => {
+                lat = Number(position.coords.latitude.toFixed(6));
+                lon = Number(position.coords.longitude.toFixed(6));
+                cityName = CITY_AUTO_DETECT_NAME;
+                setIsNonCity(false);
+                router_navigate(`/search/:${cityName}/:${lat}/:${lon}`);
+                stateWeatherGeoDispatch(setAutoDetect(true));
+                stateWeatherGeoDispatch(updateCity({ lat, lon, cityName }));
+            };
+
+            const error = (e: GeolocationPositionError) => {
+                console.log(e);
+            };
+
+            navigator.geolocation.getCurrentPosition(success, error);
+        };
+
+        getGeoLocation();
 
         if (cityName == undefined || lat == undefined || lon == undefined) {
             setIsNonCity(true);

@@ -19,7 +19,7 @@ import { SearchCityNotFound } from "../SearchCityNotFound/SearchCityNotFound";
 // городов, юсер кликает на нужный ему город, после этого также происходит вызов
 // selectCityCallback с координатами выбранного города
 
-import { updateCity, setNotFound, fetchGeo, setFetchData } from "../../redux/slises/weather_lat_lon";
+import { updateCity, setNotFound, fetchGeo, setFetchData, setAutoDetect } from "../../redux/slises/weather_lat_lon";
 import { useAppStoreDispatch, useAppStoreSelector } from "../../redux/redux_hooks";
 
 interface ICityPosSearchProps {}
@@ -82,6 +82,7 @@ function CityPosSearch({}: TProps) {
     // начать поиск города по выбранному результату GEO запроса
     const selectCallback = (selectedCity: fetchCityLatLon.TResponseObj) => {
         storeDispatch(updateCity({ lat: selectedCity.lat, lon: selectedCity.lon, cityName: get_localed_city_name(selectedCity) }));
+        storeDispatch(setAutoDetect(false));
         removeResponse();
         router_navigate("/search");
     };
@@ -108,6 +109,7 @@ function CityPosSearch({}: TProps) {
     const onHistorySelect = (metaDataId: string) => {
         let decode_metaDataId = JSON.parse(metaDataId) as TStorageHistoryCity;
         storeDispatch(updateCity({ lat: decode_metaDataId.lat, lon: decode_metaDataId.lon, cityName: decode_metaDataId.name }));
+        storeDispatch(setAutoDetect(false));
         closeHistory();
         router_navigate("/search");
     };
