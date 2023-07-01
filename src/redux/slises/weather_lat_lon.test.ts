@@ -1,4 +1,12 @@
-import reducer, { updateCity, setFetchError, setFetchLoading, setNotFound, setFetchData, fetchGeo } from "../slises/weather_lat_lon";
+import reducer, {
+    updateCity,
+    setFetchError,
+    setFetchLoading,
+    setNotFound,
+    setFetchData,
+    fetchGeo,
+    setAutoDetect,
+} from "../slises/weather_lat_lon";
 import type { IWeatherGeoSlice } from "../slises/weather_lat_lon";
 import type { TFullResponse } from "../../utils/fetch_LatLon";
 
@@ -31,6 +39,7 @@ describe("tests homePageSlice", () => {
             isFetchLoading: false,
             isNotFound: false,
             fetchData: undefined,
+            isAutoDetect: false,
         });
     });
 
@@ -98,5 +107,13 @@ describe("tests homePageSlice", () => {
         store = reducer(store, fetchGeo.rejected(null, "", { cityName: "qwerty1234", limit: 5 }));
 
         expect(store).toEqual({ ...defaultStore, isFetchError: true });
+    });
+
+    test("test action setAutoDetect", () => {
+        store = reducer(store, setAutoDetect(true));
+        expect(store).toEqual({
+            ...defaultStore,
+            isAutoDetect: true,
+        });
     });
 });

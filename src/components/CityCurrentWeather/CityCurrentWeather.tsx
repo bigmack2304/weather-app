@@ -82,7 +82,7 @@ function CityCurrentWeather({}: TProps = {}) {
                 <>
                     <div className="CityCurrentWeather__head">
                         <h2 className="CityCurrentWeather__name">
-                            {cityName} {isAutoDetect ? <span className="CityCurrentWeather__name_auto">(автоопределение)</span> : null}{" "}
+                            {cityName} {isAutoDetect ? <span className="CityCurrentWeather__name_auto">(автоопределение)</span> : null}
                         </h2>
                         <WeatherNowTime
                             times={{ dt: currentWeather.dt, timezone: currentWeather.timezone }}

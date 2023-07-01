@@ -55,7 +55,7 @@ function HomeProvider({ children }: TProps) {
         let lon = urlLonNormalized || stateWeatherGeo.lon || localStorageData.history[0]?.lon;
 
         const getGeoLocation = () => {
-            if (!navigator.geolocation) return undefined;
+            if (!navigator.geolocation) return;
             if (cityName !== undefined && lat !== undefined && lon !== undefined) return;
 
             const success = (position: GeolocationPosition) => {
