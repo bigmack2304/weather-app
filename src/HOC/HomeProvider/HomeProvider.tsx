@@ -53,10 +53,12 @@ function HomeProvider({ children }: TProps) {
         let cityName = urlCityNameNormalized || stateWeatherGeo.cityName || localStorageData.history[0]?.name;
         let lat = urlLatNormalized || stateWeatherGeo.lat || localStorageData.history[0]?.lat;
         let lon = urlLonNormalized || stateWeatherGeo.lon || localStorageData.history[0]?.lon;
+        let geoLocationGettingStage: 0 | 1 | 2 | 3 = 0; // 0 - еще не определяли. 1 - определение с высокой точностью. 2 - определение с высокой точностью. 3 - определение с низкой точностью
 
-        const getGeoLocation = () => {
+        const getGeoLocation = (gettingOptions: PositionOptions) => {
             if (!navigator.geolocation) return;
             if (cityName !== undefined && lat !== undefined && lon !== undefined) return;
+            geoLocationGettingStage++;
 
             const success = (position: GeolocationPosition) => {
                 lat = Number(position.coords.latitude.toFixed(6));
@@ -69,13 +71,26 @@ function HomeProvider({ children }: TProps) {
             };
 
             const error = (e: GeolocationPositionError) => {
-                console.log(e);
+                console.dir(e);
+
+                if (e.code === 3 && (geoLocationGettingStage === 1 || geoLocationGettingStage === 2)) {
+                    // на некоторых устройствах нужен gps
+                    getGeoLocation({ timeout: 15000, enableHighAccuracy: false });
+                }
+
+                if (e.code === 1) {
+                    // нету разрешений
+                }
+
+                if (e.code === 2) {
+                    // внутрення ошибка
+                }
             };
 
-            navigator.geolocation.getCurrentPosition(success, error);
+            navigator.geolocation.getCurrentPosition(success, error, gettingOptions);
         };
 
-        getGeoLocation();
+        getGeoLocation({ timeout: 15000, enableHighAccuracy: true });
 
         if (cityName == undefined || lat == undefined || lon == undefined) {
             setIsNonCity(true);
