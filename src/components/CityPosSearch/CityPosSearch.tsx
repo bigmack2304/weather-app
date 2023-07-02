@@ -10,7 +10,7 @@ import { ClosableItem } from "../ClosableItem/ClosableItem";
 import "./CityPosSearch.scss";
 import { Portal } from "../../HOC/Portal/Portal";
 import { useNavigate } from "react-router-dom";
-import { SearchCityNotFound } from "../SearchCityNotFound/SearchCityNotFound";
+import { ModalWndTemplate } from "../ModalWndTemplate/ModalWndTemplate";
 
 // компонент делает запрос на сервер для определления координат города
 // указанного в форме, после ответа, если найден один город то происходит вызов
@@ -115,7 +115,7 @@ function CityPosSearch({}: TProps) {
     };
 
     // закрываем модалку о ненайденном городе
-    const onSearchCityNotFoundClose = () => {
+    const onModalWndTemplateClose = () => {
         storeDispatch(setNotFound(false));
     };
 
@@ -182,7 +182,7 @@ function CityPosSearch({}: TProps) {
 
             {isNotFound ? (
                 <Portal>
-                    <SearchCityNotFound onClose={onSearchCityNotFoundClose} />
+                    <ModalWndTemplate onClose={onModalWndTemplateClose}>Город не найден.</ModalWndTemplate>
                 </Portal>
             ) : null}
         </div>
