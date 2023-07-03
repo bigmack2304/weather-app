@@ -1,17 +1,15 @@
-import type { Action } from "@reduxjs/toolkit";
-import type { PayloadAction } from "@reduxjs/toolkit";
+import type { Action, Dispatch, PayloadAction, MiddlewareAPI } from "@reduxjs/toolkit";
 import type { IautoDetectLocationSlice } from "../slises/autoDetectLocation";
-import { RootState, store } from "../store";
+import { AppDispatch, RootState, store } from "../store";
 
 function isIautoDetectLocation(action: Action): action is PayloadAction<IautoDetectLocationSlice> {
     return action.type == "autoDetectLocation/setPending";
 }
 
-function autoDetectLocation_pending_middleware(store: any) {
-    return function (next: any) {
+function autoDetectLocation_pending_middleware(store: MiddlewareAPI) {
+    return function (next: Dispatch) {
         return function (action: Action) {
             let autoDetectLocationSlice = (store.getState() as RootState).autoDetectLocation;
-            // debugger;
             if (isIautoDetectLocation(action)) {
                 if (!autoDetectLocationSlice.nextStage) {
                     return;
