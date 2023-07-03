@@ -14,14 +14,14 @@ type TFetchGeoArgs = {
 };
 
 interface IWeatherGeoSlice {
-    lat?: number;
-    lon?: number;
-    cityName?: string;
-    isFetchError: boolean;
-    isFetchLoading: boolean;
-    isNotFound: boolean;
-    fetchData: TFullResponse;
-    isAutoDetect: boolean;
+    lat?: number; // широта искомого города
+    lon?: number; // долгота искомого города
+    cityName?: string; // название искомого города
+    isFetchError: boolean; // активируется в случае ошибки при запросе города (в форме поиска)
+    isFetchLoading: boolean; // активируется при поиске города (из формы поиска)
+    isNotFound: boolean; // активируется если город не найден
+    fetchData: TFullResponse; // список найденных городов, если их более 1
+    isAutoDetect: boolean; // активируется при первой загрузке, если искомый город не определен, тогда будет попытка автомотически определить город
 }
 
 const initialState: IWeatherGeoSlice = {

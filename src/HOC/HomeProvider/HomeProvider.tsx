@@ -6,6 +6,7 @@ import { updateCity, setAutoDetect } from "../../redux/slises/weather_lat_lon";
 import { useLoacalStorage } from "../../hooks/useLocalStorage";
 import { update_meta_title, update_meta_desc } from "../../utils/util_functions";
 import { CITY_AUTO_DETECT_NAME } from "../../utils/global_vars";
+import { useGeoLocation } from "../../hooks/useGeoLocation";
 
 interface IHomeProvider {
     children: React.ReactElement<IHomePageProps>;
@@ -48,49 +49,29 @@ function HomeProvider({ children }: TProps) {
     };
     normalizer();
 
+    const onGeoLocationSuccess = (position: GeolocationPosition) => {
+        let lat = Number(position.coords.latitude.toFixed(6));
+        let lon = Number(position.coords.longitude.toFixed(6));
+        let cityName = CITY_AUTO_DETECT_NAME;
+        setIsNonCity(false);
+        router_navigate(`/search/:${cityName}/:${lat}/:${lon}`);
+        stateWeatherGeoDispatch(setAutoDetect(true));
+        stateWeatherGeoDispatch(updateCity({ lat, lon, cityName }));
+    };
+
+    const [getGeoLocation] = useGeoLocation({
+        onSuccess: onGeoLocationSuccess,
+    });
+
     // при вервой загрузке определим как загружать город, по ссылке, из стора или из локал стораджа
     useEffect(() => {
-        let cityName = urlCityNameNormalized || stateWeatherGeo.cityName || localStorageData.history[0]?.name;
-        let lat = urlLatNormalized || stateWeatherGeo.lat || localStorageData.history[0]?.lat;
-        let lon = urlLonNormalized || stateWeatherGeo.lon || localStorageData.history[0]?.lon;
-        let geoLocationGettingStage: 0 | 1 | 2 | 3 = 0; // 0 - еще не определяли. 1 - определение с высокой точностью. 2 - определение с высокой точностью. 3 - определение с низкой точностью
+        let cityName = urlCityNameNormalized || stateWeatherGeo.cityName || localStorageData.history[0]?.name || undefined;
+        let lat = urlLatNormalized || stateWeatherGeo.lat || localStorageData.history[0]?.lat || undefined;
+        let lon = urlLonNormalized || stateWeatherGeo.lon || localStorageData.history[0]?.lon || undefined;
 
-        const getGeoLocation = (gettingOptions: PositionOptions) => {
-            if (!navigator.geolocation) return;
-            if (cityName !== undefined && lat !== undefined && lon !== undefined) return;
-            geoLocationGettingStage++;
-
-            const success = (position: GeolocationPosition) => {
-                lat = Number(position.coords.latitude.toFixed(6));
-                lon = Number(position.coords.longitude.toFixed(6));
-                cityName = CITY_AUTO_DETECT_NAME;
-                setIsNonCity(false);
-                router_navigate(`/search/:${cityName}/:${lat}/:${lon}`);
-                stateWeatherGeoDispatch(setAutoDetect(true));
-                stateWeatherGeoDispatch(updateCity({ lat, lon, cityName }));
-            };
-
-            const error = (e: GeolocationPositionError) => {
-                console.dir(e);
-
-                if (e.code === 3 && (geoLocationGettingStage === 1 || geoLocationGettingStage === 2)) {
-                    // на некоторых устройствах нужен gps
-                    getGeoLocation({ timeout: 15000, enableHighAccuracy: false });
-                }
-
-                if (e.code === 1) {
-                    // нету разрешений
-                }
-
-                if (e.code === 2) {
-                    // внутрення ошибка
-                }
-            };
-
-            navigator.geolocation.getCurrentPosition(success, error, gettingOptions);
-        };
-
-        getGeoLocation({ timeout: 15000, enableHighAccuracy: true });
+        if (cityName === undefined && lat === undefined && lon === undefined) {
+            getGeoLocation({ timeout: 15000, enableHighAccuracy: true });
+        }
 
         if (cityName == undefined || lat == undefined || lon == undefined) {
             setIsNonCity(true);

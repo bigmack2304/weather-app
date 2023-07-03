@@ -2,8 +2,8 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import React from "react";
 
 interface IHomePageSlice {
-    pageSelector?: string;
-    backgroundClass?: string;
+    pageSelector?: string; // DEPRICATED. css селектор home страницы
+    backgroundClass?: string; // содержит в себе класс который будет применен как дополнительный к home странице
 }
 
 const initialState: IHomePageSlice = {

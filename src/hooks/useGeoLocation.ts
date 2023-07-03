@@ -1,55 +1,98 @@
 import React, { useEffect } from "react";
+import { useAppStoreDispatch, useAppStoreSelector } from "../redux/redux_hooks";
+import { setPending, setError, setSuccess } from "../redux/slises/autoDetectLocation";
 
 // автоопределение координат пользователя
 
-// нужен глобвльный стет
-// - если это первая загрузка
-// - определенные координаты
-// - обработка 3х типов ошибок
-// - нужноли автоопределение для первой загрузки? ???
-
-interface IUseGeoLocationParams {
-    onError?: (err: GeolocationPositionError) => void;
-    onSuccess?: (position: GeolocationPosition) => void;
+interface IUseGeoLocationParams<D extends object> {
+    onError?: (err: GeolocationPositionError, dependencies: D) => void;
+    onSuccess?: (position: GeolocationPosition, dependencies: D) => void;
+    onPending?: () => void;
 }
 
-function useGeoLocation({
+function geoLocationErrorConstructor(code: number, message: string): GeolocationPositionError {
+    return {
+        code: code,
+        message: message,
+        PERMISSION_DENIED: 1,
+        POSITION_UNAVAILABLE: 2,
+        TIMEOUT: 3,
+    };
+}
+
+function useGeoLocation<TDEPENDENCIES extends object>({
     onError = () => {},
     onSuccess = () => {},
-}: IUseGeoLocationParams): [getGeoLocation: (gettingOptions: PositionOptions) => void] {
-    let geoLocationGettingStage: 0 | 1 | 2 | 3 = 0; // 0 - еще не определяли. 1 - определение с высокой точностью. 2 - определение с высокой точностью. 3 - определение с низкой точностью
+    onPending = () => {},
+}: IUseGeoLocationParams<TDEPENDENCIES>): [
+    getGeoLocation: (gettingOptions: PositionOptions, dependencies?: Readonly<TDEPENDENCIES>) => void
+] {
+    const redux_storeDispatch = useAppStoreDispatch();
+    const { detectionStage, isError, nextStage, errorCode } = useAppStoreSelector((store) => store.autoDetectLocation);
 
-    const successCallback = (position: GeolocationPosition) => {
-        onSuccess(position);
+    const startCallback = () => {
+        onPending();
+        redux_storeDispatch(setPending(true));
     };
 
-    const errorCallback = (err: GeolocationPositionError) => {
-        if (err.code === 3 && (geoLocationGettingStage === 1 || geoLocationGettingStage === 2)) {
-            // ошибка по таймауту
-            // на некоторых устройствах нужен gps
-            getGeoLocation({ timeout: 15000, enableHighAccuracy: false });
-        }
-
-        if (err.code === 1) {
-            // нету разрешений
-        }
-
-        if (err.code === 2) {
-            // внутрення ошибка
-        }
-
-        onError(err);
+    const successCallback = (dependencies: TDEPENDENCIES, position: GeolocationPosition) => {
+        onSuccess(position, dependencies);
+        redux_storeDispatch(setSuccess(true));
     };
 
-    const getGeoLocation = (gettingOptions: PositionOptions) => {
-        if (!navigator.geolocation) return;
-        // if (cityName !== undefined && lat !== undefined && lon !== undefined) return;
-        geoLocationGettingStage++;
+    const errorCallback = (dependencies: TDEPENDENCIES, err: GeolocationPositionError) => {
+        // if (err.code === 1) {
+        //     // нету разрешений
+        // }
 
-        navigator.geolocation.getCurrentPosition(successCallback, errorCallback, gettingOptions);
+        // if (err.code === 2) {
+        //     // внутрення ошибка
+        // }
+
+        // if (err.code === 3) {
+        //     // ошибка по таймауту
+        //     // на некоторых устройствах нужен gps
+        // }
+
+        // if (err.code === 4) {
+        //     // GeoLocation не поддерживается
+        // }
+
+        onError(err, dependencies);
+        setError({ errorCode: err.code, errorStatus: true });
     };
 
-    // getGeoLocation({ timeout: 15000, enableHighAccuracy: true });
+    const getGeoLocation = (gettingOptions: PositionOptions, dependencies: Readonly<TDEPENDENCIES> = {} as Readonly<TDEPENDENCIES>) => {
+        if (!navigator.geolocation) {
+            errorCallback(dependencies, geoLocationErrorConstructor(4, "geoLocation not supported"));
+            return;
+        }
+
+        startCallback();
+        navigator.geolocation.getCurrentPosition(
+            successCallback.bind(null, dependencies),
+            errorCallback.bind(null, dependencies),
+            gettingOptions
+        );
+    };
+
+    useEffect(() => {
+        if (isError) {
+            if (errorCode === 3) {
+                if (detectionStage === 1 && nextStage) {
+                    getGeoLocation({ timeout: 15000, enableHighAccuracy: true });
+                }
+
+                if (detectionStage === 2 && nextStage) {
+                    getGeoLocation({ timeout: 15000, enableHighAccuracy: false });
+                }
+
+                if (detectionStage === 3) {
+                    redux_storeDispatch(setError({ errorStatus: true, errorCode: 4 }));
+                }
+            }
+        }
+    }, [isError, detectionStage, nextStage, errorCode]);
 
     return [getGeoLocation];
 }

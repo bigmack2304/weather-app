@@ -11,6 +11,8 @@ import "./CityPosSearch.scss";
 import { Portal } from "../../HOC/Portal/Portal";
 import { useNavigate } from "react-router-dom";
 import { ModalWndTemplate } from "../ModalWndTemplate/ModalWndTemplate";
+import { updateCity, setNotFound, fetchGeo, setFetchData, setAutoDetect } from "../../redux/slises/weather_lat_lon";
+import { useAppStoreDispatch, useAppStoreSelector } from "../../redux/redux_hooks";
 
 // компонент делает запрос на сервер для определления координат города
 // указанного в форме, после ответа, если найден один город то происходит вызов
@@ -18,9 +20,6 @@ import { ModalWndTemplate } from "../ModalWndTemplate/ModalWndTemplate";
 // еслиже найденных городов более одного то под формой появляется список найденных
 // городов, юсер кликает на нужный ему город, после этого также происходит вызов
 // selectCityCallback с координатами выбранного города
-
-import { updateCity, setNotFound, fetchGeo, setFetchData, setAutoDetect } from "../../redux/slises/weather_lat_lon";
-import { useAppStoreDispatch, useAppStoreSelector } from "../../redux/redux_hooks";
 
 interface ICityPosSearchProps {}
 
@@ -34,6 +33,7 @@ function CityPosSearch({}: TProps) {
     const router_navigate = useNavigate();
 
     const { isFetchLoading, isNotFound, fetchData } = useAppStoreSelector((state) => state.weatherGeo);
+    const { isPending } = useAppStoreSelector((state) => state.autoDetectLocation);
 
     let sorted_cityPosResponse: fetchCityLatLon.TResponseObj[] = fetchData ? [...fetchData] : [];
 
@@ -178,7 +178,7 @@ function CityPosSearch({}: TProps) {
                 </Portal>
             ) : null}
 
-            {isFetchLoading ? <IconLoader addClassName={["CityPosSearch__loader"]} /> : null}
+            {isFetchLoading || isPending ? <IconLoader addClassName={["CityPosSearch__loader"]} /> : null}
 
             {isNotFound ? (
                 <Portal>
