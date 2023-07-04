@@ -26,7 +26,9 @@ function App() {
                                 path="not_city_find"
                                 element={
                                     <Suspense fallback={<LoadingPage />}>
-                                        <NotCityFind />
+                                        <HomeProvider>
+                                            <NotCityFind />
+                                        </HomeProvider>
                                     </Suspense>
                                 }
                             />

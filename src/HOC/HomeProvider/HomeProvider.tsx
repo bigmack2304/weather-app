@@ -92,6 +92,9 @@ function HomeProvider({ children }: TProps) {
             update_meta_title(cityName);
             update_meta_desc(cityName);
             router_navigate(`/search/:${cityName}/:${lat}/:${lon}`);
+            setIsNonCity(false);
+        } else {
+            setIsNonCity(true);
         }
     }, [stateWeatherGeo.cityName, stateWeatherGeo.lat, stateWeatherGeo.lon]);
 
