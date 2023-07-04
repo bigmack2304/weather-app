@@ -10,6 +10,8 @@ interface IUseGeoLocationParams<D extends object> {
     onPending?: () => void;
 }
 
+type TTimerId = ReturnType<typeof setTimeout>;
+
 function geoLocationErrorConstructor(code: number, message: string): GeolocationPositionError {
     return {
         code: code,
@@ -28,8 +30,8 @@ function useGeoLocation<TDEPENDENCIES extends object>({
     getGeoLocation: (gettingOptions: PositionOptions, dependencies?: Readonly<TDEPENDENCIES>) => void
 ] {
     const redux_storeDispatch = useAppStoreDispatch();
-    const { detectionStage, isError, nextStage, errorCode } = useAppStoreSelector((state) => state.autoDetectLocation);
-
+    const { detectionStage, isError, nextStage, errorCode, isPending } = useAppStoreSelector((state) => state.autoDetectLocation);
+    let dopTimerErrTimeout: TTimerId;
     const startCallback = () => {
         onPending();
         redux_storeDispatch(setPending(true));
@@ -51,6 +53,13 @@ function useGeoLocation<TDEPENDENCIES extends object>({
             return;
         }
 
+        // дополнительный таймаут, на моем телефоне почемуто getCurrentPosition оочень странно работает и в некоторых ситуациях стандартный таймаут не отрабатывает
+        dopTimerErrTimeout = setTimeout(() => {
+            if (!isError && isPending) {
+                redux_storeDispatch(setError({ errorStatus: true, errorCode: 3 }));
+            }
+        }, gettingOptions.timeout ?? 5000 + 1000);
+
         startCallback();
         navigator.geolocation.getCurrentPosition(
             successCallback.bind(null, dependencies),
@@ -60,8 +69,8 @@ function useGeoLocation<TDEPENDENCIES extends object>({
     };
 
     useEffect(() => {
-        debugger;
         if (isError) {
+            clearTimeout(dopTimerErrTimeout);
             if (errorCode === 3) {
                 // ошибка по первому таймауту
                 if (detectionStage === 1 && nextStage) {
@@ -81,6 +90,12 @@ function useGeoLocation<TDEPENDENCIES extends object>({
             }
         }
     }, [isError, detectionStage, nextStage, errorCode]);
+
+    useEffect(() => {
+        return () => {
+            clearTimeout(dopTimerErrTimeout);
+        };
+    });
 
     return [getGeoLocation];
 }
