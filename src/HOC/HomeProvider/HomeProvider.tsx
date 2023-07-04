@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import type { IHomePageProps } from "../../pages/Home/Home";
-import { useNavigate, useParams, Navigate } from "react-router-dom";
+import { useNavigate, useParams, Navigate, useLocation } from "react-router-dom";
 import { useAppStoreDispatch, useAppStoreSelector } from "../../redux/redux_hooks";
 import { updateCity, setAutoDetect } from "../../redux/slises/weather_lat_lon";
 import { useLoacalStorage } from "../../hooks/useLocalStorage";
@@ -20,10 +20,11 @@ function removeColon(str: string): string {
 
 function HomeProvider({ children }: TProps) {
     const router_navigate = useNavigate();
-    let stateWeatherGeoDispatch = useAppStoreDispatch();
-    let stateWeatherGeo = useAppStoreSelector((state) => state.weatherGeo);
+    const stateWeatherGeoDispatch = useAppStoreDispatch();
+    const stateWeatherGeo = useAppStoreSelector((state) => state.weatherGeo);
     const [localStorageData, setLocalStorageData] = useLoacalStorage(false);
     const [isNonCity, setIsNonCity] = useState<boolean>(false); // будет true если город не определен (при первой загрузке компонента)
+    const { pathname } = useLocation();
     let urlLatNormalized: number | undefined = undefined;
     let urlLonNormalized: number | undefined = undefined;
     let urlCityNameNormalized: string | undefined = undefined;
@@ -91,8 +92,8 @@ function HomeProvider({ children }: TProps) {
         if (cityName && lat && lon) {
             update_meta_title(cityName);
             update_meta_desc(cityName);
-            router_navigate(`/search/:${cityName}/:${lat}/:${lon}`);
             setIsNonCity(false);
+            router_navigate(`/search/:${cityName}/:${lat}/:${lon}`);
         } else {
             setIsNonCity(true);
         }
@@ -102,14 +103,16 @@ function HomeProvider({ children }: TProps) {
     // это приведет к двойному рендеру но зато у нас будут работать стрелки назад вперед в браузере
     useEffect(() => {
         if (urlLatNormalized && urlLonNormalized && urlCityNameNormalized) {
-            // console.log(stateWeatherGeo.cityName, urlCityName);
             if (stateWeatherGeo.cityName !== urlCityNameNormalized) {
                 stateWeatherGeoDispatch(updateCity({ lat: urlLatNormalized, lon: urlLonNormalized, cityName: urlCityNameNormalized }));
             }
         }
     }, [urlLatNormalized, urlLonNormalized, urlCityNameNormalized]);
 
-    return <>{isNonCity ? <Navigate to={"/not_city_find"} /> : children}</>;
+    // если город определен то рендерим содержимое
+    // если не определен то проверим, мы на /not_city_find ? если да то редерим содержимое (это и будет not_city_find)
+    // если нет то редирект на /not_city_find
+    return <>{isNonCity ? !pathname.includes("not_city_find") ? <Navigate to={"/not_city_find"} /> : children : children}</>;
 }
 
 export { HomeProvider as default };
