@@ -70,7 +70,7 @@ function HomeProvider({ children }: TProps) {
         let lon = urlLonNormalized || stateWeatherGeo.lon || localStorageData.history[0]?.lon || undefined;
 
         if (cityName === undefined && lat === undefined && lon === undefined) {
-            getGeoLocation({ timeout: 15000, enableHighAccuracy: true });
+            getGeoLocation({ timeout: 10000, enableHighAccuracy: true });
         }
 
         if (cityName == undefined || lat == undefined || lon == undefined) {

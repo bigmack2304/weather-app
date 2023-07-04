@@ -12,7 +12,9 @@ import { Portal } from "../../HOC/Portal/Portal";
 import { useNavigate } from "react-router-dom";
 import { ModalWndTemplate } from "../ModalWndTemplate/ModalWndTemplate";
 import { updateCity, setNotFound, fetchGeo, setFetchData, setAutoDetect } from "../../redux/slises/weather_lat_lon";
+import { setNextStage, resetError } from "../../redux/slises/autoDetectLocation";
 import { useAppStoreDispatch, useAppStoreSelector } from "../../redux/redux_hooks";
+import { useGeoLocation } from "../../hooks/useGeoLocation";
 
 // компонент делает запрос на сервер для определления координат города
 // указанного в форме, после ответа, если найден один город то происходит вызов
@@ -33,7 +35,9 @@ function CityPosSearch({}: TProps) {
     const router_navigate = useNavigate();
 
     const { isFetchLoading, isNotFound, fetchData } = useAppStoreSelector((state) => state.weatherGeo);
-    const { isPending } = useAppStoreSelector((state) => state.autoDetectLocation);
+    const { isPending, isError, detectionStage, errorCode, nextStage } = useAppStoreSelector((state) => state.autoDetectLocation);
+
+    //const [getGeoLocation] = useGeoLocation({}); // это нужно тут, тк в нутри есть useEffect который реагирует на стор, проблема в том что если этот хук стоит в HOC (homeProvider) то useEffect не риагирует на изменения, но так все работает
 
     let sorted_cityPosResponse: fetchCityLatLon.TResponseObj[] = fetchData ? [...fetchData] : [];
 
@@ -119,6 +123,15 @@ function CityPosSearch({}: TProps) {
         storeDispatch(setNotFound(false));
     };
 
+    // при истичении времяни автоопределения координат, выводим модалку, при закрытии которой пытаемся еще раз определить координаты
+    const isErrAutoDetectLocation = () => {
+        if (detectionStage === 1) {
+            storeDispatch(setNextStage(true));
+            return;
+        }
+        storeDispatch(resetError());
+    };
+
     return (
         <div className="CityPosSearch">
             <FormSearh
@@ -186,6 +199,43 @@ function CityPosSearch({}: TProps) {
                         <p>Город не найден.</p>
                     </ModalWndTemplate>
                 </Portal>
+            ) : null}
+
+            {isError ? (
+                errorCode == 3 && detectionStage == 1 ? (
+                    <Portal>
+                        <ModalWndTemplate onClose={isErrAutoDetectLocation}>
+                            <p>
+                                Привышено время автомотического определения города, возможно на вашем устройстве требуется включить гео
+                                локацию. После закрытия окна запустится повторная попытка определения города.
+                            </p>
+                        </ModalWndTemplate>
+                    </Portal>
+                ) : errorCode == 5 ? (
+                    <Portal>
+                        <ModalWndTemplate onClose={isErrAutoDetectLocation}>
+                            <p>Не удалось определить ваши координаты.</p>
+                        </ModalWndTemplate>
+                    </Portal>
+                ) : errorCode == 4 ? (
+                    <Portal>
+                        <ModalWndTemplate onClose={isErrAutoDetectLocation}>
+                            <p>На вашем устройстве не поддерживается автоматическое определение города.</p>
+                        </ModalWndTemplate>
+                    </Portal>
+                ) : errorCode == 1 ? (
+                    <Portal>
+                        <ModalWndTemplate onClose={isErrAutoDetectLocation}>
+                            <p>Не удается получить разрешение для автоматического определения города.</p>
+                        </ModalWndTemplate>
+                    </Portal>
+                ) : errorCode == 2 ? (
+                    <Portal>
+                        <ModalWndTemplate onClose={isErrAutoDetectLocation}>
+                            <p>Ошибка при автоматическом определении города.</p>
+                        </ModalWndTemplate>
+                    </Portal>
+                ) : null
             ) : null}
         </div>
     );

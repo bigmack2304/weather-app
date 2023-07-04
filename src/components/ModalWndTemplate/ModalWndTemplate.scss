@@ -28,6 +28,10 @@
 
     &__main {
         padding: 10px;
+
+        @include is-screen(desctop) {
+            max-width: 80vw;
+        }
     }
 
     &__close {

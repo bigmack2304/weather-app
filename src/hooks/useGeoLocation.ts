@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useAppStoreDispatch, useAppStoreSelector } from "../redux/redux_hooks";
-import { setPending, setError, setSuccess } from "../redux/slises/autoDetectLocation";
+import { setPending, setError, setSuccess, setNextStage } from "../redux/slises/autoDetectLocation";
 
 // автоопределение координат пользователя
 
@@ -28,7 +28,7 @@ function useGeoLocation<TDEPENDENCIES extends object>({
     getGeoLocation: (gettingOptions: PositionOptions, dependencies?: Readonly<TDEPENDENCIES>) => void
 ] {
     const redux_storeDispatch = useAppStoreDispatch();
-    const { detectionStage, isError, nextStage, errorCode } = useAppStoreSelector((store) => store.autoDetectLocation);
+    const { detectionStage, isError, nextStage, errorCode } = useAppStoreSelector((state) => state.autoDetectLocation);
 
     const startCallback = () => {
         onPending();
@@ -41,25 +41,8 @@ function useGeoLocation<TDEPENDENCIES extends object>({
     };
 
     const errorCallback = (dependencies: TDEPENDENCIES, err: GeolocationPositionError) => {
-        // if (err.code === 1) {
-        //     // нету разрешений
-        // }
-
-        // if (err.code === 2) {
-        //     // внутрення ошибка
-        // }
-
-        // if (err.code === 3) {
-        //     // ошибка по таймауту
-        //     // на некоторых устройствах нужен gps
-        // }
-
-        // if (err.code === 4) {
-        //     // GeoLocation не поддерживается
-        // }
-
         onError(err, dependencies);
-        setError({ errorCode: err.code, errorStatus: true });
+        redux_storeDispatch(setError({ errorCode: err.code, errorStatus: true }));
     };
 
     const getGeoLocation = (gettingOptions: PositionOptions, dependencies: Readonly<TDEPENDENCIES> = {} as Readonly<TDEPENDENCIES>) => {
@@ -77,18 +60,23 @@ function useGeoLocation<TDEPENDENCIES extends object>({
     };
 
     useEffect(() => {
+        debugger;
         if (isError) {
             if (errorCode === 3) {
+                // ошибка по первому таймауту
                 if (detectionStage === 1 && nextStage) {
                     getGeoLocation({ timeout: 15000, enableHighAccuracy: true });
                 }
 
-                if (detectionStage === 2 && nextStage) {
+                // ошибка по второму таймауту
+                if (detectionStage === 2) {
+                    redux_storeDispatch(setNextStage(true)); //???????????
                     getGeoLocation({ timeout: 15000, enableHighAccuracy: false });
                 }
 
+                // ошибка по третьему таймауту, генерируем новую ошибку о том что определить город не удалось
                 if (detectionStage === 3) {
-                    redux_storeDispatch(setError({ errorStatus: true, errorCode: 4 }));
+                    redux_storeDispatch(setError({ errorStatus: true, errorCode: 5 }));
                 }
             }
         }

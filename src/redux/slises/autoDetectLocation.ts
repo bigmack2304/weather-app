@@ -53,7 +53,7 @@ const autoDetectLocationSlice = createSlice({
             state.isError = action.payload.errorStatus;
             state.errorCode = action.payload.errorCode;
 
-            if (action.payload.errorCode === 4) {
+            if (action.payload.errorCode !== 3) {
                 state.detectionStage = 0;
                 state.nextStage = true;
             }
