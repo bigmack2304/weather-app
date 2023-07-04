@@ -226,7 +226,10 @@ function CityPosSearch({}: TProps) {
                 ) : errorCode == 1 ? (
                     <Portal>
                         <ModalWndTemplate onClose={isErrAutoDetectLocation}>
-                            <p>Не удается получить разрешение для автоматического определения города.</p>
+                            <p>
+                                Не удается получить разрешение для автоматического определения города. На некоторых устроиствах эта ошибка
+                                может возникнуть изза выключенной геолокации.
+                            </p>
                         </ModalWndTemplate>
                     </Portal>
                 ) : errorCode == 2 ? (
