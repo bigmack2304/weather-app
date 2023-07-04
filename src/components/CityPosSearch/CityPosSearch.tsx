@@ -182,7 +182,9 @@ function CityPosSearch({}: TProps) {
 
             {isNotFound ? (
                 <Portal>
-                    <ModalWndTemplate onClose={onModalWndTemplateClose}>Город не найден.</ModalWndTemplate>
+                    <ModalWndTemplate onClose={onModalWndTemplateClose}>
+                        <p>Город не найден.</p>
+                    </ModalWndTemplate>
                 </Portal>
             ) : null}
         </div>

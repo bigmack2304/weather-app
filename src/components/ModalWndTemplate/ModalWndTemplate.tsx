@@ -29,9 +29,7 @@ function ModalWndTemplate({ onClose = () => {}, children = null }: TProps) {
                 <div className="ModalWndTemplate__header">
                     <ButtonClose clickCallback={onBtnClose} addClassName={["ModalWndTemplate__close"]} />
                 </div>
-                <div className="ModalWndTemplate__main">
-                    <p>{children}</p>
-                </div>
+                <div className="ModalWndTemplate__main">{children}</div>
             </div>
         </div>
     );
