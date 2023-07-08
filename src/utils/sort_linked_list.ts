@@ -1,7 +1,12 @@
-// короче вся сортировка нод завязана на свойстве weight ноды, так как значение ноды может быть не сиреализуемым.
-// поле weight это строка, значение которой задает программист.
+// двусвязный список, с возможностью автомотической сортировки
 
-// todo: сделать чтобы ключи были уникальными, одинаковые ключи перезаписывают значения
+// варианты использования
+// list = new sort_linked_list<тип значения хранимых данных. по умолчанию any>()
+// 1. list.(1, "1")     - добавляем ноду(значение, вес), со значением и так все понятно а вес это
+//                      - своиство ноды по которому ноды сортируются между собой (от меньшего к большему)
+//                      - при добавляении ноды с уже имеющимся в структуре данных весом, новое значение перепишет значение ноды с такимже весом
+// 2. list.(1)          - добавляется просто значение без веса, тогда ноды не сортируются и одинаковые значения не переписываются
+//                      - при таком создании нод, find_by_weight работать не будет и сразу вернет undefined
 
 // экземпляр класса
 interface ISortLinkedList<V = any> {
@@ -12,9 +17,6 @@ interface ISortLinkedList<V = any> {
     get_nodes_values(): Generator<unknown, V | undefined, unknown>;
     find_by_weight(findWeight: string): { node: TSortLinkedListNodeNoNull<V>; index: number } | undefined;
 }
-
-// обьект класса
-type ISortLinkedListObject<V = any> = ISortLinkedList<V> & { new (): InstanceType<typeof sort_linked_list<V>> };
 
 // тип ноды, возможно не существующей
 type TSortLinkedListNode<V = any> = InstanceType<typeof _node<V>> | null;
@@ -41,6 +43,7 @@ class sort_linked_list<NODE_VALUE = any> implements ISortLinkedList<NODE_VALUE> 
 
     public lenght: number = 0;
     private _first_node: TSortLinkedListNode<NODE_VALUE> = null;
+    private _isUseNoWeight = false;
 
     // добавляет новую ноду, так чтобы веса сортировались от меньшего к большему
     public add(value: NODE_VALUE, weight: string = NON_WEIGHT) {
@@ -53,6 +56,26 @@ class sort_linked_list<NODE_VALUE = any> implements ISortLinkedList<NODE_VALUE> 
 
             while (true) {
                 after_node = before_node.next_node;
+
+                if (new_node.weight !== NON_WEIGHT) {
+                    if (new_node.weight == before_node.weight) {
+                        before_node.value = new_node.value;
+                        this.lenght--; // мы не добавляем ноду, а перезаписываем значение ноды с такимже ключем, но в переди у нас будет инкремент дленны списка, поэтому тут мы отнимем 1, в итоге нода обновится а длинна списка останется прежней
+                        break;
+                    }
+                } else {
+                    this._isUseNoWeight = true;
+                    let last_node = this._get_last_node();
+
+                    if (last_node) {
+                        last_node.next_node = new_node;
+                        new_node.prev_node = last_node;
+                    } else {
+                        this._first_node = new_node;
+                    }
+
+                    break;
+                }
 
                 if (new_node.weight < before_node.weight) {
                     let before_before_node = before_node.prev_node; // нода стоящая перед before_node
@@ -68,7 +91,7 @@ class sort_linked_list<NODE_VALUE = any> implements ISortLinkedList<NODE_VALUE> 
                     break;
                 }
 
-                if (new_node.weight == before_node.weight || new_node.weight > before_node.weight) {
+                if (new_node.weight > before_node.weight) {
                     if (after_node !== null) {
                         before_node = before_node.next_node!;
                         continue;
@@ -150,7 +173,7 @@ class sort_linked_list<NODE_VALUE = any> implements ISortLinkedList<NODE_VALUE> 
     // алгоритм двоичного поиска
     public find_by_weight(findWeight: string) {
         if (this.lenght === 0) return;
-        if (this._first_node!.weight === NON_WEIGHT) return;
+        if (this._isUseNoWeight === true) return;
 
         let start_index = 0; // храним индекс с которого начинаем поиск в половине
         let end_index = this.lenght; // храним индекс которым заканчивается половина
@@ -159,6 +182,10 @@ class sort_linked_list<NODE_VALUE = any> implements ISortLinkedList<NODE_VALUE> 
 
         while (true) {
             if (node == undefined || node.weight == undefined) {
+                return; // не нашли
+            }
+
+            if (end_index == current_index && node.weight !== findWeight) {
                 return; // не нашли
             }
 
@@ -190,7 +217,21 @@ class sort_linked_list<NODE_VALUE = any> implements ISortLinkedList<NODE_VALUE> 
 
         return node;
     }
+
+    private _get_last_node() {
+        if (this.lenght === 0) {
+            return;
+        }
+
+        let node: TSortLinkedListNodeNoNull<NODE_VALUE> = this._first_node!;
+
+        while (node.next_node) {
+            node = node.next_node;
+        }
+
+        return node;
+    }
 }
 
 export { sort_linked_list };
-export type { ISortLinkedList, ISortLinkedListObject };
+export type { ISortLinkedList };

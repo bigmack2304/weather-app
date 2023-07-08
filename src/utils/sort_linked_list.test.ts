@@ -35,10 +35,10 @@ describe("test sort_linked_list.ts", () => {
         list.add(2, "2");
         list.add(2, "2");
         list.add(6, "6");
-        expect([...list.get_nodes_values()]).toEqual([2, 2, 4, 6]);
+        expect([...list.get_nodes_values()]).toEqual([2, 4, 6]);
 
         list.add(1, "1");
-        expect([...list.get_nodes_values()]).toEqual([1, 2, 2, 4, 6]);
+        expect([...list.get_nodes_values()]).toEqual([1, 2, 4, 6]);
     });
 
     test("test delete", () => {
@@ -107,6 +107,8 @@ describe("test sort_linked_list.ts", () => {
 
         // несуществующий вес
         expect(list.find_by_weight("7")).toEqual(undefined);
+        expect(list.find_by_weight("3")).toEqual(undefined);
+        expect(list.find_by_weight("0")).toEqual(undefined);
 
         // этот поиск работает только в отсортированном массиве
         list = new sort_linked_list<number>();
