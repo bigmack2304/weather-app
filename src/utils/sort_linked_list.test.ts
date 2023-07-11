@@ -100,6 +100,9 @@ describe("test sort_linked_list.ts", () => {
         list.add(2, "2");
         list.add(6, "6");
 
+        expect(list.find_by_weight("1")!.index).toEqual(0);
+        expect(list.find_by_weight("1")!.node.value).toEqual(1);
+
         expect(list.find_by_weight("2")!.index).toEqual(1);
         expect(list.find_by_weight("2")!.node.value).toEqual(2);
         expect(list.find_by_weight("6")!.index).toEqual(3);

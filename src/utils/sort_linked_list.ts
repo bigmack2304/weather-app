@@ -26,6 +26,14 @@ type TSortLinkedListNodeNoNull<V = any> = Exclude<TSortLinkedListNode<V>, null>;
 
 const NON_WEIGHT = "--sort_linked_list > _node: NON_WEIGHT--";
 
+function string_converter(str: string) {
+    let temp = Number(str);
+    if (isNaN(temp)) {
+        return str;
+    }
+    return temp;
+}
+
 class _node<V = any> {
     public constructor(val: V, weight: string) {
         this.value = val;
@@ -49,62 +57,68 @@ class sort_linked_list<NODE_VALUE = any> implements ISortLinkedList<NODE_VALUE> 
     public add(value: NODE_VALUE, weight: string = NON_WEIGHT) {
         if (this.lenght === 0) {
             this._first_node = new _node<NODE_VALUE>(value, weight);
+            this.lenght++;
         } else {
-            let before_node: TSortLinkedListNodeNoNull<NODE_VALUE> = this._first_node!; // начальная нода для сравнения
             let new_node = new _node(value, weight); // новая нода
-            let after_node: TSortLinkedListNode<NODE_VALUE>; // следующая нода после before_node
 
-            while (true) {
-                after_node = before_node.next_node;
+            const add_last_no_sort = () => {
+                this._isUseNoWeight = true;
+                let last_node = this._get_last_node();
 
-                if (new_node.weight !== NON_WEIGHT) {
-                    if (new_node.weight == before_node.weight) {
-                        before_node.value = new_node.value;
-                        this.lenght--; // мы не добавляем ноду, а перезаписываем значение ноды с такимже ключем, но в переди у нас будет инкремент дленны списка, поэтому тут мы отнимем 1, в итоге нода обновится а длинна списка останется прежней
-                        break;
-                    }
+                if (last_node) {
+                    last_node.next_node = new_node;
+                    new_node.prev_node = last_node;
                 } else {
-                    this._isUseNoWeight = true;
-                    let last_node = this._get_last_node();
+                    this._first_node = new_node;
+                }
+                this.lenght++;
+            };
 
-                    if (last_node) {
-                        last_node.next_node = new_node;
-                        new_node.prev_node = last_node;
-                    } else {
-                        this._first_node = new_node;
-                    }
+            if (this._isUseNoWeight) {
+                add_last_no_sort();
+                return;
+            }
 
-                    break;
+            if (weight === NON_WEIGHT) {
+                add_last_no_sort();
+                return;
+            } else {
+                let list_place = this._find_to_add(weight)!;
+
+                if (list_place.node_is == "EQUAL") {
+                    list_place.node.value = new_node.value;
+                    return;
                 }
 
-                if (new_node.weight < before_node.weight) {
-                    let before_before_node = before_node.prev_node; // нода стоящая перед before_node
-
-                    if (before_before_node) {
-                        before_before_node.next_node = new_node;
-                        new_node.prev_node = before_before_node;
+                if (list_place.node_is == "LESS") {
+                    if (list_place.node.next_node) {
+                        list_place.node.next_node.prev_node = new_node;
+                        new_node.next_node = list_place.node.next_node;
                     }
 
-                    before_node.prev_node = new_node;
-                    new_node.next_node = before_node;
-                    this._first_node = this._get_first_node(before_node); // ??
-                    break;
+                    list_place.node.next_node = new_node;
+                    new_node.prev_node = list_place.node;
+                    this.lenght++;
+
+                    return;
                 }
 
-                if (new_node.weight > before_node.weight) {
-                    if (after_node !== null) {
-                        before_node = before_node.next_node!;
-                        continue;
-                    } else {
-                        new_node.prev_node = before_node;
-                        before_node.next_node = new_node;
-                        break;
+                if (list_place.node_is == "MORE") {
+                    if (list_place.node.prev_node) {
+                        list_place.node.prev_node.next_node = new_node;
+                        new_node.prev_node = list_place.node.prev_node;
                     }
+
+                    list_place.node.prev_node = new_node;
+                    new_node.next_node = list_place.node;
+
+                    this._first_node = this._get_first_node(new_node); // ??
+                    this.lenght++;
+
+                    return;
                 }
             }
         }
-
-        this.lenght++;
     }
 
     // удаляет ноду по указанному индексу
@@ -171,36 +185,40 @@ class sort_linked_list<NODE_VALUE = any> implements ISortLinkedList<NODE_VALUE> 
 
     // ищет ноду по указанному весу
     // алгоритм двоичного поиска
-    public find_by_weight(findWeight: string) {
+    public find_by_weight(findWeightVal: string) {
         if (this.lenght === 0) return;
         if (this._isUseNoWeight === true) return;
 
         let start_index = 0; // храним индекс с которого начинаем поиск в половине
-        let end_index = this.lenght; // храним индекс которым заканчивается половина
+        let end_index = this.lenght - 1; // храним индекс которым заканчивается половина
         let current_index = Math.ceil(end_index / 2); // определяем центральный индекс
         let node: TSortLinkedListNodeNoNull<NODE_VALUE> = this.at(current_index)!; // получаем среднюю ноду
 
+        let findWeight = string_converter(findWeightVal);
+        let node_weight: string | number;
         while (true) {
             if (node == undefined || node.weight == undefined) {
                 return; // не нашли
             }
 
-            if (end_index == current_index && node.weight !== findWeight) {
+            node_weight = string_converter(node.weight);
+
+            if (end_index == current_index && node_weight !== findWeight) {
                 return; // не нашли
             }
 
-            if (node.weight === findWeight) {
+            if (node_weight === findWeight) {
                 return { node: node, index: current_index };
             }
 
-            if (node.weight > findWeight) {
+            if (node_weight > findWeight) {
                 end_index = current_index;
                 current_index = start_index + Math.ceil((end_index - start_index - 1) / 2);
                 node = this.at(current_index)!;
                 continue;
             }
 
-            if (node.weight < findWeight) {
+            if (node_weight < findWeight) {
                 start_index = current_index;
                 current_index = start_index + Math.ceil((end_index - start_index) / 2);
                 node = this.at(current_index)!;
@@ -231,7 +249,110 @@ class sort_linked_list<NODE_VALUE = any> implements ISortLinkedList<NODE_VALUE> 
 
         return node;
     }
+
+    // ищет место для ноды по указанному весу, возвращает крайнюю ноду для этой позиции
+    // также возвращает своиство, которое указывает, эта нода больше искомого веса, меньше или равна ?
+    private _find_to_add(findWeightVal: string) {
+        if (this.lenght === 0) return;
+        if (this._isUseNoWeight === true) return;
+
+        let checked_nodes = new WeakSet();
+        let start_index = 0; // храним индекс с которого начинаем поиск в половине
+        let end_index = this.lenght - 1; // храним индекс которым заканчивается половина
+        let current_index = Math.ceil(end_index / 2); // определяем центральный индекс
+        let temp_node: TSortLinkedListNodeNoNull<NODE_VALUE>;
+        let node: TSortLinkedListNodeNoNull<NODE_VALUE> = this.at(current_index)!; // получаем среднюю ноду
+        let find_state: "MORE" | "LESS" | "EQUAL" | null = null;
+
+        let findWeight = string_converter(findWeightVal);
+        let node_weight: string | number;
+
+        while (true) {
+            if (node == undefined || node.weight == undefined) {
+                return { node: node, node_is: find_state };
+            }
+
+            node_weight = string_converter(node.weight);
+
+            if (node_weight === findWeight) {
+                checked_nodes.add(node);
+                temp_node = node;
+                find_state = "EQUAL";
+
+                if (checked_nodes.has(node)) {
+                    return { node: temp_node, node_is: find_state };
+                }
+            }
+
+            if (node_weight > findWeight) {
+                checked_nodes.add(node);
+                find_state = "MORE";
+                end_index = current_index;
+                current_index = start_index + Math.ceil((end_index - start_index - 1) / 2);
+                temp_node = node;
+                node = this.at(current_index)!;
+
+                if (checked_nodes.has(node)) {
+                    return { node: temp_node, node_is: find_state };
+                }
+
+                continue;
+            }
+
+            if (node_weight < findWeight) {
+                checked_nodes.add(node);
+                find_state = "LESS";
+                start_index = current_index;
+                current_index = start_index + Math.ceil((end_index - start_index) / 2);
+                temp_node = node;
+                node = this.at(current_index)!;
+
+                if (checked_nodes.has(node)) {
+                    return { node: temp_node, node_is: find_state };
+                }
+            }
+        }
+    }
+
+    [Symbol.toPrimitive](hint: "string" | "number" | "default") {
+        if (hint == "string") {
+            return "[link_list object]";
+        } else if (hint == "number") {
+            return this.lenght;
+        }
+
+        return this._first_node;
+    }
 }
+
+// ////////////////////////////////////////////////////////////////////////////////////////
+// let list = new sort_linked_list();
+
+// let time1 = performance.now();
+// for (let i = 1000; i > 0; i--) {
+//     list.add(i, `${i}`);
+// }
+// let time2 = performance.now();
+
+// console.log("test list", time2 - time1);
+
+// ////////////////////////////////////////////////////////////////////////////////////////
+
+// let arr = [];
+
+// let time3 = performance.now();
+// for (let i = 1000; i > 0; i--) {
+//     arr.push(i);
+//     arr.sort((a: number, b: number) => {
+//         if (a > b) return 1;
+//         if (a < b) return -1;
+//         return 0;
+//     });
+// }
+// let time4 = performance.now();
+// console.log("test array", time4 - time3);
+
+// ////////////////////////////////////////////////////////////////////////////////////////
 
 export { sort_linked_list };
 export type { ISortLinkedList };
