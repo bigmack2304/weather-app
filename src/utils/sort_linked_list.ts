@@ -314,6 +314,35 @@ class sort_linked_list<NODE_VALUE = any> implements ISortLinkedList<NODE_VALUE> 
         }
     }
 
+    // преобразует 2х связный список в односвязный и возвращает его в JSON строке
+    public to_JSON() {
+        let obj: any = {};
+        let stack = [this._first_node];
+        let selector = obj;
+
+        while (stack.length !== 0) {
+            let temp = stack.shift()!;
+
+            for (let elem in temp) {
+                if (elem == "prev_node") {
+                    continue;
+                }
+                if (elem == "next_node") {
+                    stack.push((temp as any)[elem]);
+                    selector["next_node"] = (temp as any)[elem] ? {} : null;
+                    continue;
+                }
+                selector[elem] = (temp as any)[elem];
+            }
+
+            if (selector["next_node"] !== null) {
+                selector = selector["next_node"];
+            }
+        }
+
+        return JSON.stringify(obj);
+    }
+
     [Symbol.toPrimitive](hint: "string" | "number" | "default") {
         if (hint == "string") {
             return "[link_list object]";
