@@ -16,6 +16,7 @@ interface ISortLinkedList<V = any> {
     at(need_index: number): TSortLinkedListNode | undefined;
     get_nodes_values(): Generator<unknown, V | undefined, unknown>;
     find_by_weight(findWeight: string): { node: TSortLinkedListNodeNoNull<V>; index: number } | undefined;
+    to_JSON(): string;
 }
 
 // тип ноды, возможно не существующей
@@ -316,23 +317,38 @@ class sort_linked_list<NODE_VALUE = any> implements ISortLinkedList<NODE_VALUE> 
 
     // преобразует 2х связный список в односвязный и возвращает его в JSON строке
     public to_JSON() {
-        let obj: any = {};
+        type TSinglyLinkedListNoNull = Omit<TSortLinkedListNodeNoNull<NODE_VALUE>, "prev_node">;
+        type TSinglyLinkedList = null | TSinglyLinkedListNoNull;
+        let result_obj = {} as TSinglyLinkedListNoNull;
         let stack = [this._first_node];
-        let selector = obj;
+        let selector = result_obj;
+
+        if (this.lenght == 0) {
+            return "{}";
+        }
 
         while (stack.length !== 0) {
             let temp = stack.shift()!;
+            let elem: keyof TSortLinkedListNodeNoNull<NODE_VALUE>;
 
-            for (let elem in temp) {
+            for (elem in temp) {
                 if (elem == "prev_node") {
                     continue;
                 }
+
                 if (elem == "next_node") {
-                    stack.push((temp as any)[elem]);
-                    selector["next_node"] = (temp as any)[elem] ? {} : null;
+                    stack.push(temp[elem]);
+                    (selector["next_node"] as TSinglyLinkedList) = temp[elem] ? ({} as TSinglyLinkedListNoNull) : null;
                     continue;
                 }
-                selector[elem] = (temp as any)[elem];
+
+                if (elem == "value") {
+                    selector[elem] = temp[elem];
+                }
+
+                if (elem == "weight") {
+                    selector[elem] = temp[elem];
+                }
             }
 
             if (selector["next_node"] !== null) {
@@ -340,7 +356,7 @@ class sort_linked_list<NODE_VALUE = any> implements ISortLinkedList<NODE_VALUE> 
             }
         }
 
-        return JSON.stringify(obj);
+        return JSON.stringify(result_obj);
     }
 
     [Symbol.toPrimitive](hint: "string" | "number" | "default") {

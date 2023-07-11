@@ -122,4 +122,17 @@ describe("test sort_linked_list.ts", () => {
 
         expect(list.find_by_weight("6")).toEqual(undefined);
     });
+
+    test("test to_json", () => {
+        list.add(4, "4");
+        list.add(1, "1");
+        list.add(2, "2");
+        list.add(6, "6");
+
+        let json = list.to_JSON();
+
+        expect(json).toEqual(
+            '{"value":1,"weight":"1","next_node":{"value":2,"weight":"2","next_node":{"value":4,"weight":"4","next_node":{"value":6,"weight":"6","next_node":null}}}}'
+        );
+    });
 });
