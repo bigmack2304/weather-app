@@ -24,7 +24,7 @@
     padding: 5px;
     border-radius: 5px;
 
-    &__hints_wrapper {
+    &__items_wrapper {
         position: absolute;
 
         display: flex;
@@ -36,7 +36,7 @@
         margin: 37px 0 0 15px;
     }
 
-    &__hints_elements {
+    &__items_elements {
         overflow-wrap: break-word;
         background-color: white;
         border-bottom-left-radius: 5px;
@@ -47,7 +47,7 @@
         overflow-y: auto;
     }
 
-    &__hint_element {
+    &__item_element {
         cursor: default;
         padding: 3px 4px 3px 4px;
         font-size: 16px;

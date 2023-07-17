@@ -145,13 +145,13 @@ function CityPosSearch({}: TProps) {
             {fetchData && fetchData.length > 1 ? (
                 <Portal>
                     <div className="CityPosSearch__hints_outer" onClick={removeResponse}></div>
-                    <div className="CityPosSearch__hints_wrapper">
-                        <div className="CityPosSearch__hints_elements">
+                    <div className="CityPosSearch__items_wrapper">
+                        <div className="CityPosSearch__items_elements">
                             {sorted_cityPosResponse.map((city) => {
                                 return (
                                     <div
                                         tabIndex={0}
-                                        className="CityPosSearch__hint_element"
+                                        className="CityPosSearch__item_element"
                                         key={`${city.lat}-${city.lon}`}
                                         onClick={selectCallback.bind(null, city)}
                                     >
@@ -171,15 +171,15 @@ function CityPosSearch({}: TProps) {
             {isHistoryVisible && filtred_storage_history.length !== 0 && !fetchData ? (
                 <Portal>
                     <div className="CityPosSearch__history_outer" onClick={closeHistory}></div>
-                    <div className="CityPosSearch__hints_wrapper">
-                        <div className="CityPosSearch__hints_elements">
+                    <div className="CityPosSearch__items_wrapper">
+                        <div className="CityPosSearch__items_elements">
                             {filtred_storage_history.map((city) => {
                                 return (
                                     <ClosableItem
                                         closeCallback={onHistoryListClose}
                                         onClick={onHistorySelect}
                                         metaDataId={JSON.stringify(city)}
-                                        addClassName={["CityPosSearch__hint_element"]}
+                                        addClassName={["CityPosSearch__item_element"]}
                                         key={`${city.lat}-${city.lon}`}
                                     >
                                         {city.name}
