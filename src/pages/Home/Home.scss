@@ -81,6 +81,10 @@
             padding: 0;
             border-radius: 3px;
             overflow: hidden;
+
+            & > .TwoGisMaps {
+                height: 40vh;
+            }
         }
     }
 
