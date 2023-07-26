@@ -6,7 +6,7 @@ import type { TStorageHistoryCity } from "../../appLocalStorage/appLoacalStorage
 
 import { generate_url } from "../../utils/fetch_LatLon";
 import type { TLimit, TFullResponse } from "../../utils/fetch_LatLon";
-import { CITY_AUTO_DETECT_NAME } from "../../utils/global_vars";
+import { CITY_AUTO_DETECT_NAME, CITY_NO_NAME_MAP_TAP } from "../../utils/global_vars";
 
 type TFetchGeoArgs = {
     cityName: string;
@@ -40,13 +40,16 @@ const weatherGeoSlice = createSlice({
     initialState: initialState,
     reducers: {
         updateCity: (state, action: PayloadAction<Required<Pick<IWeatherGeoSlice, "lat" | "lon" | "cityName">>>) => {
-            // не будем заносить в историю первую стадию автоопределения местоположения
-            if (action.payload.cityName !== CITY_AUTO_DETECT_NAME) {
+            const save_to_local_storage = () => {
+                if (action.payload.cityName == CITY_AUTO_DETECT_NAME || action.payload.cityName == CITY_NO_NAME_MAP_TAP) return;
+
                 let localStorageData = get_stprage_data();
                 let new_data = { name: action.payload.cityName, lat: action.payload.lat, lon: action.payload.lon };
                 let new_history = unshuft_unique_obj_to_array_force(localStorageData.history, new_data) as TStorageHistoryCity[];
                 set_storage_data({ ...localStorageData, history: new_history });
-            }
+            };
+
+            save_to_local_storage();
 
             state.cityName = action.payload.cityName;
             state.lat = action.payload.lat;

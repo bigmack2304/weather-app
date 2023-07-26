@@ -13,6 +13,7 @@ import { WeatherSunPhase } from "../WeatherSunPhase/WeatherSunPhase";
 import { useAppStoreSelector, useAppStoreDispatch } from "../../redux/redux_hooks";
 import { updateBackgroundClass } from "../../redux/slises/homePage";
 import { updateCity } from "../../redux/slises/weather_lat_lon";
+import { CITY_NO_NAME_MAP_TAP } from "../../utils/global_vars";
 
 interface ICityCurrentWeatherProps {}
 
@@ -76,14 +77,32 @@ function CityCurrentWeather({}: TProps = {}) {
         getWeather();
     });
 
+    // определяем каким будет название искомого города
+    const renderCityName = () => {
+        // если это автоопределение, то название города берем из ответа о погоде с сервера
+        if (isAutoDetect && cityName !== CITY_NO_NAME_MAP_TAP) {
+            return (
+                <>
+                    {cityName} <span className="CityCurrentWeather__name_auto">(автоопределение)</span>
+                </>
+            );
+        }
+
+        // если мы нажали по карте то лучше если название будет таким, потомучто названия там определяются так себе
+        if (cityName == CITY_NO_NAME_MAP_TAP) {
+            return <>Точка на карте</>;
+        }
+
+        // в остальных случаях название берем из стора
+        return <>{cityName}</>;
+    };
+
     return (
         <div className="CityCurrentWeather">
             {currentWeather && !isLoadingVisible && !isFetchError ? (
                 <>
                     <div className="CityCurrentWeather__head">
-                        <h2 className="CityCurrentWeather__name">
-                            {cityName} {isAutoDetect ? <span className="CityCurrentWeather__name_auto">(автоопределение)</span> : null}
-                        </h2>
+                        <h2 className="CityCurrentWeather__name">{renderCityName()}</h2>
                         <WeatherNowTime
                             times={{ dt: currentWeather.dt, timezone: currentWeather.timezone }}
                             get_hours={false}
