@@ -23,6 +23,10 @@ const map_base_config = {
     maxZoom: 20,
     minZoom: 2,
     closePopupOnClick: false,
+    maxBounds: [
+        [84.9593, -200.0],
+        [-85.0321, 200.0],
+    ],
 };
 
 function TwoGisMaps({ center = [1.0, 1.0], startZoom = 4, mapInitConfig = {}, addClassName = [""], isFlyToAnim = "auto" }: TProps) {
