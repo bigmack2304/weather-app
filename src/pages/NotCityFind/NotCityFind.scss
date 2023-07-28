@@ -12,4 +12,36 @@
         color: $WHITE_TEXT;
         text-shadow: 0 0 9px black;
     }
+
+    &__map {
+        margin: 60px auto 0 auto;
+        padding: 10px;
+        display: flex;
+        width: 100%;
+
+        & > .TwoGisMapLoadOnClick__default {
+            @include is-screen(mobile) {
+                overflow: hidden;
+                border-radius: 5px;
+            }
+        }
+
+        & > .TwoGisMaps_wrapper {
+            width: 100%;
+
+            & > .TwoGisMaps {
+                height: 400px;
+                width: inherit;
+
+                @include is-screen(mobile) {
+                    height: 40vh;
+                }
+            }
+
+            @include is-screen(mobile) {
+                overflow: hidden;
+                border-radius: 5px;
+            }
+        }
+    }
 }
