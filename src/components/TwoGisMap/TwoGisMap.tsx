@@ -51,7 +51,7 @@ function TwoGisMaps({ center = [1.0, 1.0], startZoom = 4, mapInitConfig = {}, ad
         let map_clicked_lon = Number((e.latlng.lng as Number).toFixed(3));
 
         // если попап на маркере открыт, то закрываем попап, новый поиск не начинаем
-        if (marker.current.getPopup().isOpen()) {
+        if (marker.current && marker.current.getPopup().isOpen()) {
             marker.current.closePopup();
             return;
         }
@@ -121,4 +121,4 @@ function TwoGisMaps({ center = [1.0, 1.0], startZoom = 4, mapInitConfig = {}, ad
     );
 }
 
-export { TwoGisMaps };
+export { TwoGisMaps as default };

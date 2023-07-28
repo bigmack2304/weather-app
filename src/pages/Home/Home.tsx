@@ -10,7 +10,7 @@ import { ErrorCacher } from "../../HOC/ErrorCacher/ErrorCacher";
 import { HocOnResizeUpdate } from "../../HOC/OnResizeUpdate/OnResizeUpdate";
 import { updatePageSelector } from "../../redux/slises/homePage";
 import { useAppStoreDispatch, useAppStoreSelector } from "../../redux/redux_hooks";
-import { TwoGisMaps } from "../../components/TwoGisMap/TwoGisMap";
+import TwoGisMaps from "../../components/TwoGisMap/TwoGisMap";
 
 const City5d3hWeather_onResizeUpdate = HocOnResizeUpdate<ICity5d3hWeatherProps>(City5d3hWeather); // City5d3hWeather нужно перерендоревать при ресайзе
 
