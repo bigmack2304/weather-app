@@ -1,5 +1,6 @@
 import React from "react";
 import "./IconWeatherSnow_3.scss";
+import { is_device_mobile } from "../utils/util_functions";
 
 interface IIconWeatherSnow_3Props {
     addClassName?: string[];
@@ -30,40 +31,46 @@ function IconWeatherSnow_3({ addClassName = [""] }: TProps) {
                     <circle className="IconWeatherSnow_3__white" cx="34.5" cy="15.6" r="15.6"></circle>
                 </g>
                 <circle className="IconWeatherSnow_3__snow" cx="37" cy="43.5" r="3">
-                    <animateTransform
-                        attributeName="transform"
-                        attributeType="XML"
-                        dur="1.5s"
-                        keyTimes="0;0.33;0.66;1"
-                        repeatCount="indefinite"
-                        type="translate"
-                        values="1 -2;3 2; 1 4; 2 6"
-                        calcMode="linear"
-                    ></animateTransform>
+                    {!is_device_mobile() ? (
+                        <animateTransform
+                            attributeName="transform"
+                            attributeType="XML"
+                            dur="1.5s"
+                            keyTimes="0;0.33;0.66;1"
+                            repeatCount="indefinite"
+                            type="translate"
+                            values="1 -2;3 2; 1 4; 2 6"
+                            calcMode="linear"
+                        ></animateTransform>
+                    ) : null}
                 </circle>
                 <circle className="IconWeatherSnow_3__snow" cx="27" cy="43.5" r="3">
-                    <animateTransform
-                        attributeName="transform"
-                        attributeType="XML"
-                        dur="1.5s"
-                        keyTimes="0;0.33;0.66;1"
-                        repeatCount="indefinite"
-                        type="translate"
-                        values="1 -2;3 2; 1 4; 2 6"
-                        calcMode="linear"
-                    ></animateTransform>
+                    {!is_device_mobile() ? (
+                        <animateTransform
+                            attributeName="transform"
+                            attributeType="XML"
+                            dur="1.5s"
+                            keyTimes="0;0.33;0.66;1"
+                            repeatCount="indefinite"
+                            type="translate"
+                            values="1 -2;3 2; 1 4; 2 6"
+                            calcMode="linear"
+                        ></animateTransform>
+                    ) : null}
                 </circle>
                 <circle className="IconWeatherSnow_3__snow" cx="17" cy="43.5" r="3">
-                    <animateTransform
-                        attributeName="transform"
-                        attributeType="XML"
-                        dur="1.5s"
-                        keyTimes="0;0.33;0.66;1"
-                        repeatCount="indefinite"
-                        type="translate"
-                        values="1 -2;3 2; 1 4; 2 6"
-                        calcMode="linear"
-                    ></animateTransform>
+                    {!is_device_mobile() ? (
+                        <animateTransform
+                            attributeName="transform"
+                            attributeType="XML"
+                            dur="1.5s"
+                            keyTimes="0;0.33;0.66;1"
+                            repeatCount="indefinite"
+                            type="translate"
+                            values="1 -2;3 2; 1 4; 2 6"
+                            calcMode="linear"
+                        ></animateTransform>
+                    ) : null}
                 </circle>
             </g>
         </svg>

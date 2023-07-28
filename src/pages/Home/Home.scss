@@ -13,8 +13,12 @@
 }
 
 @mixin bg_settings() {
-    background-size: 400% 400%;
-    animation: gradient 15s linear infinite;
+    background-size: 100% 100%;
+
+    @include is-screen(desctop) {
+        background-size: 400% 400%;
+        animation: gradient 15s linear infinite;
+    }
 }
 
 .Home {

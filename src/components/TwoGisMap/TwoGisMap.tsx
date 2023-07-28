@@ -3,6 +3,7 @@ import { gisMaps } from "./gisMapModule";
 import { useAppStoreSelector, useAppStoreDispatch } from "../../redux/redux_hooks";
 import { updateCity, setAutoDetect } from "../../redux/slises/weather_lat_lon";
 import { CITY_NO_NAME_MAP_TAP } from "../../utils/global_vars";
+import { is_device_mobile } from "../../utils/util_functions";
 
 // страница с API https://api.2gis.ru/doc/maps/ru/quickstart/
 
@@ -12,6 +13,7 @@ interface ITwoGisMaps {
     addClassName?: string[];
     center?: [number, number];
     startZoom?: 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19;
+    isFlyToAnim?: "true" | "false" | "auto";
     mapInitConfig?: object;
 }
 
@@ -23,7 +25,7 @@ const map_base_config = {
     closePopupOnClick: false,
 };
 
-function TwoGisMaps({ center = [1.0, 1.0], startZoom = 4, mapInitConfig = {}, addClassName = [""] }: TProps) {
+function TwoGisMaps({ center = [1.0, 1.0], startZoom = 4, mapInitConfig = {}, addClassName = [""], isFlyToAnim = "auto" }: TProps) {
     const componentClassName = [...addClassName, "TwoGisMaps_wrapper"].join(" ");
     const isFirstRender = useRef(false); // защита от повторного перерендера в режиме React.StrictMode
     const MapId = useId();
@@ -32,6 +34,13 @@ function TwoGisMaps({ center = [1.0, 1.0], startZoom = 4, mapInitConfig = {}, ad
     const markersLayer = useRef<any>(null); // слой с маркерами карты
     const marker = useRef<any>(null); // маркер на карте, для которой показхан прогноз погоды
     const storeDispatch = useAppStoreDispatch();
+
+    // странно но тут эта проверка корректно работает при изменении ресайза, несмотря на то что явно тут никаких обработчиков ресайза нету
+    const calc_isFlyToAnim = () => {
+        if (isFlyToAnim == "auto") return !is_device_mobile();
+        if (isFlyToAnim == "true") return true;
+        return false;
+    };
 
     const on_map_click = (e: any) => {
         let map_clicked_lat = Number((e.latlng.lat as Number).toFixed(3));
@@ -96,7 +105,7 @@ function TwoGisMaps({ center = [1.0, 1.0], startZoom = 4, mapInitConfig = {}, ad
             new_markersLayer.addTo(map); // добавляем новый слой на карты
         }
 
-        map.flyTo([lat, lon], 14, { duration: 3.0 }); // перемещаем окно карты на этот маркер
+        map.flyTo([lat, lon], 14, { duration: 3.0, animate: calc_isFlyToAnim() }); // перемещаем окно карты на этот маркер
     };
 
     set_marker_on_city_pos();

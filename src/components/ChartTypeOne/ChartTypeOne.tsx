@@ -17,11 +17,12 @@ type TPointData = {
 type TChartTypeOneProps = {
     chartData: IChartDot[];
     pointsData: TPointData[];
+    chartAnimation?: boolean;
 };
 
 type TProps = Readonly<TChartTypeOneProps>;
 
-function ChartTypeOne({ chartData, pointsData }: TProps) {
+function ChartTypeOne({ chartData, pointsData, chartAnimation = true }: TProps) {
     return (
         <ResponsiveContainer width="100%" height="100%" debounce={200}>
             <AreaChart margin={{ top: 0, left: 0, right: 0, bottom: 0 }} data={chartData}>
@@ -46,6 +47,7 @@ function ChartTypeOne({ chartData, pointsData }: TProps) {
                                 stroke={point.pointLineCloror}
                                 fillOpacity={1}
                                 fill={`url(#color${point.pointName})`}
+                                isAnimationActive={chartAnimation}
                             />
                         </React.Fragment>
                     );

@@ -5,6 +5,7 @@ import { decode_dataIdRender } from "./City5d3hWeather";
 import type { TresponseObjListObj, TresponseObj } from "../../utils/fetch_5d3h_weather";
 import { get_text_date } from "../../utils/util_functions";
 import { addon_map } from "../../utils/util_functions";
+import { is_device_mobile } from "../../utils/util_functions";
 
 type TCity5d3hWeather_chartProps = {
     rawSortedWeather: React.MutableRefObject<TresponseObjListObj[][]>;
@@ -64,6 +65,7 @@ function City5d3hWeather_chart({ rawSortedWeather, dataIdRender, chartDataType }
                 };
             })}
             pointsData={[{ pointName: chartDataType, pointGradientCloror: "#f0f8ff", pointLineCloror: "#d33d29" }]}
+            chartAnimation={!is_device_mobile()}
         />
     );
 }

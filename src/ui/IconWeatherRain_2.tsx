@@ -1,5 +1,6 @@
 import React from "react";
 import "./IconWeatherRain_2.scss";
+import { is_device_mobile } from "../utils/util_functions";
 
 interface IIconWeatherRain_2Props {
     addClassName?: string[];
@@ -28,16 +29,18 @@ function IconWeatherRain_2({ addClassName = [""] }: TProps) {
                     ></path>
                     <circle className="IconWeatherRain_2__white" cx="17.4" cy="22.8" r="9.3"></circle>
                     <circle className="IconWeatherRain_2__white" cx="34.5" cy="21.1" r="15.6"></circle>
-                    <animateTransform
-                        attributeName="transform"
-                        attributeType="XML"
-                        dur="6s"
-                        keyTimes="0;0.5;1"
-                        repeatCount="indefinite"
-                        type="translate"
-                        values="0;5;0"
-                        calcMode="linear"
-                    ></animateTransform>
+                    {!is_device_mobile() ? (
+                        <animateTransform
+                            attributeName="transform"
+                            attributeType="XML"
+                            dur="6s"
+                            keyTimes="0;0.5;1"
+                            repeatCount="indefinite"
+                            type="translate"
+                            values="0;5;0"
+                            calcMode="linear"
+                        ></animateTransform>
+                    ) : null}
                 </g>
                 <g>
                     <path
@@ -45,16 +48,18 @@ function IconWeatherRain_2({ addClassName = [""] }: TProps) {
                         d="M54.7,22.3H33.4c-3.3,0-6-2.7-6-6v0c0-3.3,2.7-6,6-6h21.3c3.3,0,6,2.7,6,6v0 C60.7,19.6,58,22.3,54.7,22.3z"
                     ></path>
                     <circle className="IconWeatherRain_2__gray" cx="45.7" cy="10.7" r="10.7"></circle>
-                    <animateTransform
-                        attributeName="transform"
-                        attributeType="XML"
-                        dur="6s"
-                        keyTimes="0;0.5;1"
-                        repeatCount="indefinite"
-                        type="translate"
-                        values="0;-3;0"
-                        calcMode="linear"
-                    ></animateTransform>
+                    {!is_device_mobile() ? (
+                        <animateTransform
+                            attributeName="transform"
+                            attributeType="XML"
+                            dur="6s"
+                            keyTimes="0;0.5;1"
+                            repeatCount="indefinite"
+                            type="translate"
+                            values="0;-3;0"
+                            calcMode="linear"
+                        ></animateTransform>
+                    ) : null}
                 </g>
                 <g>
                     <path
@@ -65,25 +70,29 @@ function IconWeatherRain_2({ addClassName = [""] }: TProps) {
                         className="IconWeatherRain_2__rain"
                         d="M36.3,51.9c0,1.7-1.4,3.1-3.1,3.1c-1.7,0-3.1-1.4-3.1-3.1c0-1.7,3.1-7.8,3.1-7.8 S36.3,50.2,36.3,51.9z"
                     ></path>
-                    <animateTransform
-                        attributeName="transform"
-                        attributeType="XML"
-                        dur="1s"
-                        keyTimes="0;1"
-                        repeatCount="indefinite"
-                        type="translate"
-                        values="2 0;2 10"
-                        calcMode="linear"
-                    ></animateTransform>
-                    <animate
-                        attributeType="CSS"
-                        attributeName="opacity"
-                        dur="1s"
-                        keyTimes="0;1"
-                        repeatCount="indefinite"
-                        values="1;0"
-                        calcMode="linear"
-                    ></animate>
+                    {!is_device_mobile() ? (
+                        <>
+                            <animateTransform
+                                attributeName="transform"
+                                attributeType="XML"
+                                dur="1s"
+                                keyTimes="0;1"
+                                repeatCount="indefinite"
+                                type="translate"
+                                values="2 0;2 10"
+                                calcMode="linear"
+                            ></animateTransform>
+                            <animate
+                                attributeType="CSS"
+                                attributeName="opacity"
+                                dur="1s"
+                                keyTimes="0;1"
+                                repeatCount="indefinite"
+                                values="1;0"
+                                calcMode="linear"
+                            ></animate>
+                        </>
+                    ) : null}
                 </g>
             </g>
         </svg>

@@ -1,5 +1,6 @@
 import React from "react";
 import "./IconWeatherCloudyDay.scss";
+import { is_device_mobile } from "../utils/util_functions";
 
 interface IIconWeatherCloudyDayProps {
     addClassName?: string[];
@@ -28,16 +29,18 @@ function IconWeatherCloudyDay({ addClassName = [""] }: TProps) {
                     ></path>
                     <circle className="IconWeatherCloudyDay__white" cx="17.4" cy="25.5" r="9.3"></circle>
                     <circle className="IconWeatherCloudyDay__white" cx="34.5" cy="23.9" r="15.6"></circle>
-                    <animateTransform
-                        attributeName="transform"
-                        attributeType="XML"
-                        dur="6s"
-                        keyTimes="0;0.5;1"
-                        repeatCount="indefinite"
-                        type="translate"
-                        values="0;5;0"
-                        calcMode="linear"
-                    ></animateTransform>
+                    {!is_device_mobile() ? (
+                        <animateTransform
+                            attributeName="transform"
+                            attributeType="XML"
+                            dur="6s"
+                            keyTimes="0;0.5;1"
+                            repeatCount="indefinite"
+                            type="translate"
+                            values="0;5;0"
+                            calcMode="linear"
+                        ></animateTransform>
+                    ) : null}
                 </g>
                 <g>
                     <circle className="IconWeatherCloudyDay__yellow" cx="31.4" cy="18.5" r="9"></circle>
@@ -74,27 +77,31 @@ function IconWeatherCloudyDay({ addClassName = [""] }: TProps) {
                             className="IconWeatherCloudyDay__yellow"
                             d="M40.3,26.1L40.3,26.1c0.3-0.3,0.6-0.3,0.8-0.1l4.2,3.6c0.2,0.2,0.3,0.6,0.1,0.8l-0.1,0.1 c-0.2,0.2-0.6,0.3-0.8,0.1l-4.2-3.6C40.1,26.7,40,26.3,40.3,26.1z"
                         ></path>
-                        <animate
-                            attributeType="CSS"
-                            attributeName="opacity"
-                            dur="0.5s"
-                            keyTimes="0;0.5;1"
-                            repeatCount="indefinite"
-                            values="1;0.6;1"
-                            calcMode="linear"
-                        ></animate>
+                        {!is_device_mobile() ? (
+                            <animate
+                                attributeType="CSS"
+                                attributeName="opacity"
+                                dur="0.5s"
+                                keyTimes="0;0.5;1"
+                                repeatCount="indefinite"
+                                values="1;0.6;1"
+                                calcMode="linear"
+                            ></animate>
+                        ) : null}
                     </g>
                 </g>
-                <animateTransform
-                    attributeName="transform"
-                    attributeType="XML"
-                    dur="2s"
-                    keyTimes="0;1"
-                    repeatCount="indefinite"
-                    type="scale"
-                    values="1;1"
-                    calcMode="linear"
-                ></animateTransform>
+                {!is_device_mobile() ? (
+                    <animateTransform
+                        attributeName="transform"
+                        attributeType="XML"
+                        dur="2s"
+                        keyTimes="0;1"
+                        repeatCount="indefinite"
+                        type="scale"
+                        values="1;1"
+                        calcMode="linear"
+                    ></animateTransform>
+                ) : null}
             </g>
             <g>
                 <path
@@ -102,16 +109,18 @@ function IconWeatherCloudyDay({ addClassName = [""] }: TProps) {
                     d="M55.7,25.1H34.4c-3.3,0-6-2.7-6-6v0c0-3.3,2.7-6,6-6h21.3c3.3,0,6,2.7,6,6v0 C61.7,22.4,59,25.1,55.7,25.1z"
                 ></path>
                 <circle className="IconWeatherCloudyDay__gray" cx="46.7" cy="13.4" r="10.7"></circle>
-                <animateTransform
-                    attributeName="transform"
-                    attributeType="XML"
-                    dur="6s"
-                    keyTimes="0;0.5;1"
-                    repeatCount="indefinite"
-                    type="translate"
-                    values="0;-3;0"
-                    calcMode="linear"
-                ></animateTransform>
+                {!is_device_mobile() ? (
+                    <animateTransform
+                        attributeName="transform"
+                        attributeType="XML"
+                        dur="6s"
+                        keyTimes="0;0.5;1"
+                        repeatCount="indefinite"
+                        type="translate"
+                        values="0;-3;0"
+                        calcMode="linear"
+                    ></animateTransform>
+                ) : null}
             </g>
         </svg>
     );

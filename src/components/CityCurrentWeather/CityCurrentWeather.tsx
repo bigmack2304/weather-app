@@ -14,10 +14,13 @@ import { useAppStoreSelector, useAppStoreDispatch } from "../../redux/redux_hook
 import { updateBackgroundClass } from "../../redux/slises/homePage";
 import { updateCity } from "../../redux/slises/weather_lat_lon";
 import { CITY_NO_NAME_MAP_TAP } from "../../utils/global_vars";
+import { HocOnResizeUpdate } from "../../HOC/OnResizeUpdate/OnResizeUpdate";
 
 interface ICityCurrentWeatherProps {}
 
 type TProps = Readonly<ICityCurrentWeatherProps>;
+
+const WeatherBaseInfo_onResizeUpd = HocOnResizeUpdate(WeatherBaseInfo);
 
 function CityCurrentWeather({}: TProps = {}) {
     const { lat, lon, cityName, isAutoDetect } = useAppStoreSelector((state) => state.weatherGeo);
@@ -113,7 +116,7 @@ function CityCurrentWeather({}: TProps = {}) {
 
                     <div className="CityCurrentWeather__main_wrapper">
                         <div className="CityCurrentWeather__main">
-                            <WeatherBaseInfo
+                            <WeatherBaseInfo_onResizeUpd
                                 weather_data={{
                                     sunrise: currentWeather.sys.sunrise,
                                     sunset: currentWeather.sys.sunset,

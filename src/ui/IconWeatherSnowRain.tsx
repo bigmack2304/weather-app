@@ -1,5 +1,6 @@
 import React from "react";
 import "./IconWeatherSnowRain.scss";
+import { is_device_mobile } from "../utils/util_functions";
 
 interface IIconWeatherSnowRainProps {
     addClassName?: string[];
@@ -30,41 +31,47 @@ function IconWeatherSnowRain({ addClassName = [""] }: TProps) {
                     <circle className="IconWeatherSnowRain__white" cx="34.5" cy="15.6" r="15.6"></circle>
                 </g>
                 <circle className="IconWeatherSnowRain__snow" cx="37" cy="43.5" r="3">
-                    <animateTransform
-                        attributeName="transform"
-                        attributeType="XML"
-                        dur="1.5s"
-                        keyTimes="0;0.33;0.66;1"
-                        repeatCount="indefinite"
-                        type="translate"
-                        values="-4 -2;-2 2; -2 4; -3 6"
-                        calcMode="linear"
-                    ></animateTransform>
+                    {!is_device_mobile() ? (
+                        <animateTransform
+                            attributeName="transform"
+                            attributeType="XML"
+                            dur="1.5s"
+                            keyTimes="0;0.33;0.66;1"
+                            repeatCount="indefinite"
+                            type="translate"
+                            values="-4 -2;-2 2; -2 4; -3 6"
+                            calcMode="linear"
+                        ></animateTransform>
+                    ) : null}
                 </circle>
                 <g>
                     <path
                         className="IconWeatherSnowRain__rain"
                         d="M36.3,51.9c0,1.7-1.4,3.1-3.1,3.1c-1.7,0-3.1-1.4-3.1-3.1c0-1.7,3.1-7.8,3.1-7.8 S36.3,50.2,36.3,51.9z"
                     ></path>
-                    <animateTransform
-                        attributeName="transform"
-                        attributeType="XML"
-                        dur="1s"
-                        keyTimes="0;1"
-                        repeatCount="indefinite"
-                        type="translate"
-                        values="-12 -5;-12 5"
-                        calcMode="linear"
-                    ></animateTransform>
-                    <animate
-                        attributeType="CSS"
-                        attributeName="opacity"
-                        dur="1s"
-                        keyTimes="0;1"
-                        repeatCount="indefinite"
-                        values="1;0"
-                        calcMode="linear"
-                    ></animate>
+                    {!is_device_mobile() ? (
+                        <>
+                            <animateTransform
+                                attributeName="transform"
+                                attributeType="XML"
+                                dur="1s"
+                                keyTimes="0;1"
+                                repeatCount="indefinite"
+                                type="translate"
+                                values="-12 -5;-12 5"
+                                calcMode="linear"
+                            ></animateTransform>
+                            <animate
+                                attributeType="CSS"
+                                attributeName="opacity"
+                                dur="1s"
+                                keyTimes="0;1"
+                                repeatCount="indefinite"
+                                values="1;0"
+                                calcMode="linear"
+                            ></animate>
+                        </>
+                    ) : null}
                 </g>
             </g>
         </svg>
