@@ -52,8 +52,8 @@ function ChartTypeOne({ chartData, pointsData, chartAnimation = true }: TProps) 
                         </React.Fragment>
                     );
                 })}
-                <XAxis dataKey={"name"} />
-                <YAxis width={50} />
+                <XAxis dataKey={(chartData) => chartData.name} interval={"preserveStart"} />
+                <YAxis width={50} interval={"preserveStart"} />
                 <CartesianGrid strokeDasharray="5 5" />
                 <Tooltip active={false} isAnimationActive={false} content={<CustomizedTooltip />} />
             </AreaChart>
