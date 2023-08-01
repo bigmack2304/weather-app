@@ -7,4 +7,9 @@
     flex-wrap: wrap;
     justify-content: center;
     gap: 20px;
+
+    &__icon2gis {
+        overflow: hidden;
+        border-radius: 5px;
+    }
 }

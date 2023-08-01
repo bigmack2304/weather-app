@@ -7,13 +7,15 @@ interface ILinkIconProps {
     children?: React.ReactNode;
     title?: string;
     href?: string;
+    addClassName?: string[];
 }
 
 type TProps = Readonly<ILinkIconProps>;
 
-function LinkIcon({ children, title = "", href = "" }: TProps) {
+function LinkIcon({ children, title = "", href = "", addClassName = [""] }: TProps) {
+    let componentClassName = [...addClassName, "LinkIcon"].join(" ");
     return (
-        <a className="LinkIcon" href={href} title={title}>
+        <a className={componentClassName} href={href} title={title}>
             {children}
         </a>
     );
