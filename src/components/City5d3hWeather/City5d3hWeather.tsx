@@ -157,7 +157,6 @@ function City5d3hWeather({}: TProps = {}) {
         // если не один день не выбран, выбираем первый по умолчанию
         if (sorted_days_weather.length > 0 && dataIdRender == "") {
             setDataIdRender(`${dt_from_string(sorted_days_weather[0][0].dt)}--0`);
-            console.log(sorted_days_weather);
         } // else {
         //     let decode_data_id_renderer = decode_dataIdRender(dataIdRender);
         //     setDataIdRender(

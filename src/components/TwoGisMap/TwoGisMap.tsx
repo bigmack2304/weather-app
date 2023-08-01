@@ -63,7 +63,6 @@ function TwoGisMaps({ center = [1.0, 1.0], startZoom = 4, mapInitConfig = {}, ad
     // монтирование компонента
     useEffect(() => {
         if (!isFirstRender.current) {
-            console.log(gisMaps);
             isFirstRender.current = true;
             setMap(new gisMaps.Map(MapId, { ...map_base_config, center, zoom: startZoom, ...mapInitConfig }));
         }
