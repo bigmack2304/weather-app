@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useId } from "react";
 import { AreaChart, XAxis, YAxis, Tooltip, CartesianGrid, Area, ResponsiveContainer } from "recharts";
 import { CustomizedTooltip } from "../CustomizedTooltip/CustomizedTooltip";
 
@@ -23,8 +23,10 @@ type TChartTypeOneProps = {
 type TProps = Readonly<TChartTypeOneProps>;
 
 function ChartTypeOne({ chartData, pointsData, chartAnimation = true }: TProps) {
+    const chartId = useId();
+
     return (
-        <ResponsiveContainer width="100%" height="100%" debounce={200}>
+        <ResponsiveContainer width="100%" height="100%" debounce={200} id={chartId}>
             <AreaChart margin={{ top: 0, left: 0, right: 0, bottom: 0 }} data={chartData}>
                 <defs>
                     {pointsData.map((point) => {
@@ -55,7 +57,7 @@ function ChartTypeOne({ chartData, pointsData, chartAnimation = true }: TProps) 
                 <XAxis dataKey={(chartData) => chartData.name} interval={"preserveStart"} />
                 <YAxis width={50} interval={"preserveStart"} />
                 <CartesianGrid strokeDasharray="5 5" />
-                <Tooltip active={false} isAnimationActive={false} content={<CustomizedTooltip />} />
+                <Tooltip active={false} isAnimationActive={false} content={<CustomizedTooltip chartId={chartId} />} />
             </AreaChart>
         </ResponsiveContainer>
     );

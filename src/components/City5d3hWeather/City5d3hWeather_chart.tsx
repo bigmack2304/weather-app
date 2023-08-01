@@ -33,16 +33,23 @@ function City5d3hWeather_chart({ rawSortedWeather, dataIdRender, chartDataType }
                 };
 
                 if (day.rain) {
-                    result = { ...result, Осадки: day.rain["3h"] };
+                    result = { ...result, ["Осадки"]: day.rain["3h"] };
                 }
 
                 if (day.snow) {
-                    result = { ...result, Осадки: day.snow["3h"] };
+                    result = { ...result, ["Осадки"]: day.snow["3h"] };
                 }
 
                 result = {
                     ...result,
                     ["Вер.осадков"]: addon_map(day.pop, 0.0, 1.0, 0, 100).toFixed(0),
+                };
+
+                break;
+
+            case "Облачность":
+                result = {
+                    ["Облачность"]: day.clouds ? day.clouds.all : 0,
                 };
 
                 break;

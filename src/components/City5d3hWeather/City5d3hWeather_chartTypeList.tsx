@@ -18,6 +18,10 @@ function City5d3hWeather_chartTypeList({ chartDataType, setChartDataType }: TPro
         setChartDataType(data_id);
     };
 
+    const onClickCloudy = (e: React.MouseEvent, data_id: string) => {
+        setChartDataType(data_id);
+    };
+
     return (
         <>
             <WeatherAltInfoTemplate
@@ -31,6 +35,12 @@ function City5d3hWeather_chartTypeList({ chartDataType, setChartDataType }: TPro
                 data_id={"Осадки"}
                 onClick={onClickRainfall}
                 addClassName={[chartDataType == "Осадки" ? "City5d3hWeather__day--active" : "", "City5d3hWeather__chart_type_item"]}
+            />
+            <WeatherAltInfoTemplate
+                slot_header="Облачность"
+                data_id={"Облачность"}
+                onClick={onClickCloudy}
+                addClassName={[chartDataType == "Облачность" ? "City5d3hWeather__day--active" : "", "City5d3hWeather__chart_type_item"]}
             />
         </>
     );

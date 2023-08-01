@@ -5,7 +5,9 @@ import { first_caller_delay_callback } from "../../utils/decorators";
 import { generateHashCode } from "../../utils/util_functions";
 import "./CustomizedTooltip.scss";
 
-interface ICustomizedTooltipProps {}
+interface ICustomizedTooltipProps {
+    chartId: string; // id самого внешнего контейнера в компонекнте графика
+}
 
 type TProps = TooltipProps<ValueType, NameType> & ICustomizedTooltipProps;
 
@@ -13,13 +15,15 @@ function CustomizedTooltip(external: TProps) {
     let isActive = external.active!;
     let timerId: number | null = null;
     let refTooltip = useRef<HTMLDivElement>(null);
-    //let data = external.payload![0];
     let data = external.payload && external.payload.length > 0 ? external.payload[0] : null;
 
+    // скрывает всплывающее окно. (если оно открыто то генерирует на графике событие узода мыши, это и приводит к закрытию)
     const toolTipHide = first_caller_delay_callback(
         () => {
             if (!isActive) return;
-            let tooltip = document.querySelector(".recharts-tooltip-wrapper");
+            let chart = document.querySelector(`[id="${external.chartId}"]`);
+            if (!chart) return;
+            let tooltip = chart.querySelector(`.recharts-tooltip-wrapper`);
             if (!tooltip) return;
             tooltip.dispatchEvent(new MouseEvent("mouseout", { bubbles: true }));
         },
@@ -50,7 +54,7 @@ function CustomizedTooltip(external: TProps) {
     }, [external]);
 
     const get_jsx_from_payload = () => {
-        let jsx_arr: any[] = [];
+        let jsx_arr: JSX.Element[] = [];
         let postfix: string = "";
 
         if (!data || !data.payload) return <></>;
@@ -68,6 +72,9 @@ function CustomizedTooltip(external: TProps) {
                 postfix = "мм/3ч";
             }
             if (elem.toLocaleLowerCase() == "вер.осадков") {
+                postfix = "%";
+            }
+            if (elem.toLocaleLowerCase() == "облачность") {
                 postfix = "%";
             }
 
