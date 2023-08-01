@@ -65,7 +65,7 @@ function TwoGisMaps({ center = [1.0, 1.0], startZoom = 4, mapInitConfig = {}, ad
         if (!isFirstRender.current) {
             console.log(gisMaps);
             isFirstRender.current = true;
-            setMap(new gisMaps.Map(`TwoGisMaps_${MapId}`, { ...map_base_config, center, zoom: startZoom, ...mapInitConfig }));
+            setMap(new gisMaps.Map(MapId, { ...map_base_config, center, zoom: startZoom, ...mapInitConfig }));
         }
     }, []);
 
@@ -116,7 +116,7 @@ function TwoGisMaps({ center = [1.0, 1.0], startZoom = 4, mapInitConfig = {}, ad
 
     return (
         <div className={componentClassName}>
-            <div id={`TwoGisMaps_${MapId}`} className="TwoGisMaps"></div>
+            <div id={MapId} className="TwoGisMaps"></div>
         </div>
     );
 }
