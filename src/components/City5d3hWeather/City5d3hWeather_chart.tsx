@@ -50,6 +50,24 @@ function City5d3hWeather_chart({ rawSortedWeather, dataIdRender, chartDataType }
             case "Облачность":
                 result = {
                     ["Облачность"]: day.clouds ? day.clouds.all : 0,
+                    // ["Видимость"]: day.visibility
+                    //     ? (day.visibility / 1000) % 1 > 0
+                    //         ? (day.visibility / 1000).toFixed(2)
+                    //         : day.visibility / 1000
+                    //     : 0,
+
+                    // аналог вложенного тернарного оператора только с использованием iife
+                    ["Видимость"]: (function () {
+                        if (!day.visibility) return 0;
+
+                        let visibility_value = day.visibility / 1000;
+
+                        if (visibility_value % 1 > 0) {
+                            return visibility_value.toFixed(2);
+                        }
+
+                        return visibility_value;
+                    })(),
                 };
 
                 break;

@@ -77,6 +77,9 @@ function CustomizedTooltip(external: TProps) {
             if (elem.toLocaleLowerCase() == "облачность") {
                 postfix = "%";
             }
+            if (elem.toLocaleLowerCase() == "видимость") {
+                postfix = "Км";
+            }
 
             let content: string = `${elem}: ${data.payload[elem]} ${postfix}`;
             let new_item = (
