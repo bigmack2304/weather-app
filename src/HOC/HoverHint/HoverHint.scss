@@ -1,3 +1,6 @@
+@import "../../global_styles/transitionGroupAnims.scss";
+@import "../../global_styles/global_vars.scss";
+
 .HoverHint {
     width: fit-content;
     height: fit-content;
@@ -13,6 +16,11 @@
         padding: 10px;
         border-radius: 5px;
     }
+}
+
+// добавим анимации появления для всплывающих подсказок для не мобильных устроиств
+@include is-screen(desctop) {
+    @include TransitionGroupAnims-type-1(".HoverHint__hint");
 }
 
 .HoverHint__after,

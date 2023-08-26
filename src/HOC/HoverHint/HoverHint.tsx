@@ -3,6 +3,7 @@ import "./HoverHint.scss";
 import { Portal } from "../Portal/Portal";
 import { GetElementOffsetsInDocument, add_to_macro_stack } from "../../utils/util_functions";
 import { first_caller_delay_callback } from "../../utils/decorators";
+import { CSSTransition } from "react-transition-group";
 
 // HOC добавляет внутреннему элементу всплывающее окно с текстом, при наведении курсора или при клике
 // расчитано что внутрь этого HOC будет помещен только один дочерний эемент. Если более одного то всплывающее окошко
@@ -117,10 +118,45 @@ function HoverHint({ children, hoverText = "", gap_vertical = 5, gap_horizontal 
                 let hint_data = hintRef.current!.getBoundingClientRect();
                 let to_render_hint_top = hoverData.current.target_vp_top - gap_vertical >= Math.floor(hint_data.height);
 
+                let HintTranformScales = { scaleX: 1, scaleY: 1 };
+
+                const calcHintTranformScales = () => {
+                    const hintTranformStyle = getComputedStyle(hintRef.current!).transform;
+
+                    if (hintTranformStyle.includes("matrix")) {
+                        try {
+                            //[scaleX, 0, 0, scaleY, 0, translateY]
+                            let transformStyleArr = hintTranformStyle
+                                .slice(7, hintTranformStyle.length - 1)
+                                .split(",")
+                                .map((item) => {
+                                    return Number(item);
+                                });
+
+                            if (typeof transformStyleArr[0] == "number" && typeof transformStyleArr[3] == "number") {
+                                HintTranformScales.scaleX = transformStyleArr[0];
+                                HintTranformScales.scaleY = transformStyleArr[3];
+                            }
+                        } catch (e) {
+                            console.error(e);
+                        }
+                    }
+                };
+
+                calcHintTranformScales();
+
                 hoverData.current = {
                     ...hoverData.current,
-                    hint_h: Math.floor(hint_data.height),
-                    hint_w: Math.floor(hint_data.width),
+                    hint_h: Math.floor(
+                        HintTranformScales.scaleY < 1
+                            ? hint_data.height * HintTranformScales.scaleY
+                            : hint_data.height / HintTranformScales.scaleY
+                    ),
+                    hint_w: Math.floor(
+                        HintTranformScales.scaleX < 1
+                            ? hint_data.width * HintTranformScales.scaleX
+                            : hint_data.width / HintTranformScales.scaleX
+                    ),
                     to_render_hint_top: to_render_hint_top,
                 };
             };
@@ -231,7 +267,7 @@ function HoverHint({ children, hoverText = "", gap_vertical = 5, gap_horizontal 
     return (
         <div className="HoverHint" onMouseMove={onMove} ref={hoverHintRef}>
             {children}
-            {isHover ? (
+            <CSSTransition in={isHover} classNames="HoverHint__hint" timeout={200} nodeRef={hintRef} mountOnEnter unmountOnExit>
                 <Portal>
                     <div className="HoverHint__hint" ref={hintRef}>
                         <div className="HoverHint__before"></div>
@@ -239,7 +275,7 @@ function HoverHint({ children, hoverText = "", gap_vertical = 5, gap_horizontal 
                         {hoverText}
                     </div>
                 </Portal>
-            ) : null}
+            </CSSTransition>
         </div>
     );
 }

@@ -1,0 +1,40 @@
+// варианты появления и исчезания
+
+@mixin TransitionGroupAnims-type-1($baseSelector) {
+    /////////////////////////////////////////////////////////
+    // появление
+    #{$baseSelector}-enter {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    // начало анимации
+    #{$baseSelector}-enter-active {
+        opacity: 1;
+        transition: all 200ms;
+        transform: translateY(0px);
+    }
+
+    // конец анимации
+    #{$baseSelector}-enter-done {
+        opacity: 1;
+    }
+
+    /////////////////////////////////////////////////////////
+    // исчезание
+    #{$baseSelector}-exit {
+        opacity: 1;
+    }
+
+    // начало анимации
+    #{$baseSelector}-exit-active {
+        opacity: 0;
+        transform: translateY(-10px);
+        transition: all 200ms;
+    }
+
+    // конец анимации
+    #{$baseSelector}-exit-done {
+        opacity: 0;
+    }
+}
