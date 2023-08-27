@@ -4,6 +4,7 @@ import { Portal } from "../Portal/Portal";
 import { GetElementOffsetsInDocument, add_to_macro_stack } from "../../utils/util_functions";
 import { first_caller_delay_callback } from "../../utils/decorators";
 import { CSSTransition } from "react-transition-group";
+import { is_device_mobile } from "../../utils/util_functions";
 
 // HOC добавляет внутреннему элементу всплывающее окно с текстом, при наведении курсора или при клике
 // расчитано что внутрь этого HOC будет помещен только один дочерний эемент. Если более одного то всплывающее окошко
@@ -267,7 +268,21 @@ function HoverHint({ children, hoverText = "", gap_vertical = 5, gap_horizontal 
     return (
         <div className="HoverHint" onMouseMove={onMove} ref={hoverHintRef}>
             {children}
-            <CSSTransition in={isHover} classNames="HoverHint__hint" timeout={200} nodeRef={hintRef} mountOnEnter unmountOnExit>
+            {/* на десктопах используем CSSTransition, на мобилах нет */}
+            {!is_device_mobile() ? (
+                <CSSTransition in={isHover} classNames="HoverHint__hint" timeout={200} nodeRef={hintRef} mountOnEnter unmountOnExit>
+                    <Portal>
+                        <div className="HoverHint__inner_wrapper" ref={hintRef}>
+                            <div className="HoverHint__hint">
+                                <div className="HoverHint__before"></div>
+                                <div className="HoverHint__after"></div>
+                                {hoverText}
+                            </div>
+                        </div>
+                    </Portal>
+                </CSSTransition>
+            ) : /* на мобильных используем старую логику и разметку*/
+            isHover ? (
                 <Portal>
                     <div className="HoverHint__hint" ref={hintRef}>
                         <div className="HoverHint__before"></div>
@@ -275,7 +290,7 @@ function HoverHint({ children, hoverText = "", gap_vertical = 5, gap_horizontal 
                         {hoverText}
                     </div>
                 </Portal>
-            </CSSTransition>
+            ) : null}
         </div>
     );
 }

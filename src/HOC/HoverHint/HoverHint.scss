@@ -7,6 +7,10 @@
     display: contents;
     cursor: help;
 
+    &__inner_wrapper {
+        position: absolute;
+    }
+
     &__hint {
         position: relative;
         background-color: rgb(39, 39, 39);
@@ -15,6 +19,11 @@
         font-size: 1rem;
         padding: 10px;
         border-radius: 5px;
+
+        @include is-screen(desctop) {
+            width: max-content;
+            max-width: 35dvw;
+        }
     }
 }
 
