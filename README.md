@@ -45,6 +45,7 @@
 #### Используемые библиотеки
 
 -   [Recharts (графики)](https://recharts.org/en-US/)
+-   [React Transition Group (технология для анимации переключения состояния)](https://reactcommunity.org/react-transition-group/)
 
 #### Используемые API
 
