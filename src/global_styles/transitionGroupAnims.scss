@@ -2,39 +2,70 @@
 
 @mixin TransitionGroupAnims-type-1($baseSelector) {
     /////////////////////////////////////////////////////////
-    // появление
+    // появление (начало анимации)
     #{$baseSelector}-enter {
         opacity: 0;
         transform: translateY(-10px);
     }
 
-    // начало анимации
+    // конец анимации (состояние)
     #{$baseSelector}-enter-active {
         opacity: 1;
         transition: all 200ms;
         transform: translateY(0px);
     }
 
-    // конец анимации
+    // финальное состояние
     #{$baseSelector}-enter-done {
-        opacity: 1;
     }
 
     /////////////////////////////////////////////////////////
-    // исчезание
+    // исчезание (начало анимации)
     #{$baseSelector}-exit {
         opacity: 1;
     }
 
-    // начало анимации
+    // конец анимации (состояние)
     #{$baseSelector}-exit-active {
         opacity: 0;
         transform: translateY(-10px);
         transition: all 200ms;
     }
 
-    // конец анимации
+    // финальное состояние
     #{$baseSelector}-exit-done {
-        opacity: 0;
+    }
+}
+
+@mixin TransitionGroupAnims-type-2($baseSelector) {
+    /////////////////////////////////////////////////////////
+    // появление (начало анимации)
+    #{$baseSelector}-enter {
+    }
+
+    // конец анимации (состояние)
+    #{$baseSelector}-enter-active {
+        transform: translateY(-305px);
+        transition: ease-out 250ms;
+    }
+
+    // финальное состояние
+    #{$baseSelector}-enter-done {
+    }
+
+    /////////////////////////////////////////////////////////
+    // исчезание (начало анимации)
+    #{$baseSelector}-exit {
+    }
+
+    // конец анимации (состояние)
+    #{$baseSelector}-exit-active {
+        opacity: 0.4;
+        transform: translateY(-405px);
+        transition: ease-out 250ms;
+    }
+
+    // финальное состояние
+    #{$baseSelector}-exit-done {
     }
 }

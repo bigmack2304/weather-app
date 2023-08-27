@@ -1,4 +1,5 @@
 @import "./../../global_styles/global_vars.scss";
+@import "./../../global_styles/transitionGroupAnims.scss";
 
 .City5d3hWeather {
     width: 100%;
@@ -109,10 +110,24 @@
 
         @include is-screen(desctop) {
             margin-top: 0;
-            justify-content: center;
+            justify-content: flex-end;
+            flex-direction: column-reverse;
+            flex-wrap: nowrap;
             width: 100%;
             gap: 5px;
+            max-height: 300px;
+            overflow: hidden;
         }
+    }
+
+    &__day_time_list {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: stretch;
+        justify-content: center;
+        gap: 5px;
+        width: 100%;
     }
 
     &__day_time_weather {
@@ -286,4 +301,9 @@
         background-color: white;
         padding: 5px;
     }
+}
+
+// анимация перелистывания для блоков прогноза по часам
+@include is-screen(desctop) {
+    @include TransitionGroupAnims-type-2(".City5d3hWeather__day_time_list");
 }
