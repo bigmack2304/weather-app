@@ -5,17 +5,9 @@
     "homepage": ".",
     "dependencies": {
         "@reduxjs/toolkit": "^1.9.5",
-        "@testing-library/jest-dom": "^5.16.5",
-        "@testing-library/react": "^13.4.0",
-        "@testing-library/user-event": "^13.5.0",
-        "@types/jest": "^27.5.2",
-        "@types/node": "^16.18.20",
-        "@types/react": "^18.0.29",
-        "@types/react-dom": "^18.0.11",
         "2gis-maps": "^3.7.3",
         "classnames": "^2.3.2",
         "node-sass-chokidar": "^2.0.0",
-        "npm-run-all": "^4.1.5",
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
         "react-redux": "^8.0.5",
@@ -23,7 +15,6 @@
         "react-scripts": "5.0.1",
         "react-transition-group": "^4.4.5",
         "recharts": "^2.5.0",
-        "typescript": "^4.9.5",
         "web-vitals": "^2.1.4"
     },
     "scripts": {
@@ -56,6 +47,16 @@
         ]
     },
     "devDependencies": {
-        "@types/recharts": "^1.8.24"
+        "@types/recharts": "^1.8.24",
+        "@testing-library/jest-dom": "^5.16.5",
+        "@testing-library/react": "^13.4.0",
+        "@testing-library/user-event": "^13.5.0",
+        "@types/jest": "^27.5.2",
+        "@types/node": "^16.18.20",
+        "@types/react": "^18.0.29",
+        "@types/react-dom": "^18.0.11",
+        "@types/react-transition-group": "^4.4.6",
+        "npm-run-all": "^4.1.5",
+        "typescript": "^4.9.5"
     }
 }
