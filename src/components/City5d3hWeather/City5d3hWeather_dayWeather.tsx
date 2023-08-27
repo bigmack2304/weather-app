@@ -19,7 +19,7 @@ type TProps = Readonly<TCity5d3hWeather_dayWeatherProps>;
 
 function City5d3hWeather_dayWeather({ dataIdRender, sorted_days_weather, weather }: TProps) {
     let day_id = Number(decode_dataIdRender(dataIdRender).index);
-    const [desctopListRef, setDesctopListRef] = useState<Map<number, React.RefObject<HTMLDivElement>>>(new Map()); // эта конструкция должна хранить зарезервированные рефы на каждый City5d3hWeather__day_time_list, однако почемуто она хранит ссылку на текущий отображаемый лист, странно но даже так все работает. Нужно для того чтобы TransitionGroup понимал что мы добавляем а что удаляем
+    const [desctopListRef, setDesctopListRef] = useState<Map<number, React.RefObject<HTMLDivElement>>>(new Map()); // эта конструкция должна хранить зарезервированные рефы на каждый City5d3hWeather__day_time_list. Нужно для того чтобы TransitionGroup понимал что мы добавляем а что удаляем
 
     useEffect(() => {
         let temp = new Map<number, React.RefObject<HTMLDivElement>>();
