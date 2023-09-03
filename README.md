@@ -17,32 +17,35 @@
 
 -   Проект создан на базе React (Create-React-App), который включает в себя Webpack, ESlint, Jest и многие другие библиотеки.
 -   Реализован "резиново-адаптивный" интерфейс, под мобильные устройства и мониторы.
--   После загрузки данных, для страницы генерируется уникальный хеш, это позволяет делится ссылкой на прогноз для нужного города.
--   Все искомые города сохраняются в Local Storage и отображаются в истории поисков на странице
+-   В качестве менеджера состояния сайта используется Redux ToolKit
+-   Интегрирован React Router для генерирования URL для каждого состояния сайта.
+-   Страницы и некоторые компоненты работают в конкурентном режиме React
+-   Все искомые города сохраняются в Local Storage и отображаются в истории поисков на странице. Поиск по карте не сохраняется.
 -   Анимированый фон, зависящий от текущего времяни и погодных условий.
 -   Настроенна автоматическая сборка, тесты, и развёртывание страницы на github pages после кождого коммита или PR.
 
 #### Используемые технологии
 
--   React (CRA)
--   Redux Tool Kit
--   Type script
--   Java script
 -   HTML 5
 -   CSS 3
 -   SCSS
+-   Java script
+-   Type script
+-   React (CRA)
+-   React router
+-   Redux ToolKit
 -   Jest
 
     **Дополнительно**
 
--   prettier
--   github
+-   git
 -   github Actions
 -   github Pages
 
 #### Используемые библиотеки
 
 -   [Recharts (графики)](https://recharts.org/en-US/)
+-   [React Transition Group (технология для анимации переключения состояния)](https://reactcommunity.org/react-transition-group/)
 
 #### Используемые API
 
@@ -50,3 +53,5 @@
 
 -   [Текущяя погода](https://openweathermap.org/current)
 -   [Прогноз на 5 дней](https://openweathermap.org/forecast5)
+
+[API 2Gis](https://api.2gis.ru/doc/maps/ru/quickstart/)

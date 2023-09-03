@@ -1,0 +1,71 @@
+// варианты появления и исчезания
+
+@mixin TransitionGroupAnims-type-1($baseSelector) {
+    /////////////////////////////////////////////////////////
+    // появление (начало анимации)
+    #{$baseSelector}-enter {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    // конец анимации (состояние)
+    #{$baseSelector}-enter-active {
+        opacity: 1;
+        transition: all 200ms;
+        transform: translateY(0px);
+    }
+
+    // финальное состояние
+    #{$baseSelector}-enter-done {
+    }
+
+    /////////////////////////////////////////////////////////
+    // исчезание (начало анимации)
+    #{$baseSelector}-exit {
+        opacity: 1;
+    }
+
+    // конец анимации (состояние)
+    #{$baseSelector}-exit-active {
+        opacity: 0;
+        transform: translateY(-10px);
+        transition: all 200ms;
+    }
+
+    // финальное состояние
+    #{$baseSelector}-exit-done {
+    }
+}
+
+@mixin TransitionGroupAnims-type-2($baseSelector) {
+    /////////////////////////////////////////////////////////
+    // появление (начало анимации)
+    #{$baseSelector}-enter {
+    }
+
+    // конец анимации (состояние)
+    #{$baseSelector}-enter-active {
+        transform: translateY(-305px);
+        transition: ease-out 250ms;
+    }
+
+    // финальное состояние
+    #{$baseSelector}-enter-done {
+    }
+
+    /////////////////////////////////////////////////////////
+    // исчезание (начало анимации)
+    #{$baseSelector}-exit {
+    }
+
+    // конец анимации (состояние)
+    #{$baseSelector}-exit-active {
+        opacity: 0.4;
+        transform: translateY(-405px);
+        transition: ease-out 250ms;
+    }
+
+    // финальное состояние
+    #{$baseSelector}-exit-done {
+    }
+}

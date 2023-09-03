@@ -4,10 +4,10 @@ import React, { useState, useCallback } from "react";
 // handleUpdate функция неизменна между рендерами
 
 function useHandleUpdate(): [handleupdate: () => void] {
-    let [HandleUpdateVal, setHandleUpdateVal] = useState<object>({});
+    let [HandleUpdateVal, setHandleUpdateVal] = useState<{ val: boolean }>({ val: true });
 
     const handleUpdate = useCallback(() => {
-        setHandleUpdateVal({ ...HandleUpdateVal });
+        setHandleUpdateVal({ ...HandleUpdateVal, val: !HandleUpdateVal.val });
     }, []);
 
     return [handleUpdate];

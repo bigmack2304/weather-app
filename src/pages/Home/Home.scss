@@ -13,13 +13,15 @@
 }
 
 @mixin bg_settings() {
-    background-size: 400% 400%;
-    animation: gradient 15s linear infinite;
+    background-size: 100% 100%;
+
+    @include is-screen(desctop) {
+        background-size: 400% 400%;
+        animation: gradient 15s linear infinite;
+    }
 }
 
 .Home {
-    background: #c9c9c9;
-    min-height: 100vh;
     display: flex;
     flex-direction: column;
 
@@ -31,7 +33,7 @@
     }
 
     &__weather_now {
-        min-height: 100vh;
+        min-height: calc(max(500px, 100dvh));
         display: flex;
         flex-direction: column;
         flex-wrap: nowrap;
@@ -45,7 +47,7 @@
     }
 
     &__weather_week {
-        min-height: 100vh;
+        min-height: calc(max(500px, 100dvh));
         box-shadow: black 0px -3px 20px 0px;
         display: flex;
         flex-direction: column;
@@ -53,12 +55,40 @@
         align-items: stretch;
         justify-content: flex-start;
         padding-top: 20px;
+        padding-bottom: 30px;
 
         @include is-screen(desctop) {
             box-shadow: rgba(0, 0, 0, 0) 0px 0px 0px 0px;
             min-height: fit-content;
             padding-top: 60px;
-            padding-bottom: 30px;
+            padding-bottom: 40px;
+        }
+    }
+
+    &__maps_wrapper {
+        padding: 10px;
+    }
+
+    &__maps {
+        background-color: $WEATCHER_INFO_ALT_NOACTIVE_BACKROUND;
+        margin: 60px auto 0 auto;
+        padding: 10px;
+        display: flex;
+        width: 100%;
+
+        & > .TwoGisMaps {
+            height: 400px;
+            width: 100%;
+        }
+
+        @include is-screen(mobile) {
+            padding: 0;
+            border-radius: 3px;
+            overflow: hidden;
+
+            & > .TwoGisMaps {
+                height: 40vh;
+            }
         }
     }
 

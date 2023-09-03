@@ -1,77 +1,38 @@
-import React, { memo, useEffect, useRef } from "react";
+import React, { memo, useEffect } from "react";
 import "./Home.scss";
 import { deep_object_is_equal } from "../../utils/is_equal";
-import { Footer } from "../../components/Footer/Footer";
-import { Header } from "../../components/Header/Header";
 import { CityCurrentWeather } from "../../components/CityCurrentWeather/CityCurrentWeather";
 import { City5d3hWeather } from "../../components/City5d3hWeather/City5d3hWeather";
 import type { ICity5d3hWeatherProps } from "../../components/City5d3hWeather/City5d3hWeather";
-import { update_meta_title, unshuft_unique_obj_to_array_force, update_meta_desc } from "../../utils/util_functions";
-import { useLoacalStorage } from "../../hooks/useLocalStorage";
-import { useHashAddressBar } from "../../hooks/useHashAddressBar";
-import { PortalVieport } from "../../components/PortalVieport/PortalVieport";
 import "./../../utils/chart_fix";
 import "./../../global_styles/chart_fix.scss";
 import { ErrorCacher } from "../../HOC/ErrorCacher/ErrorCacher";
 import { HocOnResizeUpdate } from "../../HOC/OnResizeUpdate/OnResizeUpdate";
-import type { TStorageHistoryCity } from "../../appLocalStorage/appLoacalStorage";
-
-import { updateCity } from "../../redux/slises/weather_lat_lon";
 import { updatePageSelector } from "../../redux/slises/homePage";
 import { useAppStoreDispatch, useAppStoreSelector } from "../../redux/redux_hooks";
+import TwoGisMaps from "../../components/TwoGisMap/TwoGisMap";
 
 const City5d3hWeather_onResizeUpdate = HocOnResizeUpdate<ICity5d3hWeatherProps>(City5d3hWeather); // City5d3hWeather нужно перерендоревать при ресайзе
 
-// Начальная страница
+interface IHomePageProps {}
 
-function HomePage() {
-    let [localStorageData, setLocalStorageData] = useLoacalStorage(false);
-    let [is_hashOnFirstLoad, set_hash, clear_hash, get_hash] = useHashAddressBar();
+type TProps = Readonly<IHomePageProps>;
 
-    let stateWeatherGeo = useAppStoreSelector((state) => state.weatherGeo);
+function HomePage({}: TProps) {
+    const { backgroundClass } = useAppStoreSelector((state) => state.homePage);
     let stateWeatherGeoDispatch = useAppStoreDispatch();
 
+    // при вервой загрузке обновляем  селектор этого компонента в сторе
     useEffect(() => {
-        let firstLoadState = {
-            ...stateWeatherGeo,
-            lat: is_hashOnFirstLoad ? Number(get_hash().lat) : localStorageData.history[0]?.lat ?? undefined,
-            lon: is_hashOnFirstLoad ? Number(get_hash().lon) : localStorageData.history[0]?.lon ?? undefined,
-            cityName: is_hashOnFirstLoad ? get_hash().city : localStorageData.history[0]?.name ?? undefined,
-        };
-
-        stateWeatherGeoDispatch(updateCity({ lat: firstLoadState.lat, lon: firstLoadState.lon, cityName: firstLoadState.cityName }));
-        stateWeatherGeoDispatch(updatePageSelector("main[class*='Home']"));
-
+        stateWeatherGeoDispatch(updatePageSelector("div[class*='Home']"));
         return () => {
             stateWeatherGeoDispatch(updatePageSelector(""));
         };
     }, []);
 
-    useEffect(() => {
-        const cityName = stateWeatherGeo.cityName;
-
-        // обновим метаданные тайтла
-        update_meta_title(cityName);
-        update_meta_desc(cityName);
-
-        if (cityName && cityName !== "") {
-            // записываем город в локалсторадж
-            let new_data = { name: stateWeatherGeo.cityName!, lat: stateWeatherGeo.lat!, lon: stateWeatherGeo.lon! };
-            let new_history = unshuft_unique_obj_to_array_force(localStorageData.history, new_data) as TStorageHistoryCity[];
-            setLocalStorageData({ ...localStorageData, history: [...new_history] });
-
-            // обновляем хэш
-            clear_hash();
-            set_hash("city", cityName);
-            set_hash("lat", stateWeatherGeo.lat!.toString());
-            set_hash("lon", stateWeatherGeo.lon!.toString());
-        }
-    }, [stateWeatherGeo.cityName]);
-
     return (
         <>
-            <main className="Home">
-                <Header />
+            <div className={`Home ${backgroundClass ?? ""}`}>
                 <div className="Home__in_container">
                     <section className="Home__weather_now">
                         <h3 className="visually_hidden">Погода на сегодня</h3>
@@ -84,15 +45,22 @@ function HomePage() {
                         <ErrorCacher>
                             <City5d3hWeather_onResizeUpdate />
                         </ErrorCacher>
+                        <div className="Home__maps_wrapper">
+                            <ErrorCacher>
+                                <TwoGisMaps
+                                    mapInitConfig={{ fullscreenControl: false, zoomControl: false }}
+                                    addClassName={["Home__maps"]}
+                                />
+                            </ErrorCacher>
+                        </div>
                     </section>
                 </div>
-                <Footer />
-            </main>
-            <PortalVieport />
+            </div>
         </>
     );
 }
 
 const HomePage_memo = memo(HomePage, deep_object_is_equal);
 
-export { HomePage, HomePage_memo };
+export { HomePage as default, HomePage_memo };
+export type { IHomePageProps };

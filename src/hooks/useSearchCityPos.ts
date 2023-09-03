@@ -8,7 +8,8 @@ import type * as fetchLatLonTypes from "../utils/fetch_LatLon";
 function useSearchCityPos(
     errorCallback = () => {},
     fetchEndCallback = () => {},
-    fetchStartCallback = () => {}
+    fetchStartCallback = () => {},
+    notFoundCallback = () => {}
 ): [fetchResult: Readonly<fetchLatLonTypes.TFullResponse>, fetchRequest: (cityName: string) => void, deleteFetchResult: () => void] {
     let [fetchResult, setFetchResult] = useState<fetchLatLonTypes.TFullResponse>();
     let abortController = useRef<null | AbortController>(null);
@@ -41,6 +42,10 @@ function useSearchCityPos(
         abortController.current = obj;
     };
 
+    const fetchNotFoundCallback = () => {
+        notFoundCallback();
+    };
+
     const fetchRequest = (cityName: string) => {
         fetchingStartCallback();
         fetch_lat_lon({
@@ -49,6 +54,7 @@ function useSearchCityPos(
             callBack: fetchingResponseCallback,
             errorCallback: fetchingErrorCallback,
             getController: getAbortController,
+            notFoundCallback: fetchNotFoundCallback,
         });
     };
 

@@ -109,25 +109,21 @@ function low_update_decorator<T extends TanyFunc>(func: T, callback = () => {}, 
     декоратор для кеширования значений возвращаемых функциями.
 */
 function cache_decorator<T extends TanyFunc, R extends ReturnType<T>>(func: T) {
-    type TCacheItem = {
-        params: Parameters<T>;
-        result: R;
-    };
-
     const ERR_RESPONSE = "!! decorators.is_cached: value not cached !!";
-    let cache: TCacheItem[] = [];
+    const cache_v2 = new Map<string, R>();
 
-    const get_cached = (args: Parameters<T>): typeof ERR_RESPONSE | TCacheItem => {
-        // на случай если одним из аргументов будет обьект ссылающийся сам на себя, тогда в deep_array_is_equal будет исключение
+    const get_cached = (args: Parameters<T>): typeof ERR_RESPONSE | R => {
         try {
-            for (let cache_item of cache) {
-                if (deep_array_is_equal(cache_item.params, args)) {
-                    return cache_item;
-                }
+            const calcKey = JSON.stringify(args);
+
+            if (cache_v2.has(calcKey)) {
+                return cache_v2.get(calcKey) as R;
             }
         } catch {
+            // Если данные не сирализуемы
             return ERR_RESPONSE;
         }
+
         return ERR_RESPONSE;
     };
 
@@ -137,9 +133,9 @@ function cache_decorator<T extends TanyFunc, R extends ReturnType<T>>(func: T) {
 
         if (is_value_cache === ERR_RESPONSE) {
             result = func(...args);
-            cache.push({ params: args, result: result });
+            cache_v2.set(JSON.stringify(args), result);
         } else {
-            result = is_value_cache.result;
+            result = is_value_cache;
         }
 
         return result;

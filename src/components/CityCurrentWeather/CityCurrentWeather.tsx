@@ -10,23 +10,21 @@ import { WeatherAltInfoTemplate } from "../WeatherAltInfoTemplate/WeatherAltInfo
 import "./../../fonts/acline/acline.css";
 import { HoverHint } from "../../HOC/HoverHint/HoverHint";
 import { WeatherSunPhase } from "../WeatherSunPhase/WeatherSunPhase";
-import { useAppStoreSelector } from "../../redux/redux_hooks";
+import { useAppStoreSelector, useAppStoreDispatch } from "../../redux/redux_hooks";
+import { updateBackgroundClass } from "../../redux/slises/homePage";
+import { updateCity } from "../../redux/slises/weather_lat_lon";
+import { CITY_NO_NAME_MAP_TAP } from "../../utils/global_vars";
+import { HocOnResizeUpdate } from "../../HOC/OnResizeUpdate/OnResizeUpdate";
 
 interface ICityCurrentWeatherProps {}
 
 type TProps = Readonly<ICityCurrentWeatherProps>;
 
-// сила ветра
-// 0 – штиль (безветрие);
-// 1 – 3 – слабый (скорость 2 – 5 м/с);
-// 4 – 5 – умеренный (5 – 10 м/с);
-// 6 – 8 – сильный (10 – 18 м/с);
-// 9 – 11 – шторм (18 – 30 м/с);
-// 12 – ураган (более 30 м/с);
+const WeatherBaseInfo_onResizeUpd = HocOnResizeUpdate(WeatherBaseInfo);
 
 function CityCurrentWeather({}: TProps = {}) {
-    const { lat, lon, cityName } = useAppStoreSelector((state) => state.weatherGeo);
-    const { pageSelector: homePageSelector } = useAppStoreSelector((state) => state.homePage);
+    const { lat, lon, cityName, isAutoDetect } = useAppStoreSelector((state) => state.weatherGeo);
+    const reduxStoreDispatch = useAppStoreDispatch();
     const [isLoadingVisible, setIsLoadingVisible] = useState<boolean>(false);
     const [isFetchError, setIsFetchError] = useState<boolean>(false); // ошибка загрузки данных
 
@@ -63,21 +61,17 @@ function CityCurrentWeather({}: TProps = {}) {
     useEffect(() => {
         if (currentWeather) {
             console.log(currentWeather);
-
             let sun_data = calc_sun_hours_details(currentWeather.sys.sunrise, currentWeather.sys.sunset, currentWeather.timezone);
-            let homepage: HTMLElement | null = null;
+            reduxStoreDispatch(updateBackgroundClass(`Home--bg_${calc_backgraund_type(sun_data, currentWeather)}`));
 
-            if (homePageSelector && homePageSelector != "") {
-                homepage = document.querySelector<HTMLElement>(homePageSelector);
-            }
-
-            if (homepage) {
-                for (let elem of Array.from(homepage.classList)) {
-                    if ((elem as string).startsWith("Home--bg_")) {
-                        homepage.classList.remove(elem);
-                    }
-                }
-                homepage.classList.add(`Home--bg_${calc_backgraund_type(sun_data, currentWeather)}`);
+            if (isAutoDetect) {
+                reduxStoreDispatch(
+                    updateCity({
+                        cityName: currentWeather.name,
+                        lat: lat ?? currentWeather.coord.lat,
+                        lon: lon ?? currentWeather.coord.lon,
+                    })
+                );
             }
         }
     }, [currentWeather]);
@@ -86,12 +80,32 @@ function CityCurrentWeather({}: TProps = {}) {
         getWeather();
     });
 
+    // определяем каким будет название искомого города
+    const renderCityName = () => {
+        // если это автоопределение, то название города берем из ответа о погоде с сервера
+        if (isAutoDetect && cityName !== CITY_NO_NAME_MAP_TAP) {
+            return (
+                <>
+                    {cityName} <span className="CityCurrentWeather__name_auto">(автоопределение)</span>
+                </>
+            );
+        }
+
+        // если мы нажали по карте то лучше если название будет таким, потомучто названия там определяются так себе
+        if (cityName == CITY_NO_NAME_MAP_TAP) {
+            return <>Точка на карте</>;
+        }
+
+        // в остальных случаях название берем из стора
+        return <>{cityName}</>;
+    };
+
     return (
         <div className="CityCurrentWeather">
             {currentWeather && !isLoadingVisible && !isFetchError ? (
                 <>
                     <div className="CityCurrentWeather__head">
-                        <h2 className="CityCurrentWeather__name">{cityName}</h2>
+                        <h2 className="CityCurrentWeather__name">{renderCityName()}</h2>
                         <WeatherNowTime
                             times={{ dt: currentWeather.dt, timezone: currentWeather.timezone }}
                             get_hours={false}
@@ -102,7 +116,7 @@ function CityCurrentWeather({}: TProps = {}) {
 
                     <div className="CityCurrentWeather__main_wrapper">
                         <div className="CityCurrentWeather__main">
-                            <WeatherBaseInfo
+                            <WeatherBaseInfo_onResizeUpd
                                 weather_data={{
                                     sunrise: currentWeather.sys.sunrise,
                                     sunset: currentWeather.sys.sunset,
@@ -196,16 +210,11 @@ function CityCurrentWeather({}: TProps = {}) {
                         </div>
                     </div>
                 </>
-            ) : !isLoadingVisible && !isFetchError ? (
-                <>
-                    <div className="CityCurrentWeather__default">
-                        <p className="CityCurrentWeather__default_text">Начните поиск.</p>
-                    </div>
-                </>
             ) : null}
+
             {isFetchError ? (
                 <div className="CityCurrentWeather__fetch_error">
-                    <p>Ошибка при загрузки данных о текущей погоде.</p>
+                    <p>Ошибка при загрузке данных о текущей погоде.</p>
                     <button onClick={reload_comonent}>Перезагрузить</button>
                 </div>
             ) : null}

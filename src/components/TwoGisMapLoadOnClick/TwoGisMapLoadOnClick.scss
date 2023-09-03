@@ -1,0 +1,24 @@
+@import "./../../global_styles/global_vars.scss";
+
+@mixin settings() {
+    width: 95%;
+    height: 45vh;
+    background-color: $WEATCHER_INFO_BACKROUND;
+    margin: 0 auto;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-direction: column;
+}
+
+.TwoGisMapLoadOnClick {
+    @include settings();
+
+    &__loading {
+        justify-content: center;
+    }
+
+    &__default {
+        justify-content: center;
+    }
+}

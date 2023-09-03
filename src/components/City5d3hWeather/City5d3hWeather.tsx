@@ -157,7 +157,6 @@ function City5d3hWeather({}: TProps = {}) {
         // если не один день не выбран, выбираем первый по умолчанию
         if (sorted_days_weather.length > 0 && dataIdRender == "") {
             setDataIdRender(`${dt_from_string(sorted_days_weather[0][0].dt)}--0`);
-            console.log(sorted_days_weather);
         } // else {
         //     let decode_data_id_renderer = decode_dataIdRender(dataIdRender);
         //     setDataIdRender(
@@ -203,12 +202,10 @@ function City5d3hWeather({}: TProps = {}) {
                         <City5d3hWeather_chartBlock rawSortedWeather={rawSortedWeather} dataIdRender={dataIdRender} />
                     </div>
                 </>
-            ) : !isLoadingVisible && !isFetchError ? (
-                <div className="City5d3hWeather__default"></div>
             ) : null}
             {isFetchError ? (
                 <div className="City5d3hWeather__fetch_error">
-                    <p>Ошибка при загрузки данных о текущей погоде.</p>
+                    <p>Ошибка при загрузке данных о погоде на 5 дней.</p>
                     <button onClick={reload_comonent}>Перезагрузить</button>
                 </div>
             ) : null}

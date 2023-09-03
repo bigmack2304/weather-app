@@ -39,21 +39,9 @@
         font-size: 2.2rem;
     }
 
-    &__default {
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        backdrop-filter: $BACKDROP_BLUR;
-        background-color: $BACKDROP_COLLOR;
-
-        &_text {
-            text-align: center;
-            font-size: 1.38rem;
-            color: $WHITE_TEXT;
-            text-shadow: 0 0 9px black;
-        }
+    &__name_auto {
+        font-size: 1.5rem;
+        vertical-align: text-top;
     }
 
     &__loader_wrapper {
@@ -81,9 +69,14 @@
 
     &__main_wrapper {
         flex-grow: 1;
-        position: relative;
+
+        @include is-screen(mobile) {
+            display: flex;
+            flex-direction: column;
+        }
 
         @include is-screen(desctop) {
+            position: relative;
             padding: 10px 0;
             background-color: $WEATCHER_INFO_ALT_NOACTIVE_BACKROUND;
         }
@@ -99,8 +92,6 @@
             "grid_alt_info grid_alt_info"
             "grid_sun_phase grid_sun_phase";
 
-        position: absolute;
-        height: 100%;
         width: 100%;
 
         grid-template-columns: 1fr 1fr;
@@ -110,8 +101,13 @@
             grid-area: grid_base_info;
         }
 
+        @include is-screen(mobile) {
+            flex-grow: 1;
+        }
+
         @include is-screen(desctop) {
             position: initial;
+            height: 100%;
             flex-grow: 0;
             grid-template-areas:
                 "grid_base_info grid_alt_info"

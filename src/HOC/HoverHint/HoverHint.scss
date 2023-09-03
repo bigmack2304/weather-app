@@ -1,8 +1,15 @@
+@import "../../global_styles/transitionGroupAnims.scss";
+@import "../../global_styles/global_vars.scss";
+
 .HoverHint {
     width: fit-content;
     height: fit-content;
     display: contents;
     cursor: help;
+
+    &__inner_wrapper {
+        position: absolute;
+    }
 
     &__hint {
         position: relative;
@@ -12,7 +19,17 @@
         font-size: 1rem;
         padding: 10px;
         border-radius: 5px;
+
+        @include is-screen(desctop) {
+            width: max-content;
+            max-width: 35dvw;
+        }
     }
+}
+
+// добавим анимации появления для всплывающих подсказок для не мобильных устроиств
+@include is-screen(desctop) {
+    @include TransitionGroupAnims-type-1(".HoverHint__hint");
 }
 
 .HoverHint__after,

@@ -5,10 +5,26 @@
 /*
      резиновый размер шрифта
 */
+@keyframes focus_start_anm {
+  from {
+    outline-offset: 5px; }
+  to {
+    outline-offset: 0px; } }
+
 *,
 *::before,
 *::after {
   box-sizing: inherit; }
+
+*:focus {
+  outline: none; }
+
+*:focus-visible {
+  outline: black 2px;
+  outline-style: auto;
+  animation-name: focus_start_anm;
+  animation-timing-function: ease-in;
+  animation-duration: 0.3s; }
 
 html {
   font-size: calc( 14px + 8 * (( 100vw - 320px ) / 960)); }

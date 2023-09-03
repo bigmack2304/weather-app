@@ -1,13 +1,17 @@
+@import "./../../global_styles/global_vars.scss";
+
 .FormSearch {
     font-family: inherit;
-    width: 100%;
+    //width: 100%;
     display: flex;
 
     &__search {
         font-family: inherit;
         font-size: 1rem;
-        min-width: 50px;
-        width: 100%;
+        // min-width: 50px;
+        // width: 100%;
+        background-color: #ffffffb8;
+        width: $FORM_SEARCH_SIZE;
     }
 
     &__buttonSubmit {

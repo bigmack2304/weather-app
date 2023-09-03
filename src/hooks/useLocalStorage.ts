@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useHandleUpdate } from "./useHandleUpdate";
-import { set_storage_data, get_stprage_data, dispatchEventStorageUpdate } from "./../appLocalStorage/appLoacalStorage";
+import { set_storage_data, get_stprage_data } from "./../appLocalStorage/appLoacalStorage";
 import type { IAppLocalStorage } from "./../appLocalStorage/appLoacalStorage";
 
 // хук для чтения и записи данных в локал-сторадж, по томуже принцыпу что и useState
@@ -17,7 +17,6 @@ function useLoacalStorage(
 
     const setLocalData = (data: IAppLocalStorage) => {
         set_storage_data(data);
-        dispatchEventStorageUpdate();
     };
 
     useEffect(() => {

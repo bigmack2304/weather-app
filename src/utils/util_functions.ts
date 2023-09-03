@@ -1,6 +1,7 @@
 import type * as fetchCityLatLon from "./fetch_LatLon";
 import type * as currentWeather from "./fetch_current_weather";
 import { deep_object_is_equal } from "./is_equal";
+import { CITY_NO_NAME_MAP_TAP } from "./global_vars";
 
 // конвертирует код страны в полное название страны, с учетом языка пользователя
 // испоьзование get_full_country_by_code.of("код страны, US например")
@@ -76,7 +77,7 @@ function get_localed_city_name(city: fetchCityLatLon.TResponseObj) {
 // задает новое имя для страницы
 function update_meta_title(cityName: string | undefined) {
     const docHead = document.querySelector("head")!;
-    let text = cityName ? `в ${cityName}` : "";
+    let text = cityName !== CITY_NO_NAME_MAP_TAP ? (cityName ? `в ${cityName}` : "") : "по месту на карте";
     docHead.querySelector("title")!.textContent = `Погода ${text}`;
 }
 
@@ -84,7 +85,7 @@ function update_meta_title(cityName: string | undefined) {
 // обновлляем description head
 function update_meta_desc(cityName: string | undefined) {
     const docHead = document.querySelector("head")!;
-    let text = cityName ? `в ${cityName}` : "";
+    let text = cityName !== CITY_NO_NAME_MAP_TAP ? (cityName ? `в ${cityName}` : "") : "по месту на карте";
     (
         docHead.querySelector("meta[name='description']")! as HTMLMetaElement
     ).content = `Подробный прогноз погоды ${text}, на сегодня, завтра, 5 дней, в weather-app. Прогноз погоды ${text} с точностью '+-25 %'`;
