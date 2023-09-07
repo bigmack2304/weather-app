@@ -121,6 +121,7 @@ function CityPosSearch({}: TProps) {
     // закрываем модалку о ненайденном городе
     const onModalWndTemplateClose = () => {
         storeDispatch(setNotFound(false));
+        storeDispatch(setFetchData(undefined));
     };
 
     // при истичении времяни автоопределения координат, выводим модалку, при закрытии которой пытаемся еще раз определить координаты
