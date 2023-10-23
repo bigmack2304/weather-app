@@ -12,8 +12,11 @@ function NotCityFind() {
     return (
         <div className="NotCityFind">
             <p className="NotCityFind__default_text">Начните поиск.</p>
-            <div className="NotCityFind__map">
-                <TwoGisMapLoadOnClick />
+            <div className="NotCityFind__map_wrapper">
+                <TwoGisMapLoadOnClick
+                    mapsSettings={{ mapInitConfig: { fullscreenControl: false, zoomControl: false } }}
+                    addClassNameDefault={["NotCityFind__map"]}
+                />
             </div>
         </div>
     );

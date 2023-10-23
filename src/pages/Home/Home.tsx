@@ -11,6 +11,7 @@ import { HocOnResizeUpdate } from "../../HOC/OnResizeUpdate/OnResizeUpdate";
 import { updatePageSelector } from "../../redux/slises/homePage";
 import { useAppStoreDispatch, useAppStoreSelector } from "../../redux/redux_hooks";
 import TwoGisMaps from "../../components/TwoGisMap/TwoGisMap";
+import { TwoGisMapLoadOnClick } from "../../components/TwoGisMapLoadOnClick/TwoGisMapLoadOnClick";
 
 const City5d3hWeather_onResizeUpdate = HocOnResizeUpdate<ICity5d3hWeatherProps>(City5d3hWeather); // City5d3hWeather нужно перерендоревать при ресайзе
 
@@ -47,9 +48,14 @@ function HomePage({}: TProps) {
                         </ErrorCacher>
                         <div className="Home__maps_wrapper">
                             <ErrorCacher>
-                                <TwoGisMaps
+                                {/* <TwoGisMaps
                                     mapInitConfig={{ fullscreenControl: false, zoomControl: false }}
                                     addClassName={["Home__maps"]}
+                                /> */}
+                                <TwoGisMapLoadOnClick
+                                    addClassNameDeLoaded={["Home__maps"]}
+                                    addClassNameDefault={["Home__maps"]}
+                                    mapsSettings={{ mapInitConfig: { fullscreenControl: false, zoomControl: false } }}
                                 />
                             </ErrorCacher>
                         </div>
