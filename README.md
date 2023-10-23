@@ -6,12 +6,15 @@
 </p>
 <p align="center">
   <a href="https://github.com/bigmack2304/weather-app"><img src="https://github.com/bigmack2304/weather-app/actions/workflows/github-actions-main.yml/badge.svg" alt=""></a>
-      <a href="https://github.com/bigmack2304/weather-app"><img src="https://github.com/bigmack2304/weather-app/actions/workflows/github-actions-dev.yml/badge.svg" alt=""></a>
+  <a href="https://github.com/bigmack2304/weather-app"><img src="https://github.com/bigmack2304/weather-app/actions/workflows/github-actions-dev.yml/badge.svg" alt=""></a>
 </p>
 
 ## Описание
 
 Прогноз погоды на сегодня и на 5 дней вперед, с интервалом от 3 до 6 часов.
+
+[Ссылка (relase ver.)](https://bigmack2304.github.io/weather-app/build/final/index.html)
+[Ссылка (dev ver.)](https://bigmack2304.github.io/weather-app/build/dev/index.html)
 
 ## Технические особенности
 

@@ -33,7 +33,7 @@
     }
 
     &__weather_now {
-        min-height: calc(max(500px, 100dvh));
+        min-height: calc(max(500px, 100vh));
         display: flex;
         flex-direction: column;
         flex-wrap: nowrap;
@@ -47,7 +47,7 @@
     }
 
     &__weather_week {
-        min-height: calc(max(500px, 100dvh));
+        min-height: calc(max(500px, 100vh));
         box-shadow: black 0px -3px 20px 0px;
         display: flex;
         flex-direction: column;
@@ -75,6 +75,7 @@
         padding: 10px;
         display: flex;
         width: 100%;
+        height: 45vh;
 
         & > .TwoGisMaps {
             height: 400px;
@@ -90,6 +91,10 @@
                 height: 40vh;
             }
         }
+    }
+
+    &__maps:has(.TwoGisMaps) {
+        height: initial;
     }
 
     // фоны
