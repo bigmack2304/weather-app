@@ -1,0 +1,16 @@
+.Button {
+    padding: 5px 15px;
+    color: white;
+    background-color: #60606096;
+    border: none;
+    border-radius: 3px;
+
+    &:hover {
+        border: 1px solid white;
+    }
+
+    &:active {
+        border: 1px solid rgb(195, 195, 195);
+        box-shadow: inset 0px 11px 17px -11px black;
+    }
+}
