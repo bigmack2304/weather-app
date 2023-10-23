@@ -121,3 +121,4 @@ function TwoGisMaps({ center = [1.0, 1.0], startZoom = 4, mapInitConfig = {}, ad
 }
 
 export { TwoGisMaps as default };
+export type { ITwoGisMaps };
