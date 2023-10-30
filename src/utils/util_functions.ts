@@ -443,6 +443,33 @@ function generateHashCode(str: string, seed: number = 0): string {
     return (4294967296 * (2097151 & h2) + (h1 >>> 0)).toString(16);
 }
 
+// Приобразуем значение из неизвестного диапозона в тоже значение но в другом (указанном) диапозоне, минимальное и максимальное значения на входе автоматически запоминаются
+function addon_auto_map() {
+    let is_first_start = false;
+    let auto_val_min = 0;
+    let auto_val_max = 0;
+
+    return (val: number, need_min: number, need_max: number) => {
+        if (!is_first_start) {
+            auto_val_min = val;
+            auto_val_max = val;
+            is_first_start = !is_first_start;
+        }
+
+        if (val > auto_val_max) auto_val_max = val;
+        if (val < auto_val_min) auto_val_min = val;
+
+        let shkal_orig, shkal_new, new_val;
+
+        shkal_orig = (val - auto_val_min) / ((auto_val_max - auto_val_min) / 100);
+        shkal_orig = Number.isNaN(shkal_orig) ? 0 : shkal_orig;
+        shkal_new = Math.abs(need_max - need_min) / 100;
+        new_val = shkal_new * shkal_orig + need_min;
+
+        return new_val;
+    };
+}
+
 export {
     get_full_country_by_code,
     get_system_language,
@@ -469,4 +496,5 @@ export {
     is_mobile_screen_size,
     is_multiTuch,
     generateHashCode,
+    addon_auto_map,
 };
